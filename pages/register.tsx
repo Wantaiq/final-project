@@ -1,17 +1,22 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { ResponseBody } from './api/register';
 
+export type UserInput = {
+  username: string;
+  password: string;
+};
 export default function Register() {
-  const [registrationError, setRegistrationError] = useState([]);
+  const [registrationError, setRegistrationError] = useState('');
   const {
     register,
     handleSubmit,
     formState: { errors },
     trigger,
-  } = useForm();
+  } = useForm<UserInput>();
   const router = useRouter();
-  async function handleUserRegistration(userInput) {
+  async function handleUserRegistration(userInput: UserInput) {
     const isUserInputValid = await trigger();
     if (isUserInputValid) {
       const response = await fetch('http://localhost:3000/api/register', {
@@ -22,12 +27,12 @@ export default function Register() {
           password: userInput.password,
         }),
       });
-      const data = await response.json();
-      if ('errors' in data) {
-        setRegistrationError(data.errors[0].message);
+      const data: ResponseBody = await response.json();
+      if ('error' in data) {
+        setRegistrationError(data.error[0].message);
       } else {
-        setRegistrationError([]);
-        await router.push('/');
+        setRegistrationError('');
+        await router.push('/login');
       }
     }
   }

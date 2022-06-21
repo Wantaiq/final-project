@@ -7,11 +7,22 @@ import {
 import authenticateUser from '../../util/middleware/authentication';
 import { authenticationSchema } from '../../util/schema/authentication';
 
-async function registrationHandler(req: NextApiRequest, res: NextApiResponse) {
+export type ResponseBody =
+  | {
+      user: {
+        id: number;
+        username: string;
+      };
+    }
+  | { error: { message: string }[] };
+async function registrationHandler(
+  req: NextApiRequest,
+  res: NextApiResponse<ResponseBody>,
+) {
   if (await getUserByUsername(req.body.username)) {
     res
       .status(400)
-      .json({ errors: [{ message: 'Please choose different username' }] });
+      .json({ error: [{ message: 'Please choose different username' }] });
     return;
   }
   const passwordHash = await bcrypt.hash(req.body.password, 12);

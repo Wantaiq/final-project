@@ -18,7 +18,7 @@ async function loginHandler(req: NextApiRequest, res: NextApiResponse) {
   );
   if (!isUserAuthenticated) {
     res
-      .status(405)
+      .status(401)
       .json({ error: [{ message: 'Invalid username or password' }] });
     return;
   }
