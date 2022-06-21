@@ -29,7 +29,7 @@ export default function Login() {
       if ('error' in data) {
         setLoginError(data.error[0].message);
       } else {
-        await router.push('/');
+        await router.push(`/users/${data.user.username}`);
       }
     }
   }
