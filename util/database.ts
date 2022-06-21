@@ -1,3 +1,4 @@
+import camelcaseKeys from 'camelcase-keys';
 import { config } from 'dotenv-safe';
 import postgres from 'postgres';
 
@@ -21,3 +22,30 @@ function connectOneTimeToDatabase() {
 
 const sql = connectOneTimeToDatabase();
 export default sql;
+export type User = {
+  id: number;
+  username: string;
+};
+
+type UserWithHashedPassword = User & {
+  hashedPassword: string;
+};
+
+export async function createUserWithHashedPassword(
+  username: string,
+  hashedPassword: string,
+) {
+  const [user] = await sql<[User]>`
+    INSERT INTO users(username, password_hash)
+    VALUES(${username}, ${hashedPassword})
+    RETURNING id,username`;
+  return camelcaseKeys(user);
+}
+
+export async function getUserByUsername(username: string) {
+  if (!username) return undefined;
+  const [user] = await sql<[User | undefined]>`SELECT username
+    from users
+    WHERE username = ${username}`;
+  return user && camelcaseKeys(user);
+}
