@@ -28,7 +28,7 @@ export type User = {
 };
 
 type UserWithHashedPassword = User & {
-  hashedPassword: string;
+  passwordHash: string;
 };
 
 export async function createUserWithHashedPassword(
@@ -48,4 +48,14 @@ export async function getUserByUsername(username: string) {
     from users
     WHERE username = ${username}`;
   return user && camelcaseKeys(user);
+}
+
+export async function getUserWithHashedPassword(username: string) {
+  if (!username) return undefined;
+  const [user] = await sql<[UserWithHashedPassword]>`
+  SELECT *
+  FROM users
+  where username = ${username}
+  `;
+  return camelcaseKeys(user);
 }
