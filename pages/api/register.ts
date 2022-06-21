@@ -10,7 +10,7 @@ import { authenticationSchema } from '../../util/schema/authentication';
 async function registrationHandler(req: NextApiRequest, res: NextApiResponse) {
   if (await getUserByUsername(req.body.username)) {
     res
-      .status(401)
+      .status(400)
       .json({ errors: [{ message: 'Please choose different username' }] });
     return;
   }
