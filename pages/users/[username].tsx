@@ -19,7 +19,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
   // Create join table
   const userInformation = await getUserByUsername(queriedUsername);
-  console.log(userInformation);
 
   return {
     props: {},

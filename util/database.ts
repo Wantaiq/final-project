@@ -22,6 +22,7 @@ function connectOneTimeToDatabase() {
 
 const sql = connectOneTimeToDatabase();
 export default sql;
+
 export type User = {
   id: number;
   username: string;
