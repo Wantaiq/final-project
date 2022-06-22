@@ -1,39 +1,26 @@
 import { GetServerSidePropsContext } from 'next';
-import {
-  getUserProfileByUsername,
-  getUserProfileByValidSessionToken,
-  UserProfile,
-} from '../../util/database';
+import { getUserProfileByUsername, UserProfile } from '../../util/database';
 
-type Props = { userProfile: UserProfile; isAuth: boolean } | undefined;
+type Props = { userProfileInfo: UserProfile | null };
 export default function Profile(props: Props) {
-  if (!props) {
+  console.log(props);
+  if (!props.userProfileInfo) {
     return <h1>User not found</h1>;
   }
   return (
     <>
-      <h1>Username : {props.userProfile.username}</h1>
-      <h2>Bio : {props.userProfile.bio}</h2>
-      {props.isAuth ? <p>Update profile</p> : null}
+      <h1>Username : {props.userProfileInfo.username}</h1>
+      <h2>Bio : {props.userProfileInfo.bio}</h2>
     </>
   );
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const userProfile = await getUserProfileByValidSessionToken(
-    context.req.cookies.sessionToken,
+  if (typeof context.query.username !== 'string') return { props: {} };
+  const userProfileInfo = await getUserProfileByUsername(
+    context.query.username,
   );
-
-  if (!userProfile) {
-    if (typeof context.query.username !== 'string') return { props: {} };
-    const userProfileInfo = await getUserProfileByUsername(
-      context.query.username,
-    );
-    return {
-      props: { userProfile: userProfileInfo, isAuth: false },
-    };
-  }
   return {
-    props: { userProfile, isAuth: true },
+    props: { userProfileInfo: userProfileInfo || null },
   };
 }

@@ -106,11 +106,15 @@ export async function deleteSessionByToken(token: string) {
 }
 
 export async function getUserProfileByUsername(username: string) {
-  const [userProfile] = await sql`
+  try {
+    const [userProfile] = await sql`
     SELECT username, bio, user_id
     FROM user_profiles
     WHERE username = ${username}`;
-  return camelcaseKeys(userProfile);
+    return camelcaseKeys(userProfile);
+  } catch (error) {
+    return error && undefined;
+  }
 }
 
 export async function getUserProfileByValidSessionToken(token: string) {
@@ -122,5 +126,6 @@ export async function getUserProfileByValidSessionToken(token: string) {
   AND sessions.expiry_timestamp > now()
   AND sessions.user_id = user_profiles.id
   `;
+  await deleteExpiredSession();
   return camelcaseKeys(user);
 }
