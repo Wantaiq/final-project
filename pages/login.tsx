@@ -28,8 +28,18 @@ export default function Login() {
       const data: ResponseBody = await response.json();
       if ('error' in data) {
         setLoginError(data.error[0].message);
+        return;
+      }
+
+      const returnTo = router.query.returnTo;
+      if (
+        returnTo &&
+        !Array.isArray(returnTo) &&
+        /^\/[a-zA-Z0-9-?=/]*$/.test(returnTo)
+      ) {
+        await router.push(returnTo);
       } else {
-        await router.push(`/users/${data.user.username}`);
+        await router.push('/');
       }
     }
   }

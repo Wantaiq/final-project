@@ -1,6 +1,10 @@
+import crypto from 'node:crypto';
 import bcrypt from 'bcrypt';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { createSerializedCookie } from '../../util/cookies';
 import {
+  createSession,
+  createUserProfile,
   createUserWithHashedPassword,
   getUserByUsername,
 } from '../../util/database';
@@ -30,9 +34,15 @@ async function registrationHandler(
     req.body.username,
     passwordHash,
   );
+  const userProfile = await createUserProfile(newUser.username, newUser.id);
+  console.log(userProfile);
+  const token = crypto.randomBytes(64).toString('base64');
+  const userSession = await createSession(token, newUser.id);
+  const serializedCookie = createSerializedCookie(userSession.token);
   res
+    .setHeader('Set-Cookie', serializedCookie)
     .status(200)
-    .json({ user: { id: newUser.id, username: newUser.username } });
+    .json({ user: { id: userProfile.userId, username: userProfile.username } });
 }
 
 export default authenticateUser(authenticationSchema, registrationHandler);

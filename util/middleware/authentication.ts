@@ -7,7 +7,7 @@ export default function authenticateUser(
 ) {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method !== 'POST') {
-      res.status(405).json({ errors: [{ message: 'Method not allowed' }] });
+      res.status(405).json({ error: [{ message: 'Method not allowed' }] });
       return;
     }
     try {

@@ -1,26 +1,39 @@
 import { GetServerSidePropsContext } from 'next';
-import { getUserByUsername } from '../../util/database';
+import {
+  getUserProfileByUsername,
+  getUserProfileByValidSessionToken,
+  UserProfile,
+} from '../../util/database';
 
-export default function UserProfile(props) {
+type Props = { userProfile: UserProfile; isAuth: boolean } | undefined;
+export default function Profile(props: Props) {
+  if (!props) {
+    return <h1>User not found</h1>;
+  }
   return (
     <>
-      <h1>Hello</h1>
-      <h2>Hi</h2>
+      <h1>Username : {props.userProfile.username}</h1>
+      <h2>Bio : {props.userProfile.bio}</h2>
+      {props.isAuth ? <p>Update profile</p> : null}
     </>
   );
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const queriedUsername = context.query.username;
-  if (!queriedUsername || Array.isArray(queriedUsername)) {
+  const userProfile = await getUserProfileByValidSessionToken(
+    context.req.cookies.sessionToken,
+  );
+
+  if (!userProfile) {
+    if (typeof context.query.username !== 'string') return { props: {} };
+    const userProfileInfo = await getUserProfileByUsername(
+      context.query.username,
+    );
     return {
-      props: {},
+      props: { userProfile: userProfileInfo, isAuth: false },
     };
   }
-  // Create join table
-  const userInformation = await getUserByUsername(queriedUsername);
-
   return {
-    props: {},
+    props: { userProfile, isAuth: true },
   };
 }
