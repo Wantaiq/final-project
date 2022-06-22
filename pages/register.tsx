@@ -32,7 +32,7 @@ export default function Register() {
         setRegistrationError(data.error[0].message);
       } else {
         setRegistrationError('');
-        await router.push('/login');
+        await router.push('/');
       }
     }
   }

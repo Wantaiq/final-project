@@ -28,8 +28,20 @@ export type User = {
   username: string;
 };
 
+export type UserProfile = {
+  id: number;
+  username: string;
+  bio: string | null;
+  user_id: number;
+};
+
 type UserWithHashedPassword = User & {
   passwordHash: string;
+};
+
+export type Session = {
+  id: number;
+  token: string;
 };
 
 export async function createUserWithHashedPassword(
@@ -58,5 +70,62 @@ export async function getUserWithHashedPassword(username: string) {
   FROM users
   where username = ${username}
   `;
+  return camelcaseKeys(user);
+}
+
+export async function createUserProfile(username: string, userId: number) {
+  const [userProfile] = await sql<[UserProfile]>`
+  INSERT INTO user_profiles(username, user_id)
+    VALUES(${username}, ${userId})
+    RETURNING username, bio, user_id
+    `;
+  return camelcaseKeys(userProfile);
+}
+
+export async function createSession(token: string, userId: number) {
+  const [session] = await sql<[Session]>`
+  INSERT INTO sessions (token, user_id)
+  VALUES(${token}, ${userId})
+  RETURNING id, token
+  `;
+  await deleteExpiredSession();
+  return camelcaseKeys(session);
+}
+
+export async function deleteExpiredSession() {
+  const sessions = await sql`
+  DELETE FROM sessions WHERE expiry_timestamp < now()`;
+  return sessions.map((session) => camelcaseKeys(session));
+}
+
+export async function deleteSessionByToken(token: string) {
+  const [session] = await sql<[Session | undefined]>`
+  DELETE FROM sessions WHERE token = ${token}
+  RETURNING *`;
+  return session && camelcaseKeys(session);
+}
+
+export async function getUserProfileByUsername(username: string) {
+  try {
+    const [userProfile] = await sql`
+    SELECT username, bio, user_id
+    FROM user_profiles
+    WHERE username = ${username}`;
+    return camelcaseKeys(userProfile);
+  } catch (error) {
+    return error && undefined;
+  }
+}
+
+export async function getUserProfileByValidSessionToken(token: string) {
+  if (!token) return undefined;
+  const [user] = await sql`
+  SELECT user_profiles.username, user_profiles.bio, user_profiles.user_id
+  FROM user_profiles, sessions
+  WHERE sessions.token = ${token}
+  AND sessions.expiry_timestamp > now()
+  AND sessions.user_id = user_profiles.id
+  `;
+  await deleteExpiredSession();
   return camelcaseKeys(user);
 }
