@@ -3,7 +3,6 @@ import { getUserProfileByUsername, UserProfile } from '../../util/database';
 
 type Props = { userProfileInfo: UserProfile | null };
 export default function Profile(props: Props) {
-  console.log(props);
   if (!props.userProfileInfo) {
     return <h1>User not found</h1>;
   }

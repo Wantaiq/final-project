@@ -1,11 +1,14 @@
 import '../styles/globals.css';
 import Layout from '../components/Layout';
+import ProfileProvider from '../context/ProfileProvider';
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+    <ProfileProvider>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </ProfileProvider>
   );
 }
 
