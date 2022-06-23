@@ -17,9 +17,14 @@ export default function Profile(props: Props) {
       <h2>Bio : {props.userProfileInfo.bio}</h2>
       {props.userStories.map((story) => {
         return (
-          <div key={`userStory-${story.id}`}>
-            <h1>{story.title}</h1>
-            <h2>{story.story}</h2>
+          <div key={`userStoryId-${story.id}`}>
+            <h2>Story : {story.title}</h2>
+            <p> Chapter One: {story.chapterOne}</p>
+            <p>Chapter Two: {story.chapterTwo}</p>
+            <p>Chapter Three : {story.chapterThree}</p>
+            <p>Chapter Four: {story.chapterFour}</p>
+            <p>Chapter Five:{story.chapterFive}</p>
+            <p>Chapter Six:{story.chapterSix}</p>
           </div>
         );
       })}

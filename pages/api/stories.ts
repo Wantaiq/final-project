@@ -24,10 +24,16 @@ export default async function storiesHandler(
     }
     if (req.method === 'POST') {
       const newStory = await createUserStory(
-        req.body.story,
+        req.body.chapterOne,
+        req.body.chapterTwo,
+        req.body.chapterThree,
+        req.body.chapterFour,
+        req.body.chapterFive,
+        req.body.chapterSix,
         req.body.title,
         req.body.userId,
       );
+      console.log(newStory);
       res.status(200).json({ newStory });
       return;
     }
