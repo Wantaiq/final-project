@@ -35,6 +35,12 @@ export type UserProfile = {
   userId: number;
 };
 
+export type UserStory = {
+  id: number;
+  title: string;
+  story: string;
+};
+
 type Seed = {
   csrfSeed: string;
 };
@@ -139,7 +145,9 @@ export async function getUserProfileByValidSessionToken(token: string) {
 }
 
 export async function getUserStoriesByUserId(userId: number) {
-  const stories = await sql`SELECT * FROM stories WHERE user_id = ${userId}`;
+  const stories = await sql<
+    [UserStory]
+  >`SELECT id, title, story FROM stories WHERE user_id = ${userId}`;
   return stories;
 }
 
@@ -148,9 +156,9 @@ export async function createUserStory(
   title: string,
   userId: number,
 ) {
-  const [newStory] =
-    await sql`INSERT INTO stories (story, title, user_id) VALUES(${story}, ${title}, ${userId}) RETURNING story, title`;
-  console.log(newStory);
+  const [newStory] = await sql<
+    [UserStory]
+  >`INSERT INTO stories (story, title, user_id) VALUES(${story}, ${title}, ${userId}) RETURNING id, title, story`;
   return camelcaseKeys(newStory);
 }
 
