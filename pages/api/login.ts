@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import bcrypt from 'bcrypt';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { createCsrfSeed } from '../../util/auth';
 import { createSerializedCookie } from '../../util/cookies';
 import { createSession, getUserWithHashedPassword } from '../../util/database';
 import authenticateUser from '../../util/middleware/authentication';
@@ -27,7 +28,8 @@ async function loginHandler(req: NextApiRequest, res: NextApiResponse) {
   const userId = userWithHash.id;
   const username = userWithHash.username;
   const token = crypto.randomBytes(64).toString('base64');
-  const userSession = await createSession(token, userId);
+  const csrfSeed = createCsrfSeed();
+  const userSession = await createSession(token, userId, csrfSeed);
   const serializedCookie = createSerializedCookie(userSession.token);
   res
     .setHeader('Set-Cookie', serializedCookie)

@@ -35,6 +35,10 @@ export type UserProfile = {
   user_id: number;
 };
 
+type Seed = {
+  csrfSeed: string;
+};
+
 type UserWithHashedPassword = User & {
   password: string;
 };
@@ -82,10 +86,14 @@ export async function createUserProfile(username: string, userId: number) {
   return camelcaseKeys(userProfile);
 }
 
-export async function createSession(token: string, userId: number) {
+export async function createSession(
+  token: string,
+  userId: number,
+  csrfSeed: string,
+) {
   const [session] = await sql<[Session]>`
-  INSERT INTO sessions (token, user_id)
-  VALUES(${token}, ${userId})
+  INSERT INTO sessions (token, user_id, csrf_seed)
+  VALUES(${token}, ${userId}, ${csrfSeed})
   RETURNING id, token
   `;
   await deleteExpiredSession();
@@ -128,4 +136,12 @@ export async function getUserProfileByValidSessionToken(token: string) {
   `;
   await deleteExpiredSession();
   return camelcaseKeys(user);
+}
+
+export async function getCsrfSeedByValidUserToken(token: string) {
+  if (!token) return undefined;
+  const [seed] = await sql<
+    [Seed]
+  >`SELECT csrf_seed FROM sessions WHERE token = ${token}`;
+  return camelcaseKeys(seed);
 }

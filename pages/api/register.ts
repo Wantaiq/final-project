@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import bcrypt from 'bcrypt';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { createCsrfSeed } from '../../util/auth';
 import { createSerializedCookie } from '../../util/cookies';
 import {
   createSession,
@@ -37,7 +38,9 @@ async function registrationHandler(
   const userProfile = await createUserProfile(newUser.username, newUser.id);
   console.log(userProfile);
   const token = crypto.randomBytes(64).toString('base64');
-  const userSession = await createSession(token, newUser.id);
+
+  const csrfSeed = createCsrfSeed();
+  const userSession = await createSession(token, newUser.id, csrfSeed);
   const serializedCookie = createSerializedCookie(userSession.token);
   res
     .setHeader('Set-Cookie', serializedCookie)

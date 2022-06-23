@@ -1,10 +1,12 @@
 import { GetServerSidePropsContext } from 'next';
+import { createCsrfToken } from '../util/auth';
 import {
+  getCsrfSeedByValidUserToken,
   getUserProfileByValidSessionToken,
   UserProfile,
 } from '../util/database';
 
-type Props = { userProfile: UserProfile };
+type Props = { userProfile: UserProfile; csrfToken: string };
 export default function Profile(props: Props) {
   return (
     <>
@@ -16,17 +18,22 @@ export default function Profile(props: Props) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  // Not sure about this one
   const userProfile = await getUserProfileByValidSessionToken(
     context.req.cookies.sessionToken,
   );
-
-  if (userProfile) {
-    return {
-      props: {
-        userProfile,
-      },
-    };
+  const csrfSeed = await getCsrfSeedByValidUserToken(
+    context.req.cookies.sessionToken,
+  );
+  if (csrfSeed) {
+    const csrfToken = createCsrfToken(csrfSeed.csrfSeed);
+    if (userProfile) {
+      return {
+        props: {
+          userProfile,
+          csrfToken,
+        },
+      };
+    }
   }
   return {
     redirect: {
