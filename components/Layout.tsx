@@ -14,6 +14,7 @@ export default function Layout(props: Props) {
     <>
       <header>
         <nav>
+          <Link href="/">Home</Link>
           {userProfile && <p>{userProfile}</p>}
           {!userProfile && (
             <>
