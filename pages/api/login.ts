@@ -16,7 +16,7 @@ async function loginHandler(req: NextApiRequest, res: NextApiResponse) {
   }
   const isUserAuthenticated = await bcrypt.compare(
     req.body.password,
-    userWithHash.passwordHash,
+    userWithHash.password,
   );
   if (!isUserAuthenticated) {
     res

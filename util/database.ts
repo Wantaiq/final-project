@@ -36,7 +36,7 @@ export type UserProfile = {
 };
 
 type UserWithHashedPassword = User & {
-  passwordHash: string;
+  password: string;
 };
 
 export type Session = {
@@ -49,7 +49,7 @@ export async function createUserWithHashedPassword(
   hashedPassword: string,
 ) {
   const [user] = await sql<[User]>`
-    INSERT INTO users(username, password_hash)
+    INSERT INTO users(username, password)
     VALUES(${username}, ${hashedPassword})
     RETURNING id,username`;
   return camelcaseKeys(user);
