@@ -21,19 +21,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const userProfile = await getUserProfileByValidSessionToken(
     context.req.cookies.sessionToken,
   );
-  const csrfSeed = await getCsrfSeedByValidUserToken(
+  const { csrfSeed } = await getCsrfSeedByValidUserToken(
     context.req.cookies.sessionToken,
   );
-  if (csrfSeed) {
-    const csrfToken = createCsrfToken(csrfSeed.csrfSeed);
-    if (userProfile) {
-      return {
-        props: {
-          userProfile,
-          csrfToken,
-        },
-      };
-    }
+  const csrfToken = createCsrfToken(csrfSeed);
+  if (userProfile) {
+    return {
+      props: {
+        userProfile,
+        csrfToken,
+      },
+    };
   }
   return {
     redirect: {

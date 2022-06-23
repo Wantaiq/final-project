@@ -139,7 +139,6 @@ export async function getUserProfileByValidSessionToken(token: string) {
 }
 
 export async function getCsrfSeedByValidUserToken(token: string) {
-  if (!token) return undefined;
   const [seed] = await sql<
     [Seed]
   >`SELECT csrf_seed FROM sessions WHERE token = ${token}`;
