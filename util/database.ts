@@ -32,7 +32,7 @@ export type UserProfile = {
   id: number;
   username: string;
   bio: string | null;
-  user_id: number;
+  userId: number;
 };
 
 type Seed = {
@@ -127,7 +127,7 @@ export async function getUserProfileByUsername(username: string) {
 
 export async function getUserProfileByValidSessionToken(token: string) {
   if (!token) return undefined;
-  const [user] = await sql`
+  const [user] = await sql<[UserProfile]>`
   SELECT user_profiles.username, user_profiles.bio, user_profiles.user_id
   FROM user_profiles, sessions
   WHERE sessions.token = ${token}
@@ -136,6 +136,22 @@ export async function getUserProfileByValidSessionToken(token: string) {
   `;
   await deleteExpiredSession();
   return camelcaseKeys(user);
+}
+
+export async function getUserStoriesByUserId(userId: number) {
+  const stories = await sql`SELECT * FROM stories WHERE user_id = ${userId}`;
+  return stories;
+}
+
+export async function createUserStory(
+  story: string,
+  title: string,
+  userId: number,
+) {
+  const [newStory] =
+    await sql`INSERT INTO stories (story, title, user_id) VALUES(${story}, ${title}, ${userId}) RETURNING story, title`;
+  console.log(newStory);
+  return camelcaseKeys(newStory);
 }
 
 export async function getCsrfSeedByValidUserToken(token: string) {

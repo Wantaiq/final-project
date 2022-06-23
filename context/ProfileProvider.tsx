@@ -19,7 +19,7 @@ export default function ProfileProvider(props: Props) {
     if ('error' in data) {
       setUserProfile(null);
     } else {
-      setUserProfile(data.userProfile.username);
+      setUserProfile(data.username);
     }
   }, []);
   return (
