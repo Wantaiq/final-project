@@ -29,7 +29,6 @@ export type User = {
 };
 
 export type UserProfile = {
-  id: number;
   username: string;
   bio: string | null;
   userId: number;
@@ -125,7 +124,7 @@ export async function deleteSessionByToken(token: string) {
 
 export async function getUserProfileByUsername(username: string) {
   try {
-    const [userProfile] = await sql`
+    const [userProfile] = await sql<[UserProfile]>`
     SELECT username, bio, user_id
     FROM user_profiles
     WHERE username = ${username}`;

@@ -33,7 +33,6 @@ export default async function storiesHandler(
     }
     if (req.method === 'DELETE') {
       const { id } = await deleteStory(req.body.storyId);
-      console.log(id);
       res.status(200).json({ id });
     }
   }
