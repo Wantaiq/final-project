@@ -36,7 +36,6 @@ async function registrationHandler(
     passwordHash,
   );
   const userProfile = await createUserProfile(newUser.username, newUser.id);
-  console.log(userProfile);
   const token = crypto.randomBytes(64).toString('base64');
 
   const csrfSeed = createCsrfSeed();

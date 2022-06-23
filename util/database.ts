@@ -54,6 +54,10 @@ export type Session = {
   token: string;
 };
 
+type DeletedStory = {
+  id: number;
+};
+
 export async function createUserWithHashedPassword(
   username: string,
   hashedPassword: string,
@@ -160,6 +164,12 @@ export async function createUserStory(
     [UserStory]
   >`INSERT INTO stories (story, title, user_id) VALUES(${story}, ${title}, ${userId}) RETURNING id, title, story`;
   return camelcaseKeys(newStory);
+}
+
+export async function deleteStory(storyId: number) {
+  const [deletedStory] = await sql<[DeletedStory]>`
+  DELETE FROM stories where id = ${storyId} RETURNING id`;
+  return camelcaseKeys(deletedStory);
 }
 
 export async function getCsrfSeedByValidUserToken(token: string) {

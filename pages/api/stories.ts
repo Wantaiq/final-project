@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { verifyCsrfToken } from '../../util/auth';
 import {
   createUserStory,
+  deleteStory,
   getCsrfSeedByValidUserToken,
 } from '../../util/database';
 
@@ -28,6 +29,12 @@ export default async function storiesHandler(
         req.body.userId,
       );
       res.status(200).json({ newStory });
+      return;
+    }
+    if (req.method === 'DELETE') {
+      const { id } = await deleteStory(req.body.storyId);
+      console.log(id);
+      res.status(200).json({ id });
     }
   }
 }

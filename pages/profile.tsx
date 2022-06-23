@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from 'next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { createCsrfToken } from '../util/auth';
 import {
   getCsrfSeedByValidUserToken,
@@ -34,6 +34,19 @@ export default function Profile(props: Props) {
     const data = await response.json();
     setUserStories((prevState) => [...prevState, data.newStory]);
   }
+  async function deleteStoryHandler(storyId: number) {
+    const response = await fetch('http://localhost:3000/api/stories', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        csrfToken: props.csrfToken,
+        storyId,
+      }),
+    });
+    const { id } = await response.json();
+    setUserStories((prevState) => prevState.filter((story) => story.id !== id));
+  }
+
   return (
     <>
       <h1>Username : {props.userProfile.username}</h1>
@@ -51,6 +64,21 @@ export default function Profile(props: Props) {
         onChange={(e) => setNewUserStory(e.currentTarget.value)}
       />
       <button onClick={() => createStoryHandler()}>Create new story</button>
+      {userStories.length === 0 ? (
+        <h1>You don't have any stories</h1>
+      ) : (
+        userStories.map((story) => {
+          return (
+            <div key={`userStory-${story.id}`}>
+              <h1>{story.title}</h1>
+              <p>{story.story}</p>
+              <button onClick={() => deleteStoryHandler(story.id)}>
+                Delete story
+              </button>
+            </div>
+          );
+        })
+      )}
     </>
   );
 }
