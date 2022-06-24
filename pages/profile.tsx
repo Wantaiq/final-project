@@ -15,20 +15,12 @@ type Props = {
   userStories: UserStory[];
 };
 
-type Chapters = {
-  id: number;
-  story_id: number;
-  heading: 'string';
-  content: 'string';
-  sortPosition: number;
-};
-
+// Refactor form
 export default function Profile(props: Props) {
   const [userStories, setUserStories] = useState(props.userStories);
-  const [newChapters, setNewChapters] = useState<Chapters[] | []>([]);
   const [storyTitle, setStoryTitle] = useState('');
   const [chapterHeading, setChapterHeading] = useState('');
-  const [chapterNumber, setChapterNumber] = useState('');
+  const [chapterNumber, setChapterNumber] = useState(1);
   const [chapterContent, setChapterContent] = useState('');
   const [storyDescription, setStoryDescription] = useState('');
   const [newStory, setNewStory] = useState<UserStory | undefined>(undefined);
@@ -45,11 +37,13 @@ export default function Profile(props: Props) {
       }),
     });
     const data: { newStory: UserStory } = await response.json();
+    setUserStories((prevStories) => [...prevStories, data.newStory]);
+    console.log(data);
     setNewStory(data.newStory);
   }
 
   async function createNewChapterHandler() {
-    const response = await fetch('http://localhost:3000/api/stories/chapters', {
+    await fetch('http://localhost:3000/api/stories/chapters', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -60,8 +54,9 @@ export default function Profile(props: Props) {
         sortPosition: chapterNumber,
       }),
     });
-    const data = await response.json();
-    setNewChapters((prevChapters) => [...prevChapters, data.newChapter]);
+    setChapterContent('');
+    setChapterHeading('');
+    setChapterNumber((prevNumber) => prevNumber + 1);
   }
 
   async function deleteStoryHandler(storyId: number) {
@@ -88,25 +83,23 @@ export default function Profile(props: Props) {
       <input
         id="title"
         maxLength={50}
+        value={storyTitle}
         onChange={(e) => setStoryTitle(e.currentTarget.value)}
       />
       <label htmlFor="description">Description :</label>
       <textarea
         id="description"
+        value={storyDescription}
         onChange={(e) => setStoryDescription(e.currentTarget.value)}
       />
       <button onClick={() => createStoryHandler()}>Create story</button>
       <hr />
-      <label htmlFor="chapterNumber">Chapter number :</label>
-      <input
-        id="chapterNumber"
-        type="number"
-        onChange={(e) => setChapterNumber(e.currentTarget.value)}
-      />
+      <p>Chapter #{chapterNumber}</p>
       <hr />
       <label htmlFor="chapterHeading">Chapter heading :</label>
       <input
         id="chapterHeading"
+        value={chapterHeading}
         onChange={(e) => setChapterHeading(e.currentTarget.value)}
       />
       <hr />
@@ -114,6 +107,7 @@ export default function Profile(props: Props) {
       <label htmlFor="chapterContent">Chapter :</label>
       <textarea
         id="chapterContent"
+        value={chapterContent}
         onChange={(e) => setChapterContent(e.currentTarget.value)}
       />
       <hr />
