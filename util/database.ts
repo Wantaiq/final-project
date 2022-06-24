@@ -125,7 +125,7 @@ export async function deleteSessionByToken(token: string) {
 export async function getUserProfileByUsername(username: string) {
   if (!username) return undefined;
   const [userProfile] =
-    await sql`SELECT users.id, users.username, user_profiles.bio
+    await sql`SELECT users.id, users.username, user_profiles.bio, user_profiles.user_id
   FROM users, user_profiles
   WHERE users.username = ${username}
   AND user_profiles.user_id = users.id`;
@@ -175,6 +175,17 @@ export async function getAllUserStoriesByUserId(userId: number) {
     ORDER BY id ASC`;
   return camelcaseKeys(stories);
 }
+
+export async function getAllStoryChaptersByStoryId(storyId: number) {
+  const chapters =
+    await sql`SELECT stories.title, chapters.heading, chapters.content, chapters.sort_position
+    FROM stories, chapters
+    WHERE stories.id= ${storyId}
+    AND chapters.story_id = stories.id
+    ORDER BY sort_position ASC`;
+  return chapters;
+}
+
 export async function deleteStory(storyId: number) {
   const [deletedStory] = await sql<[DeletedStory]>`
   DELETE FROM stories where id = ${storyId} RETURNING id`;
