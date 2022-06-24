@@ -129,7 +129,6 @@ export async function getUserProfileByUsername(username: string) {
   FROM users, user_profiles
   WHERE users.username = ${username}
   AND user_profiles.user_id = users.id`;
-  console.log(userProfile);
   return camelcaseKeys(userProfile);
 }
 
@@ -166,8 +165,15 @@ export async function createChapter(
   const [storyChapter] =
     await sql`INSERT INTO chapters (story_id, heading, content, sort_position) VALUES(${storyId},${heading}, ${content}, ${sortPosition})
     RETURNING * `;
-  console.log(storyChapter);
   return camelcaseKeys(storyChapter);
+}
+
+export async function getAllUserStoriesByUserId(userId: number) {
+  const stories = await sql`SELECT id, title, description
+    FROM stories
+    WHERE user_id = ${userId}
+    ORDER BY id ASC`;
+  return camelcaseKeys(stories);
 }
 export async function deleteStory(storyId: number) {
   const [deletedStory] = await sql<[DeletedStory]>`

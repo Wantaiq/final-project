@@ -2,6 +2,7 @@ import { GetServerSidePropsContext } from 'next';
 import { useState } from 'react';
 import { createCsrfToken } from '../util/auth';
 import {
+  getAllUserStoriesByUserId,
   getCsrfSeedByValidUserToken,
   getUserProfileByValidSessionToken,
   UserProfile,
@@ -45,7 +46,6 @@ export default function Profile(props: Props) {
     });
     const data: { newStory: UserStory } = await response.json();
     setNewStory(data.newStory);
-    // setUserStories((prevState) => [...prevState, data.newStory]);
   }
 
   async function createNewChapterHandler() {
@@ -63,21 +63,23 @@ export default function Profile(props: Props) {
     const data = await response.json();
     setNewChapters((prevChapters) => [...prevChapters, data.newChapter]);
   }
-  // async function deleteStoryHandler(storyId: number) {
-  //   const response = await fetch('http://localhost:3000/api/stories', {
-  //     method: 'DELETE',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify({
-  //       csrfToken: props.csrfToken,
-  //       storyId,
-  //     }),
-  //   });
-  //   const { id } = await response.json();
-  //   setUserStories((prevState) => prevState.filter((story) => story.id !== id));
-  // }
+
+  async function deleteStoryHandler(storyId: number) {
+    const response = await fetch('http://localhost:3000/api/stories', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        csrfToken: props.csrfToken,
+        storyId,
+      }),
+    });
+    const { id } = await response.json();
+    setUserStories((prevState) => prevState.filter((story) => story.id !== id));
+  }
 
   return (
     <>
+      {/* Profile */}
       <h1>Username : {props.userProfile.username}</h1>
       <h2>Bio : {props.userProfile.bio}</h2>
       <p>Update profile</p>
@@ -116,6 +118,18 @@ export default function Profile(props: Props) {
       />
       <hr />
       <button onClick={() => createNewChapterHandler()}>Create chapter</button>
+      {/* display stories */}
+      {userStories.map((story) => {
+        return (
+          <div key={`storyId-${story.id}`}>
+            <h1>{story.title}</h1>
+            <p>{story.description}</p>
+            <button onClick={() => deleteStoryHandler(story.id)}>
+              Delete story
+            </button>
+          </div>
+        );
+      })}
     </>
   );
 }
@@ -125,6 +139,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     context.req.cookies.sessionToken,
   );
   if (userProfile) {
+    const userStories = await getAllUserStoriesByUserId(userProfile.userId);
     const { csrfSeed } = await getCsrfSeedByValidUserToken(
       context.req.cookies.sessionToken,
     );
@@ -133,6 +148,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       props: {
         userProfile,
         csrfToken,
+        userStories,
       },
     };
   }
