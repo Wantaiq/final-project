@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { verifyCsrfToken } from '../../util/auth';
+import { verifyCsrfToken } from '../../../util/auth';
 import {
   createUserStory,
   deleteStory,
   getCsrfSeedByValidUserToken,
-} from '../../util/database';
+} from '../../../util/database';
 
 export default async function storiesHandler(
   req: NextApiRequest,
@@ -24,13 +24,8 @@ export default async function storiesHandler(
     }
     if (req.method === 'POST') {
       const newStory = await createUserStory(
-        req.body.chapterOne,
-        req.body.chapterTwo,
-        req.body.chapterThree,
-        req.body.chapterFour,
-        req.body.chapterFive,
-        req.body.chapterSix,
         req.body.title,
+        req.body.description,
         req.body.userId,
       );
       res.status(200).json({ newStory });

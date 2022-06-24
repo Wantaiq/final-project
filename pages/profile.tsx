@@ -4,7 +4,6 @@ import { createCsrfToken } from '../util/auth';
 import {
   getCsrfSeedByValidUserToken,
   getUserProfileByValidSessionToken,
-  getUserStoriesByUserId,
   UserProfile,
   UserStory,
 } from '../util/database';
@@ -15,15 +14,23 @@ type Props = {
   userStories: UserStory[];
 };
 
+type Chapters = {
+  id: number;
+  story_id: number;
+  heading: 'string';
+  content: 'string';
+  sortPosition: number;
+};
+
 export default function Profile(props: Props) {
   const [userStories, setUserStories] = useState(props.userStories);
-  const [newUserStoryTitle, setNewUserStoryTitle] = useState('');
-  const [chapterOneUserInput, setChapterOneUserInput] = useState('');
-  const [chapterTwoUserInput, setChapterTwoUserInput] = useState('');
-  const [chapterThreeUserInput, setChapterThreeUserInput] = useState('');
-  const [chapterFourUserInput, setChapterFourUserInput] = useState('');
-  const [chapterFiveUserInput, setChapterFiveUserInput] = useState('');
-  const [chapterSixUserInput, setChapterSixUserInput] = useState('');
+  const [newChapters, setNewChapters] = useState<Chapters[] | []>([]);
+  const [storyTitle, setStoryTitle] = useState('');
+  const [chapterHeading, setChapterHeading] = useState('');
+  const [chapterNumber, setChapterNumber] = useState('');
+  const [chapterContent, setChapterContent] = useState('');
+  const [storyDescription, setStoryDescription] = useState('');
+  const [newStory, setNewStory] = useState<UserStory | undefined>(undefined);
 
   async function createStoryHandler() {
     const response = await fetch('http://localhost:3000/api/stories', {
@@ -31,31 +38,43 @@ export default function Profile(props: Props) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         csrfToken: props.csrfToken,
-        chapterOne: chapterOneUserInput,
-        chapterTwo: chapterTwoUserInput,
-        chapterThree: chapterThreeUserInput,
-        chapterFour: chapterFourUserInput,
-        chapterFive: chapterFiveUserInput,
-        chapterSix: chapterSixUserInput,
-        title: newUserStoryTitle,
+        title: storyTitle,
+        description: storyDescription,
         userId: props.userProfile.userId,
       }),
     });
-    const data = await response.json();
-    setUserStories((prevState) => [...prevState, data.newStory]);
+    const data: { newStory: UserStory } = await response.json();
+    setNewStory(data.newStory);
+    // setUserStories((prevState) => [...prevState, data.newStory]);
   }
-  async function deleteStoryHandler(storyId: number) {
-    const response = await fetch('http://localhost:3000/api/stories', {
-      method: 'DELETE',
+
+  async function createNewChapterHandler() {
+    const response = await fetch('http://localhost:3000/api/stories/chapters', {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         csrfToken: props.csrfToken,
-        storyId,
+        storyId: newStory?.id,
+        heading: chapterHeading,
+        content: chapterContent,
+        sortPosition: chapterNumber,
       }),
     });
-    const { id } = await response.json();
-    setUserStories((prevState) => prevState.filter((story) => story.id !== id));
+    const data = await response.json();
+    setNewChapters((prevChapters) => [...prevChapters, data.newChapter]);
   }
+  // async function deleteStoryHandler(storyId: number) {
+  //   const response = await fetch('http://localhost:3000/api/stories', {
+  //     method: 'DELETE',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify({
+  //       csrfToken: props.csrfToken,
+  //       storyId,
+  //     }),
+  //   });
+  //   const { id } = await response.json();
+  //   setUserStories((prevState) => prevState.filter((story) => story.id !== id));
+  // }
 
   return (
     <>
@@ -67,60 +86,36 @@ export default function Profile(props: Props) {
       <input
         id="title"
         maxLength={50}
-        onChange={(e) => setNewUserStoryTitle(e.currentTarget.value)}
+        onChange={(e) => setStoryTitle(e.currentTarget.value)}
       />
-      <label htmlFor="chapterOne">Chapter One :</label>
+      <label htmlFor="description">Description :</label>
       <textarea
-        id="chapterOne"
-        onChange={(e) => setChapterOneUserInput(e.currentTarget.value)}
+        id="description"
+        onChange={(e) => setStoryDescription(e.currentTarget.value)}
       />
-      <label htmlFor="chapterTwo">Chapter Two :</label>
+      <button onClick={() => createStoryHandler()}>Create story</button>
+      <hr />
+      <label htmlFor="chapterNumber">Chapter number :</label>
+      <input
+        id="chapterNumber"
+        type="number"
+        onChange={(e) => setChapterNumber(e.currentTarget.value)}
+      />
+      <hr />
+      <label htmlFor="chapterHeading">Chapter heading :</label>
+      <input
+        id="chapterHeading"
+        onChange={(e) => setChapterHeading(e.currentTarget.value)}
+      />
+      <hr />
+
+      <label htmlFor="chapterContent">Chapter :</label>
       <textarea
-        id="chapterTwo"
-        onChange={(e) => setChapterTwoUserInput(e.currentTarget.value)}
+        id="chapterContent"
+        onChange={(e) => setChapterContent(e.currentTarget.value)}
       />
-      <label htmlFor="chapterThree">Chapter Three :</label>
-      <textarea
-        id="chapterThree"
-        onChange={(e) => setChapterThreeUserInput(e.currentTarget.value)}
-      />
-      <label htmlFor="chapterFour">Chapter Four :</label>
-      <textarea
-        id="chapterFour"
-        onChange={(e) => setChapterFourUserInput(e.currentTarget.value)}
-      />
-      <label htmlFor="chapterFive">Chapter Five :</label>
-      <textarea
-        id="chapterFive"
-        onChange={(e) => setChapterFiveUserInput(e.currentTarget.value)}
-      />
-      <label htmlFor="chapterSix">Chapter Six :</label>
-      <textarea
-        id="chapterSix"
-        onChange={(e) => setChapterSixUserInput(e.currentTarget.value)}
-      />
-      <button onClick={() => createStoryHandler()}>Create new story</button>
-      {/* Display stories */}
-      {userStories.length === 0 ? (
-        <p>You don't have any stories</p>
-      ) : (
-        userStories.map((story) => {
-          return (
-            <div key={`userStoryId-${story.id}`}>
-              <h2>Story : {story.title}</h2>
-              <p> Chapter One: {story.chapterOne}</p>
-              <p>Chapter Two: {story.chapterTwo}</p>
-              <p>Chapter Three : {story.chapterThree}</p>
-              <p>Chapter Four: {story.chapterFour}</p>
-              <p>Chapter Five:{story.chapterFive}</p>
-              <p>Chapter Six:{story.chapterSix}</p>
-              <button onClick={() => deleteStoryHandler(story.id)}>
-                Delete Story
-              </button>
-            </div>
-          );
-        })
-      )}
+      <hr />
+      <button onClick={() => createNewChapterHandler()}>Create chapter</button>
     </>
   );
 }
@@ -134,12 +129,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       context.req.cookies.sessionToken,
     );
     const csrfToken = createCsrfToken(csrfSeed);
-    const userStories = await getUserStoriesByUserId(userProfile.userId);
     return {
       props: {
         userProfile,
         csrfToken,
-        userStories: userStories,
       },
     };
   }

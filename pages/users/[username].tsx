@@ -2,7 +2,7 @@ import { GetServerSidePropsContext } from 'next';
 import {
   getUserIdByUsername,
   getUserProfileByUserId,
-  getUserStoriesByUserId,
+  getUserProfileByUsername,
   UserProfile,
   UserStory,
 } from '../../util/database';
@@ -16,38 +16,19 @@ export default function Profile(props: Props) {
     <>
       <h1>Username : {props.userProfileInfo.username}</h1>
       <h2>Bio : {props.userProfileInfo.bio}</h2>
-      {props.userStories.map((story) => {
-        return (
-          <div key={`userStoryId-${story.id}`}>
-            <h2>Story : {story.title}</h2>
-            <p> Chapter One: {story.chapterOne}</p>
-            <p>Chapter Two: {story.chapterTwo}</p>
-            <p>Chapter Three : {story.chapterThree}</p>
-            <p>Chapter Four: {story.chapterFour}</p>
-            <p>Chapter Five:{story.chapterFive}</p>
-            <p>Chapter Six:{story.chapterSix}</p>
-          </div>
-        );
-      })}
     </>
   );
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (typeof context.query.username !== 'string') return { props: {} };
-  const id: number | undefined = await getUserIdByUsername(
+  const userProfileInfo = (await getUserProfileByUsername(
     context.query.username,
-  );
-  if (id) {
-    const userProfileInfo = (await getUserProfileByUserId(id)) as
-      | UserProfile
-      | undefined;
-    if (userProfileInfo) {
-      const userStories = await getUserStoriesByUserId(userProfileInfo.userId);
-      return {
-        props: { userProfileInfo: userProfileInfo, userStories: userStories },
-      };
-    }
+  )) as UserProfile | undefined;
+  if (userProfileInfo) {
+    return {
+      props: { userProfileInfo: userProfileInfo },
+    };
   }
 
   return {

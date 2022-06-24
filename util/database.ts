@@ -37,12 +37,7 @@ export type UserProfile = {
 export type UserStory = {
   id: number;
   title: string;
-  chapterOne: string;
-  chapterTwo: string;
-  chapterThree: string;
-  chapterFour: string;
-  chapterFive: string;
-  chapterSix: string;
+  description: string;
 };
 
 type Seed = {
@@ -127,17 +122,14 @@ export async function deleteSessionByToken(token: string) {
   return session && camelcaseKeys(session);
 }
 
-export async function getUserIdByUsername(username: string | undefined) {
+export async function getUserProfileByUsername(username: string) {
   if (!username) return undefined;
-  const [userId] = await sql`SELECT id FROM users WHERE username = ${username}`;
-  return camelcaseKeys(userId.id);
-}
-export async function getUserProfileByUserId(userId: number) {
-  const [userProfile] = await sql<[UserProfile]>`
-    SELECT users.username, user_profiles.bio, user_profiles.user_id
-    FROM users, user_profiles
-    WHERE users.id = ${userId}
-    AND users.id = user_profiles.id`;
+  const [userProfile] =
+    await sql`SELECT users.id, users.username, user_profiles.bio
+  FROM users, user_profiles
+  WHERE users.username = ${username}
+  AND user_profiles.user_id = users.id`;
+  console.log(userProfile);
   return camelcaseKeys(userProfile);
 }
 
@@ -155,29 +147,28 @@ export async function getUserProfileByValidSessionToken(token: string) {
   return camelcaseKeys(user);
 }
 
-export async function getUserStoriesByUserId(userId: number) {
-  const stories = await sql<
-    [UserStory]
-  >`SELECT id, title, chapter_one, chapter_two, chapter_three, chapter_four, chapter_five, chapter_six FROM stories WHERE user_id = ${userId}`;
-  return stories;
-}
-
 export async function createUserStory(
   title: string,
-  chapterOne: string,
-  chapterTwo: string,
-  chapterThree: string,
-  chapterFour: string,
-  chapterFive: string,
-  chapterSix: string,
-  userId: number,
+  description: string,
+  userId: string,
 ) {
-  const [newStory] = await sql<
-    [UserStory]
-  >`INSERT INTO stories (title, chapter_one, chapter_two, chapter_three,chapter_four, chapter_five, chapter_six ,user_id) VALUES(${title}, ${chapterOne},${chapterTwo}, ${chapterThree}, ${chapterFour},${chapterFive}, ${chapterSix}, ${userId}) RETURNING id, title, chapter_one, chapter_two, chapter_three, chapter_four, chapter_five, chapter_six, user_id`;
-  return camelcaseKeys(newStory);
+  const [story] =
+    await sql`INSERT INTO stories (title, description, user_id)VALUES (${title}, ${description}, ${userId}) RETURNING id, title, description `;
+  return camelcaseKeys(story);
 }
 
+export async function createChapter(
+  storyId: number,
+  heading: string,
+  content: string,
+  sortPosition: number,
+) {
+  const [storyChapter] =
+    await sql`INSERT INTO chapters (story_id, heading, content, sort_position) VALUES(${storyId},${heading}, ${content}, ${sortPosition})
+    RETURNING * `;
+  console.log(storyChapter);
+  return camelcaseKeys(storyChapter);
+}
 export async function deleteStory(storyId: number) {
   const [deletedStory] = await sql<[DeletedStory]>`
   DELETE FROM stories where id = ${storyId} RETURNING id`;

@@ -12,7 +12,7 @@ import {
 import authenticateUser from '../../util/middleware/authentication';
 import { authenticationSchema } from '../../util/schema/authentication';
 
-export type ResponseBody =
+type ResponseBody =
   | {
       user: {
         id: number;
