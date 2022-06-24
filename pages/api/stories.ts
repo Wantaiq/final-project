@@ -33,7 +33,6 @@ export default async function storiesHandler(
         req.body.title,
         req.body.userId,
       );
-      console.log(newStory);
       res.status(200).json({ newStory });
       return;
     }

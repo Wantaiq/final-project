@@ -29,8 +29,8 @@ export type User = {
 };
 
 export type UserProfile = {
-  username: string;
   bio: string | null;
+  username: string;
   userId: number;
 };
 
@@ -47,6 +47,10 @@ export type UserStory = {
 
 type Seed = {
   csrfSeed: string;
+};
+
+type UserId = {
+  id: number;
 };
 
 type UserWithHashedPassword = User & {
@@ -91,11 +95,11 @@ export async function getUserWithHashedPassword(username: string) {
   return camelcaseKeys(user);
 }
 
-export async function createUserProfile(username: string, userId: number) {
+export async function createUserProfile(userId: number) {
   const [userProfile] = await sql<[UserProfile]>`
-  INSERT INTO user_profiles(username, user_id)
-    VALUES(${username}, ${userId})
-    RETURNING username, bio, user_id
+  INSERT INTO user_profiles(user_id)
+    VALUES(${userId})
+    RETURNING bio, user_id
     `;
   return camelcaseKeys(userProfile);
 }
@@ -127,26 +131,30 @@ export async function deleteSessionByToken(token: string) {
   return session && camelcaseKeys(session);
 }
 
-export async function getUserProfileByUsername(username: string) {
-  try {
-    const [userProfile] = await sql<[UserProfile]>`
-    SELECT username, bio, user_id
-    FROM user_profiles
-    WHERE username = ${username}`;
-    return camelcaseKeys(userProfile);
-  } catch (error) {
-    return error && undefined;
-  }
+export async function getUserIdByUsername(username: string) {
+  const [userId] = await sql<
+    [UserId]
+  >`SELECT id FROM users WHERE username = ${username}`;
+  return camelcaseKeys(userId);
+}
+export async function getUserProfileByUserId(userId: number) {
+  const [userProfile] = await sql<[UserProfile]>`
+    SELECT users.username, user_profiles.bio, user_profiles.user_id
+    FROM users, user_profiles
+    WHERE users.id = ${userId}
+    AND users.id = user_profiles.id`;
+  return camelcaseKeys(userProfile);
 }
 
 export async function getUserProfileByValidSessionToken(token: string) {
   if (!token) return undefined;
   const [user] = await sql<[UserProfile]>`
-  SELECT user_profiles.username, user_profiles.bio, user_profiles.user_id
-  FROM user_profiles, sessions
+  SELECT users.username, user_profiles.bio, user_profiles.user_id
+  FROM users, user_profiles, sessions
   WHERE sessions.token = ${token}
   AND sessions.expiry_timestamp > now()
   AND sessions.user_id = user_profiles.id
+  AND sessions.user_id = users.id
   `;
   await deleteExpiredSession();
   return camelcaseKeys(user);

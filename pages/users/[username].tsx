@@ -1,6 +1,7 @@
 import { GetServerSidePropsContext } from 'next';
 import {
-  getUserProfileByUsername,
+  getUserIdByUsername,
+  getUserProfileByUserId,
   getUserStoriesByUserId,
   UserProfile,
   UserStory,
@@ -34,9 +35,10 @@ export default function Profile(props: Props) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (typeof context.query.username !== 'string') return { props: {} };
-  const userProfileInfo = (await getUserProfileByUsername(
-    context.query.username,
-  )) as UserProfile | undefined;
+  const { id } = await getUserIdByUsername(context.query.username);
+  const userProfileInfo = (await getUserProfileByUserId(id)) as
+    | UserProfile
+    | undefined;
   if (userProfileInfo) {
     const userStories = await getUserStoriesByUserId(userProfileInfo.userId);
     return {

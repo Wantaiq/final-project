@@ -16,7 +16,6 @@ export type ResponseBody =
   | {
       user: {
         id: number;
-        username: string;
       };
     }
   | { error: { message: string }[] };
@@ -35,7 +34,7 @@ async function registrationHandler(
     req.body.username,
     passwordHash,
   );
-  const userProfile = await createUserProfile(newUser.username, newUser.id);
+  const userProfile = await createUserProfile(newUser.id);
   const token = crypto.randomBytes(64).toString('base64');
 
   const csrfSeed = createCsrfSeed();
@@ -44,7 +43,7 @@ async function registrationHandler(
   res
     .setHeader('Set-Cookie', serializedCookie)
     .status(200)
-    .json({ user: { id: userProfile.userId, username: userProfile.username } });
+    .json({ user: { id: userProfile.userId } });
 }
 
 export default authenticateUser(authenticationSchema, registrationHandler);

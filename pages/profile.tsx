@@ -42,7 +42,6 @@ export default function Profile(props: Props) {
       }),
     });
     const data = await response.json();
-    console.log(data);
     setUserStories((prevState) => [...prevState, data.newStory]);
   }
   async function deleteStoryHandler(storyId: number) {
