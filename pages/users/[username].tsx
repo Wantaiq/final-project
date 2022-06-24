@@ -35,15 +35,19 @@ export default function Profile(props: Props) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (typeof context.query.username !== 'string') return { props: {} };
-  const { id } = await getUserIdByUsername(context.query.username);
-  const userProfileInfo = (await getUserProfileByUserId(id)) as
-    | UserProfile
-    | undefined;
-  if (userProfileInfo) {
-    const userStories = await getUserStoriesByUserId(userProfileInfo.userId);
-    return {
-      props: { userProfileInfo: userProfileInfo, userStories: userStories },
-    };
+  const id: number | undefined = await getUserIdByUsername(
+    context.query.username,
+  );
+  if (id) {
+    const userProfileInfo = (await getUserProfileByUserId(id)) as
+      | UserProfile
+      | undefined;
+    if (userProfileInfo) {
+      const userStories = await getUserStoriesByUserId(userProfileInfo.userId);
+      return {
+        props: { userProfileInfo: userProfileInfo, userStories: userStories },
+      };
+    }
   }
 
   return {

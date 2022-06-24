@@ -49,10 +49,6 @@ type Seed = {
   csrfSeed: string;
 };
 
-type UserId = {
-  id: number;
-};
-
 type UserWithHashedPassword = User & {
   password: string;
 };
@@ -131,11 +127,10 @@ export async function deleteSessionByToken(token: string) {
   return session && camelcaseKeys(session);
 }
 
-export async function getUserIdByUsername(username: string) {
-  const [userId] = await sql<
-    [UserId]
-  >`SELECT id FROM users WHERE username = ${username}`;
-  return camelcaseKeys(userId);
+export async function getUserIdByUsername(username: string | undefined) {
+  if (!username) return undefined;
+  const [userId] = await sql`SELECT id FROM users WHERE username = ${username}`;
+  return camelcaseKeys(userId.id);
 }
 export async function getUserProfileByUserId(userId: number) {
   const [userProfile] = await sql<[UserProfile]>`
@@ -164,7 +159,6 @@ export async function getUserStoriesByUserId(userId: number) {
   const stories = await sql<
     [UserStory]
   >`SELECT id, title, chapter_one, chapter_two, chapter_three, chapter_four, chapter_five, chapter_six FROM stories WHERE user_id = ${userId}`;
-  console.log(stories);
   return stories;
 }
 
@@ -178,14 +172,10 @@ export async function createUserStory(
   chapterSix: string,
   userId: number,
 ) {
-  try {
-    const [newStory] = await sql<
-      [UserStory]
-    >`INSERT INTO stories (title, chapter_one, chapter_two, chapter_three,chapter_four, chapter_five, chapter_six ,user_id) VALUES(${title}, ${chapterOne},${chapterTwo}, ${chapterThree}, ${chapterFour},${chapterFive}, ${chapterSix}, ${userId}) RETURNING id, title, chapter_one, chapter_two, chapter_three, chapter_four, chapter_five, chapter_six, user_id`;
-    return camelcaseKeys(newStory);
-  } catch (error) {
-    console.log(error);
-  }
+  const [newStory] = await sql<
+    [UserStory]
+  >`INSERT INTO stories (title, chapter_one, chapter_two, chapter_three,chapter_four, chapter_five, chapter_six ,user_id) VALUES(${title}, ${chapterOne},${chapterTwo}, ${chapterThree}, ${chapterFour},${chapterFive}, ${chapterSix}, ${userId}) RETURNING id, title, chapter_one, chapter_two, chapter_three, chapter_four, chapter_five, chapter_six, user_id`;
+  return camelcaseKeys(newStory);
 }
 
 export async function deleteStory(storyId: number) {
