@@ -38,7 +38,6 @@ export default function Profile(props: Props) {
     });
     const data: { newStory: UserStory } = await response.json();
     setUserStories((prevStories) => [...prevStories, data.newStory]);
-    console.log(data);
     setNewStory(data.newStory);
   }
 

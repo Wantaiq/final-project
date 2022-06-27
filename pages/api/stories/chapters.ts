@@ -32,4 +32,5 @@ export default async function chaptersHandler(
       return;
     }
   }
+  res.status(405).json({ error: [{ message: 'Method not allowed' }] });
 }

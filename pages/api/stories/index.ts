@@ -36,4 +36,5 @@ export default async function storiesHandler(
       res.status(200).json({ id });
     }
   }
+  res.status(403).json({ error: [{ message: 'Method not allowed' }] });
 }

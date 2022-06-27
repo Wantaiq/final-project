@@ -8,6 +8,10 @@ import authenticateUser from '../../util/middleware/authentication';
 import { authenticationSchema } from '../../util/schema/authentication';
 
 async function loginHandler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    res.status(403).json({ error: [{ message: 'Method not allowed' }] });
+    return;
+  }
   const userWithHash = await getUserWithHashedPassword(req.body.username);
   if (!userWithHash) {
     res

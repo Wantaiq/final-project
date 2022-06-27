@@ -23,6 +23,10 @@ async function registrationHandler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseBody>,
 ) {
+  if (req.method !== 'POST') {
+    res.status(403).json({ error: [{ message: 'Method not allowed' }] });
+    return;
+  }
   if (await getUserByUsername(req.body.username)) {
     res
       .status(400)
