@@ -19,5 +19,5 @@ export default async function profileHandler(
     res.status(405).json({ error: [{ message: 'Unauthorized' }] });
     return;
   }
-  res.status(200).json({ userProfile });
+  res.status(200).json({ username: userProfile.username });
 }

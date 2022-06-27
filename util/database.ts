@@ -29,10 +29,15 @@ export type User = {
 };
 
 export type UserProfile = {
-  id: number;
-  username: string;
   bio: string | null;
-  user_id: number;
+  username: string;
+  userId: number;
+};
+
+export type UserStory = {
+  id: number;
+  title: string;
+  description: string;
 };
 
 type Seed = {
@@ -46,6 +51,10 @@ type UserWithHashedPassword = User & {
 export type Session = {
   id: number;
   token: string;
+};
+
+type DeletedStory = {
+  id: number;
 };
 
 export async function createUserWithHashedPassword(
@@ -77,11 +86,11 @@ export async function getUserWithHashedPassword(username: string) {
   return camelcaseKeys(user);
 }
 
-export async function createUserProfile(username: string, userId: number) {
+export async function createUserProfile(userId: number) {
   const [userProfile] = await sql<[UserProfile]>`
-  INSERT INTO user_profiles(username, user_id)
-    VALUES(${username}, ${userId})
-    RETURNING username, bio, user_id
+  INSERT INTO user_profiles(user_id)
+    VALUES(${userId})
+    RETURNING bio, user_id
     `;
   return camelcaseKeys(userProfile);
 }
@@ -114,28 +123,73 @@ export async function deleteSessionByToken(token: string) {
 }
 
 export async function getUserProfileByUsername(username: string) {
-  try {
-    const [userProfile] = await sql`
-    SELECT username, bio, user_id
-    FROM user_profiles
-    WHERE username = ${username}`;
-    return camelcaseKeys(userProfile);
-  } catch (error) {
-    return error && undefined;
-  }
+  if (!username) return undefined;
+  const [userProfile] =
+    await sql`SELECT users.id, users.username, user_profiles.bio, user_profiles.user_id
+  FROM users, user_profiles
+  WHERE users.username = ${username}
+  AND user_profiles.user_id = users.id`;
+  return camelcaseKeys(userProfile);
 }
 
 export async function getUserProfileByValidSessionToken(token: string) {
   if (!token) return undefined;
-  const [user] = await sql`
-  SELECT user_profiles.username, user_profiles.bio, user_profiles.user_id
-  FROM user_profiles, sessions
+  const [user] = await sql<[UserProfile]>`
+  SELECT users.username, user_profiles.bio, user_profiles.user_id
+  FROM users, user_profiles, sessions
   WHERE sessions.token = ${token}
   AND sessions.expiry_timestamp > now()
   AND sessions.user_id = user_profiles.id
+  AND sessions.user_id = users.id
   `;
   await deleteExpiredSession();
   return camelcaseKeys(user);
+}
+
+export async function createUserStory(
+  title: string,
+  description: string,
+  userId: string,
+) {
+  const [story] =
+    await sql`INSERT INTO stories (title, description, user_id)VALUES (${title}, ${description}, ${userId}) RETURNING id, title, description `;
+  return camelcaseKeys(story);
+}
+
+export async function createChapter(
+  storyId: number,
+  heading: string,
+  content: string,
+  sortPosition: number,
+) {
+  const [storyChapter] =
+    await sql`INSERT INTO chapters (story_id, heading, content, sort_position) VALUES(${storyId},${heading}, ${content}, ${sortPosition})
+    RETURNING * `;
+  return camelcaseKeys(storyChapter);
+}
+
+export async function getAllUserStoriesByUserId(userId: number) {
+  const stories = await sql`SELECT id, title, description
+    FROM stories
+    WHERE user_id = ${userId}
+    ORDER BY id ASC`;
+  return camelcaseKeys(stories);
+}
+
+export async function getAllStoryChaptersByStoryId(storyId: number) {
+  const chapters =
+    await sql`SELECT stories.title, chapters.heading, chapters.content, chapters.sort_position
+    FROM stories, chapters
+    WHERE stories.id= ${storyId}
+    AND chapters.story_id = stories.id
+    ORDER BY sort_position ASC`;
+  return chapters;
+}
+
+export async function deleteStory(storyId: number) {
+  const [deletedStory] = await sql<[DeletedStory]>`
+  DELETE FROM stories where id = ${storyId} RETURNING id`;
+  return camelcaseKeys(deletedStory);
 }
 
 export async function getCsrfSeedByValidUserToken(token: string) {

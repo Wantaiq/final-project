@@ -6,5 +6,5 @@ export default function Home() {
   useEffect(() => {
     handleUserProfile();
   }, [handleUserProfile]);
-  return <h1>Hi</h1>;
+  return <h1>Howdy</h1>;
 }
