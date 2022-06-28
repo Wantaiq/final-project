@@ -3,6 +3,7 @@ import { verifyCsrfToken } from '../../../util/auth';
 import {
   createUserStory,
   deleteStory,
+  getAllStories,
   getCsrfSeedByValidUserToken,
 } from '../../../util/database';
 
@@ -34,7 +35,13 @@ export default async function storiesHandler(
     if (req.method === 'DELETE') {
       const { id } = await deleteStory(req.body.storyId);
       res.status(200).json({ id });
+      return;
     }
+  }
+  if (req.method === 'GET') {
+    const stories = await getAllStories();
+    res.status(200).json({ stories });
+    return;
   }
   res.status(403).json({ error: [{ message: 'Method not allowed' }] });
 }

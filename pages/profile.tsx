@@ -37,7 +37,7 @@ export default function Profile(props: Props) {
       }),
     });
     const data: { newStory: UserStory } = await response.json();
-    setUserStories((prevStories) => [...prevStories, data.newStory]);
+    setUserStories((prevStories) => [data.newStory, ...prevStories]);
     setNewStory(data.newStory);
   }
 

@@ -168,11 +168,20 @@ export async function createChapter(
   return camelcaseKeys(storyChapter);
 }
 
+export async function getAllStories() {
+  const stories =
+    await sql`SELECT users.username, stories.title, stories.description, TO_CHAR(stories.timestamp, 'YYYY-MM-DD-HH24.MI') as time_created
+    FROM users, stories
+    WHERE users.id = stories.user_id
+    ORDER BY stories.id DESC`;
+  return camelcaseKeys(stories);
+}
+
 export async function getAllUserStoriesByUserId(userId: number) {
-  const stories = await sql`SELECT id, title, description
+  const stories = await sql`SELECT id, title
     FROM stories
     WHERE user_id = ${userId}
-    ORDER BY id ASC`;
+    ORDER BY id DESC`;
   return camelcaseKeys(stories);
 }
 

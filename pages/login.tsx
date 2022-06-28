@@ -48,8 +48,8 @@ export default function Login() {
       onSubmit={handleSubmit(handleUserLogin)}
       className="flex justify-center h-[40%] items-center"
     >
-      <div className="space-y-6">
-        <div className="flex flex-col w-fit justify-center items-center space-y-2">
+      <div className="space-y-8 flex flex-col justify-center items-center">
+        <div className="flex flex-col w-fit justify-center items-center space-y-3">
           <label
             htmlFor="username"
             className="font-bold text-lg tracking-wider"
@@ -71,7 +71,7 @@ export default function Login() {
             </p>
           ) : null}
         </div>
-        <div className="flex flex-col w-fit justify-center items-center space-y-2">
+        <div className="flex flex-col w-fit justify-center items-center space-y-3">
           <label
             htmlFor="password"
             className="font-bold text-lg tracking-wider"
@@ -83,6 +83,10 @@ export default function Login() {
               required: {
                 value: true,
                 message: 'This field is required',
+              },
+              minLength: {
+                value: 5,
+                message: 'Please choose password longer than 5 characters',
               },
             })}
             id="password"
@@ -98,7 +102,9 @@ export default function Login() {
               {loginError}
             </p>
           ) : null}
-          <button className="bg-amber-600 py-[0.6em] px-[2em] rounded font-medium text-lg tracking-wider">
+        </div>
+        <div>
+          <button className="bg-amber-600 py-[0.4em] px-[1.5em] rounded font-medium text-lg tracking-wider">
             Login
           </button>
         </div>
