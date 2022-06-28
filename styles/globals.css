@@ -1,16 +1,22 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-* {
-  box-sizing: border-box;
+@layer base {
+  #__next {
+    height: 100vh;
+  }
+  body {
+    @apply bg-[#1c1c1c] text-slate-200;
+  }
+  .text-shadow {
+    text-shadow: 1px 1px #ffffff;
+  }
+  input {
+    @apply text-[#1c1c1c] font-medium tracking-wide rounded-full py-[.3em] indent-4;
+  }
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+  }
 }

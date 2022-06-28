@@ -183,7 +183,7 @@ export async function getAllStoryChaptersByStoryId(storyId: number) {
     WHERE stories.id= ${storyId}
     AND chapters.story_id = stories.id
     ORDER BY sort_position ASC`;
-  return chapters;
+  return chapters.map((chapter) => camelcaseKeys(chapter));
 }
 
 export async function deleteStory(storyId: number) {

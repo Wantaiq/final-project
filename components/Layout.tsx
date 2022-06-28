@@ -12,21 +12,19 @@ export default function Layout(props: Props) {
   }, [handleUserProfile]);
   return (
     <>
-      <header>
-        <nav>
+      <header className="bg-transparent px-20 py-6 font-bold tracking-wider text-xl w-[50%] mx-auto">
+        <nav className="flex justify-between">
           <Link href="/">Home</Link>
-          {userProfile && <p>{userProfile}</p>}
-          {!userProfile && (
-            <>
+          {!userProfile ? (
+            <div className="space-x-8">
               <Link href="/login">Login</Link>
               <Link href="/register">Register</Link>
-            </>
-          )}
-          {userProfile && (
-            <>
-              <Link href="/profile">Profile</Link>
+            </div>
+          ) : (
+            <div className="space-x-8">
+              <Link href="/profile">{userProfile}</Link>
               <Link href="/logout">Logout</Link>
-            </>
+            </div>
           )}
         </nav>
       </header>
