@@ -1,22 +1,44 @@
 import { GetServerSidePropsContext } from 'next';
+import Link from 'next/link';
 import { getAllStories } from '../../util/database';
 
 type Props = {
   stories: {
+    id: number;
     username: string;
     title: string;
     description: string;
-    timestamp: string;
   }[];
 };
 export default function Stories(props: Props) {
-  return <h1>Hi</h1>;
+  return (
+    <div className="w-[75%] mx-auto mt-20">
+      <div className="grid grid-cols-5 gap-6">
+        {props.stories.map((story) => {
+          return (
+            <div key={`storyId-${story.id}`} className="border-2 rounded p-4">
+              <h1 className="mb-4">{story.title}</h1>
+              <h2 className="border-b-2 mb-4 pb-2">{story.description}</h2>
+              <p>
+                Written by:{' '}
+                <span>
+                  <Link href={`/authors/${story.username}`}>
+                    {story.username}
+                  </Link>
+                </span>
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const stories = await getAllStories();
   console.log(stories);
   return {
-    props: { random: 'random' },
+    props: { stories },
   };
 }

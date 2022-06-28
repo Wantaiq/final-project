@@ -170,7 +170,7 @@ export async function createChapter(
 
 export async function getAllStories() {
   const stories =
-    await sql`SELECT users.username, stories.title, stories.description, TO_CHAR(stories.timestamp, 'YYYY-MM-DD-HH24.MI') as time_created
+    await sql`SELECT stories.id, users.username, stories.title, stories.description
     FROM users, stories
     WHERE users.id = stories.user_id
     ORDER BY stories.id DESC`;
