@@ -44,31 +44,65 @@ export default function Login() {
     }
   }
   return (
-    <form onSubmit={handleSubmit(handleUserLogin)}>
-      <label htmlFor="username">Username</label>
-      <input
-        {...register('username', {
-          required: {
-            value: true,
-            message: 'This field is required',
-          },
-        })}
-        id="username"
-      />
-      {errors.username ? <p>{errors.username.message}</p> : null}
-      <label htmlFor="password">Password</label>
-      <input
-        {...register('password', {
-          required: {
-            value: true,
-            message: 'This field is required',
-          },
-        })}
-        id="password"
-      />
-      {errors.password ? <p>{errors.password.message}</p> : null}
-      {loginError.length > 0 ? <p>{loginError}</p> : null}
-      <button>Login</button>
+    <form
+      onSubmit={handleSubmit(handleUserLogin)}
+      className="flex justify-center h-[40%] items-center"
+    >
+      <div className="space-y-6">
+        <div className="flex flex-col w-fit justify-center items-center space-y-2">
+          <label
+            htmlFor="username"
+            className="font-bold text-lg tracking-wider"
+          >
+            Username
+          </label>
+          <input
+            {...register('username', {
+              required: {
+                value: true,
+                message: 'This field is required',
+              },
+            })}
+            id="username"
+          />
+          {errors.username ? (
+            <p className="font-bold tracking-wide text-sm text-red-300">
+              {errors.username.message}
+            </p>
+          ) : null}
+        </div>
+        <div className="flex flex-col w-fit justify-center items-center space-y-2">
+          <label
+            htmlFor="password"
+            className="font-bold text-lg tracking-wider"
+          >
+            Password
+          </label>
+          <input
+            {...register('password', {
+              required: {
+                value: true,
+                message: 'This field is required',
+              },
+            })}
+            id="password"
+            type="password"
+          />
+          {errors.password ? (
+            <p className="font-bold tracking-wide text-sm text-red-300">
+              {errors.password.message}
+            </p>
+          ) : null}
+          {loginError.length > 0 ? (
+            <p className="font-bold tracking-wide text-sm text-red-300">
+              {loginError}
+            </p>
+          ) : null}
+          <button className="bg-amber-600 py-[0.6em] px-[2em] rounded font-medium text-lg tracking-wider">
+            Login
+          </button>
+        </div>
+      </div>
     </form>
   );
 }
