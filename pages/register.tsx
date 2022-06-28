@@ -37,39 +37,71 @@ export default function Register() {
     }
   }
   return (
-    <form onSubmit={handleSubmit(handleUserRegistration)}>
-      <label htmlFor="username">Username</label>
-      <input
-        id="username"
-        {...register('username', {
-          required: {
-            value: true,
-            message: 'This field is required',
-          },
-          minLength: {
-            value: 2,
-            message: 'Minimum number of characters is 2',
-          },
-        })}
-      />
-      {errors.username ? <p>{errors.username.message}</p> : null}
-      <label htmlFor="password">Password</label>
-      <input
-        id="password"
-        {...register('password', {
-          required: {
-            value: true,
-            message: 'This field is required',
-          },
-          minLength: {
-            value: 5,
-            message: 'Minimum number of characters is 5',
-          },
-        })}
-      />
-      {errors.password ? <p>{errors.password.message}</p> : null}
-      {registrationError.length > 0 ? <p>{registrationError}</p> : null}
-      <button>Register</button>
+    <form
+      onSubmit={handleSubmit(handleUserRegistration)}
+      className="flex justify-center h-[40%] items-center"
+    >
+      <div className="space-y-8 flex flex-col justify-center items-center">
+        <div className="flex flex-col w-fit justify-center items-center space-y-3">
+          <label
+            htmlFor="username"
+            className="font-bold text-lg tracking-wider"
+          >
+            Username
+          </label>
+          <input
+            {...register('username', {
+              required: {
+                value: true,
+                message: 'This field is required',
+              },
+            })}
+            id="username"
+          />
+          {errors.username ? (
+            <p className="font-bold tracking-wide text-sm text-red-300">
+              {errors.username.message}
+            </p>
+          ) : null}
+        </div>
+        <div className="flex flex-col w-fit justify-center items-center space-y-3">
+          <label
+            htmlFor="password"
+            className="font-bold text-lg tracking-wider"
+          >
+            Password
+          </label>
+          <input
+            {...register('password', {
+              required: {
+                value: true,
+                message: 'This field is required',
+              },
+              minLength: {
+                value: 5,
+                message: 'Please choose password longer than 5 characters',
+              },
+            })}
+            id="password"
+            type="password"
+          />
+          {errors.password ? (
+            <p className="font-bold tracking-wide text-sm text-red-300">
+              {errors.password.message}
+            </p>
+          ) : null}
+          {registrationError.length > 0 ? (
+            <p className="font-bold tracking-wide text-sm text-red-300">
+              {registrationError}
+            </p>
+          ) : null}
+        </div>
+        <div>
+          <button className="bg-amber-600 py-[0.4em] px-[1.5em] rounded font-medium text-lg tracking-wider">
+            Register
+          </button>
+        </div>
+      </div>
     </form>
   );
 }
