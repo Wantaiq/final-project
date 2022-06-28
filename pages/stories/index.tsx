@@ -17,7 +17,11 @@ export default function Stories(props: Props) {
         {props.stories.map((story) => {
           return (
             <div key={`storyId-${story.id}`} className="border-2 rounded p-4">
-              <h1 className="mb-4">{story.title}</h1>
+              <h1 className="mb-4">
+                <span>
+                  <Link href={`/stories/${story.id}`}>{story.title}</Link>
+                </span>
+              </h1>
               <h2 className="border-b-2 mb-4 pb-2">{story.description}</h2>
               <p>
                 Written by:{' '}
