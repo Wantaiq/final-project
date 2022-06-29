@@ -74,22 +74,72 @@ export default function Profile(props: Props) {
   return (
     <>
       {/* Profile */}
-      <h1>Username : {props.userProfile.username}</h1>
-      <h2>Bio : {props.userProfile.bio}</h2>
-      <p>Update profile</p>
+      <div className="p-20 w-[65%] border-b-2 mx-auto flex justify-between">
+        <div className="flex space-x-14">
+          <div className="flex flex-col space-y-4">
+            <div className="bg-white w-[175px] h-[175px] rounded-full" />
+            <button className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider">
+              Update profile
+            </button>
+          </div>
+          <div className="space-y-8 mt-6">
+            <h1 className="font-bold text-2xl tracking-wider text-amber-500">
+              {props.userProfile.username}
+            </h1>
+            <p className="">
+              <span className="font-bold text-3xl">
+                {props.userStories.length}
+              </span>{' '}
+              Stories
+            </p>
+          </div>
+        </div>
+        <div>
+          <h2 className="text-xl tracking-wide opacity-70">
+            {!props.userProfile.bio
+              ? `Mysterious person that loves to read and write stories`
+              : props.userProfile.bio}
+          </h2>
+        </div>
+      </div>
+      <div className="w-[65%] mx-auto flex justify-between px-44 py-6 border-b-2">
+        <div className="font-bold text-xl tracking-wide">
+          <p className="border-b-2 border-amber-600 pb-[0.2em]">
+            Latest stories
+          </p>
+        </div>
+        <div className="font-bold text-xl tracking-wide">Stories</div>
+        <div className="font-bold text-xl tracking-wide">Comments</div>
+      </div>
+      <div className="w-[65%] mx-auto flex justify-evenly px-14 py-8">
+        {props.userStories.slice(0, 4).map((story) => {
+          return (
+            <div
+              key={`storyId-${story.id}`}
+              className="border-2 w-[20%] px-6 py-12 rounded-lg"
+            >
+              <h1 className="font-bold text-lg tracking-wide text-amber-400 mb-4 border-b-2 pb-4">
+                {story.title}
+              </h1>
+              <h2 className="">{story.description}</h2>
+            </div>
+          );
+        })}
+      </div>
+      {/* Display stories */}
       {/* Create story */}
-      <label htmlFor="title">Title:</label>
+      {/* <label htmlFor="title">Title:</label>
       <input
-        id="title"
-        maxLength={50}
-        value={storyTitle}
-        onChange={(e) => setStoryTitle(e.currentTarget.value)}
+      id="title"
+      maxLength={50}
+      value={storyTitle}
+      onChange={(e) => setStoryTitle(e.currentTarget.value)}
       />
       <label htmlFor="description">Description :</label>
       <textarea
-        id="description"
-        value={storyDescription}
-        onChange={(e) => setStoryDescription(e.currentTarget.value)}
+      id="description"
+      value={storyDescription}
+      onChange={(e) => setStoryDescription(e.currentTarget.value)}
       />
       <button onClick={() => createStoryHandler()}>Create story</button>
       <hr />
@@ -97,9 +147,9 @@ export default function Profile(props: Props) {
       <hr />
       <label htmlFor="chapterHeading">Chapter heading :</label>
       <input
-        id="chapterHeading"
-        value={chapterHeading}
-        onChange={(e) => setChapterHeading(e.currentTarget.value)}
+      id="chapterHeading"
+      value={chapterHeading}
+      onChange={(e) => setChapterHeading(e.currentTarget.value)}
       />
       <hr />
 
@@ -110,9 +160,9 @@ export default function Profile(props: Props) {
         onChange={(e) => setChapterContent(e.currentTarget.value)}
       />
       <hr />
-      <button onClick={() => createNewChapterHandler()}>Create chapter</button>
+      <button onClick={() => createNewChapterHandler()}>Create chapter</button> */}
       {/* display stories */}
-      {userStories.map((story) => {
+      {/* {userStories.map((story) => {
         return (
           <div key={`storyId-${story.id}`}>
             <h1>{story.title}</h1>
@@ -122,7 +172,7 @@ export default function Profile(props: Props) {
             </button>
           </div>
         );
-      })}
+      })} */}
     </>
   );
 }

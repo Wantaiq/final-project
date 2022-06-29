@@ -1,4 +1,3 @@
-import { GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
 import { getAllStories } from '../../util/database';
 
@@ -39,9 +38,8 @@ export default function Stories(props: Props) {
   );
 }
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export async function getServerSideProps() {
   const stories = await getAllStories();
-  console.log(stories);
   return {
     props: { stories },
   };
