@@ -57,6 +57,12 @@ type DeletedStory = {
   id: number;
 };
 
+export type Comments = {
+  id: number;
+  content: string;
+  username: string;
+}[];
+
 export type StoryOverview = {
   id: number;
   storyId: number;
@@ -218,6 +224,28 @@ export async function getStoryOverviewByStoryId(storyId: number) {
   return !profile ? undefined : camelcaseKeys(profile);
 }
 
+export async function createNewComment(
+  storyId: number,
+  userId: number,
+  content: string,
+) {
+  const [comment] = await sql`
+  INSERT INTO comments(story_id, creator_id, content)
+  VALUES(${storyId}, ${userId}, ${content})
+  RETURNING id, content`;
+  return camelcaseKeys(comment);
+}
+
+export async function getAllStoryCommentsByStoryId(storyId: number) {
+  const comments = await sql<
+    [Comments]
+  >`SELECT comments.id, comments.content, users.username
+    FROM comments, users,stories
+    WHERE comments.story_id = ${storyId}
+    AND users.id = comments.creator_id
+    `;
+  return comments.map((comment) => camelcaseKeys(comment));
+}
 export async function deleteStory(storyId: number) {
   const [deletedStory] = await sql<[DeletedStory]>`
   DELETE FROM stories where id = ${storyId} RETURNING id`;

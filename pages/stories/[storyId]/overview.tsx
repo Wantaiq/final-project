@@ -1,31 +1,59 @@
 import { GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { profileContext } from '../../../context/ProfileProvider';
+import { createCsrfToken } from '../../../util/auth';
 import {
+  Comments,
+  getAllStoryCommentsByStoryId,
+  getCsrfSeedByValidUserToken,
   getCurrentUserIdBySessionToken,
   getStoryOverviewByStoryId,
   StoryOverview,
 } from '../../../util/database';
 
 type Props = {
-  overview: StoryOverview;
-  userId?: number;
+  overview: StoryOverview | null;
+  userId?: { id: number };
+  csrfToken: string;
+  comments: Comments;
 };
 type Comment = {
   comment: string;
 };
 export default function Overview(props: Props) {
-  console.log(props);
+  const { userProfile } = useContext(profileContext);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Comment>();
   const [isComment, setIsComment] = useState(false);
+  const [storyComments, setStoryComments] = useState(props.comments);
   async function createNewCommentHandler(commentInput: Comment) {
-    console.log(commentInput);
+    if (props.userId && props.overview) {
+      const response = await fetch('/api/comments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          csrfToken: props.csrfToken,
+          userId: props.userId.id,
+          storyId: props.overview.storyId,
+          content: commentInput.comment,
+        }),
+      });
+      const data = await response.json();
+      setStoryComments((prevComments) => [
+        ...prevComments,
+        { ...data.newComment, username: userProfile },
+      ]);
+    }
   }
+  console.log(storyComments);
+  if (props.overview === null) return <h1>Oops something went wrong</h1>;
   return (
     <div className="w-[75%] mx-auto mt-24">
       <div>
@@ -39,6 +67,20 @@ export default function Overview(props: Props) {
         <div className="border-b-2 px-[2em] border-amber-500 mb-6 bg-amber-500 w-fit py-[.5em] rounded">
           <Link href={`/stories/${props.overview.storyId}`}>Read story</Link>
         </div>
+      </div>
+      <div>
+        {storyComments.length === 0 ? (
+          <h1>Be the first one to comment!</h1>
+        ) : (
+          storyComments.map((item) => {
+            return (
+              <div key={`commentId-${item.id}`} className="border-2 mb-4">
+                <h1>{item.username}</h1>
+                <h2>{item.content}</h2>
+              </div>
+            );
+          })
+        )}
       </div>
       {isComment ? (
         <div>
@@ -77,8 +119,11 @@ export default function Overview(props: Props) {
         <button
           onClick={() => setIsComment(true)}
           className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em]"
+          disabled={!props.userId}
         >
-          Write a comment
+          {!props.userId
+            ? 'Please login to leave a comment'
+            : 'Write a comment'}
         </button>
       )}
     </div>
@@ -93,15 +138,22 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     context.req.cookies.sessionToken,
   );
 
+  const comments = await getAllStoryCommentsByStoryId(
+    Number(context.query.storyId),
+  );
   if (!overview) {
     return { props: { overview: null } };
   }
   if (!userId) {
     return {
-      props: { overview },
+      props: { overview, comments },
     };
   }
+  const { csrfSeed } = await getCsrfSeedByValidUserToken(
+    context.req.cookies.sessionToken,
+  );
+  const csrfToken = createCsrfToken(csrfSeed);
   return {
-    props: { overview, userId },
+    props: { overview, userId, csrfToken, comments },
   };
 }
