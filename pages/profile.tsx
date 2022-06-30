@@ -31,6 +31,7 @@ export default function Profile(props: Props) {
     formState: { errors },
     trigger,
     resetField,
+    setFocus,
   } = useForm<StoryInput>();
   const [chapterNumber, setChapterNumber] = useState(1);
   const [newStory, setNewStory] = useState<UserStory | undefined>(undefined);
@@ -76,6 +77,7 @@ export default function Profile(props: Props) {
       });
       resetField('chapterContent');
       resetField('chapterHeading');
+      setFocus('chapterHeading');
       setChapterNumber((prevNumber) => prevNumber + 1);
     }
   }
@@ -92,6 +94,7 @@ export default function Profile(props: Props) {
     setUserStories((prevState) => prevState.filter((story) => story.id !== id));
     setNumberOfStories((prevNumber) => prevNumber - 1);
   }
+  console.log(props);
 
   return (
     <>
@@ -142,8 +145,10 @@ export default function Profile(props: Props) {
       </div>
       {!props.tab &&
         (props.userStories.length === 0 ? (
-          <div>
-            <h1>You don't have any stories</h1>
+          <div className="mx-auto my-24 w-fit">
+            <h1 className="font-bold text-3xl tracking-wide text-amber-600">
+              You don't have any stories
+            </h1>
           </div>
         ) : (
           <div className="w-[65%] mx-auto grid grid-cols-4 px-14 py-8 gap-7">
@@ -151,7 +156,7 @@ export default function Profile(props: Props) {
               return (
                 <div
                   key={`storyId-${story.id}`}
-                  className="border-2 px-6 pt-12 pb-6 rounded-lg w-[85%]"
+                  className="border-2 px-6 pt-12 pb-6 rounded-lg w-[90%]"
                 >
                   <h1 className="font-bold text-lg tracking-wide text-amber-400 mb-4 border-b-2 pb-4">
                     {story.title}
@@ -161,12 +166,19 @@ export default function Profile(props: Props) {
                       ? 'Someone ripped out description page.'
                       : story.description}
                   </h2>
-                  <button
-                    onClick={() => deleteStoryHandler(story.id)}
-                    className="mt-6 bg-red-500 px-3 py-1 rounded-full font-bold"
-                  >
-                    Delete story
-                  </button>
+                  <div className="flex flex-col">
+                    <Link href={`stories/${story.id}/overview`}>
+                      <a className="mt-6 bg-amber-600 px-3 py-1 rounded-full font-bold text-center">
+                        Read story
+                      </a>
+                    </Link>
+                    <button
+                      onClick={() => deleteStoryHandler(story.id)}
+                      className="mt-6 bg-red-500 px-3 py-1 rounded-full font-bold"
+                    >
+                      Delete story
+                    </button>
+                  </div>
                 </div>
               );
             })}
@@ -249,9 +261,11 @@ export default function Profile(props: Props) {
                 <button className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em]">
                   Next chapter
                 </button>
-                <div className="bg-amber-600 py-[0.7em] rounded font-medium tracking-wider self-center px-[1.2em] inline">
-                  <Link href={`/stories/${newStory?.id}`}>Finish writing</Link>
-                </div>
+                <Link href={`/stories/${newStory?.id}/overview`}>
+                  <button className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em]">
+                    Finish writing
+                  </button>
+                </Link>
               </div>
             </form>
           </div>

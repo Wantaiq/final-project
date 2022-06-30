@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from 'next';
 import { useState } from 'react';
-import { getAllStoryChaptersByStoryId } from '../../util/database';
+import { getAllStoryChaptersByStoryId } from '../../../util/database';
 
 type Props = {
   chapters:
@@ -74,7 +74,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const chapters = await getAllStoryChaptersByStoryId(
     Number(context.query.storyId),
   );
-  console.log(chapters);
   if (chapters.length > 0) {
     return {
       props: { chapters },

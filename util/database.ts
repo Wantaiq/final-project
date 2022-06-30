@@ -57,6 +57,13 @@ type DeletedStory = {
   id: number;
 };
 
+export type StoryOverview = {
+  id: number;
+  storyId: number;
+  username: string;
+  title: string;
+  description: string;
+};
 export async function createUserWithHashedPassword(
   username: string,
   hashedPassword: string,
@@ -132,6 +139,13 @@ export async function getUserProfileByUsername(username: string) {
   return camelcaseKeys(userProfile);
 }
 
+export async function getCurrentUserIdBySessionToken(token: string) {
+  if (!token) return undefined;
+  const [userId] =
+    await sql`SELECT users.id from users, sessions WHERE sessions.token=${token} AND sessions.user_id = users.id`;
+  return userId;
+}
+
 export async function getUserProfileByValidSessionToken(token: string) {
   if (!token) return undefined;
   const [user] = await sql<[UserProfile]>`
@@ -194,6 +208,14 @@ export async function getAllStoryChaptersByStoryId(storyId: number) {
     ORDER BY chapters.sort_position ASC
     `;
   return chapters.map((chapter) => camelcaseKeys(chapter));
+}
+export async function getStoryOverviewByStoryId(storyId: number) {
+  const [profile] = await sql<
+    [StoryOverview | undefined]
+  >`SELECT users.id, stories.id as story_id, users.username, stories.title, stories.description
+    FROM users, stories
+    WHERE stories.id = ${storyId} AND stories.user_id = users.id`;
+  return !profile ? undefined : camelcaseKeys(profile);
 }
 
 export async function deleteStory(storyId: number) {
