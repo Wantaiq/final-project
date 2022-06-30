@@ -156,7 +156,7 @@ export async function getCurrentUserIdBySessionToken(token: string) {
 export async function getUserProfileByValidSessionToken(token: string) {
   if (!token) return undefined;
   const [user] = await sql<[UserProfile]>`
-  SELECT users.username, user_profiles.bio, user_profiles.user_id
+  SELECT users.id as user_id, users.username, user_profiles.bio
   FROM users, user_profiles, sessions
   WHERE sessions.token = ${token}
   AND sessions.expiry_timestamp > now()
@@ -221,9 +221,12 @@ export async function getStoryOverviewByStoryId(storyId: number) {
     [StoryOverview | undefined]
   >`SELECT stories.id as story_id, users.username as author, stories.title, stories.description, MAX(chapters.sort_position) as number_of_chapters
     FROM users, stories, chapters
-    WHERE stories.id = ${storyId} AND stories.user_id = users.id
+    WHERE stories.id = ${storyId}
+    AND stories.user_id = users.id
+    AND stories.id = chapters.story_id
     GROUP BY stories.id, users.username, stories.title, stories.description
     `;
+  console.log(overview);
   return !overview ? undefined : camelcaseKeys(overview);
 }
 
@@ -251,12 +254,22 @@ export async function getAllStoryCommentsByStoryId(storyId: number) {
   const comments = await sql<
     [Comments]
   >`SELECT comments.id, comments.content, users.username
-    FROM comments, users,stories
+    FROM comments, users, stories
     WHERE comments.story_id = ${storyId}
     AND users.id = comments.creator_id
+    AND comments.story_id = stories.id
     ORDER BY comments.id DESC
     `;
   return comments.map((comment) => camelcaseKeys(comment));
+}
+
+export async function getAllUsersCommentsByUserId(userId: number) {
+  const comments = await sql`SELECT comments.content, stories.title
+    FROM comments, stories
+    WHERE comments.creator_id = ${userId}
+    AND stories.id = comments.story_id
+    `;
+  console.log(comments);
 }
 export async function deleteStory(storyId: number) {
   const [deletedStory] = await sql<[DeletedStory]>`

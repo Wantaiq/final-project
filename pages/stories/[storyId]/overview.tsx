@@ -160,10 +160,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const userId = await getCurrentUserIdBySessionToken(
     context.req.cookies.sessionToken,
   );
+  console.log(overview);
 
   const comments = await getAllStoryCommentsByStoryId(
     Number(context.query.storyId),
   );
+  console.log(comments);
   if (!overview) {
     return { props: { overview: null } };
   }

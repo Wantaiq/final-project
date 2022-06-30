@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createCsrfToken } from '../util/auth';
 import {
+  getAllUsersCommentsByUserId,
   getAllUserStoriesByUserId,
   getCsrfSeedByValidUserToken,
   getUserProfileByValidSessionToken,
@@ -112,7 +113,7 @@ export default function Profile(props: Props) {
             </h1>
             <p className="">
               <span className="font-bold text-3xl">{numberOfStories}</span>{' '}
-              Stories
+              {numberOfStories > 1 ? 'Stories' : 'Story'}
             </p>
           </div>
         </div>
@@ -140,7 +141,13 @@ export default function Profile(props: Props) {
         >
           <Link href="/profile?tab=writing-table">Writing table</Link>
         </div>
-        <div className="font-bold text-xl tracking-wide">Comments</div>
+        <div
+          className={`font-bold text-xl tracking-wide ${
+            props.tab === 'comments' && 'border-b-2 border-amber-600'
+          }`}
+        >
+          <Link href="/profile?tab=comments">Comments</Link>
+        </div>
       </div>
       {!props.tab &&
         (props.userStories.length === 0 ? (
@@ -283,6 +290,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     const { csrfSeed } = await getCsrfSeedByValidUserToken(
       context.req.cookies.sessionToken,
     );
+    const comments = await getAllUsersCommentsByUserId(userProfile.userId);
     const csrfToken = createCsrfToken(csrfSeed);
     return {
       props: {
