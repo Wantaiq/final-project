@@ -84,10 +84,6 @@ export default function Login() {
                 value: true,
                 message: 'This field is required',
               },
-              minLength: {
-                value: 5,
-                message: 'Please choose password longer than 5 characters',
-              },
             })}
             id="password"
             type="password"

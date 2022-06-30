@@ -8,7 +8,6 @@ type Props = {
         title: any;
         heading: any;
         content: any;
-        sortPosition: number;
       }[]
     | null;
 };
@@ -18,7 +17,7 @@ export default function Story(props: Props) {
     return (
       <div className="mx-auto my-24 w-fit">
         <h1 className="font-bold text-3xl tracking-wide text-amber-600">
-          We couldn't find your story
+          Someone stole the pages!
         </h1>
       </div>
     );
@@ -75,6 +74,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const chapters = await getAllStoryChaptersByStoryId(
     Number(context.query.storyId),
   );
+  console.log(chapters);
   if (chapters.length > 0) {
     return {
       props: { chapters },

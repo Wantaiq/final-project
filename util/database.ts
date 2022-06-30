@@ -178,7 +178,7 @@ export async function getAllStories() {
 }
 
 export async function getAllUserStoriesByUserId(userId: number) {
-  const stories = await sql`SELECT id, title
+  const stories = await sql`SELECT id, title, description
     FROM stories
     WHERE user_id = ${userId}
     ORDER BY id DESC`;
@@ -187,11 +187,12 @@ export async function getAllUserStoriesByUserId(userId: number) {
 
 export async function getAllStoryChaptersByStoryId(storyId: number) {
   const chapters =
-    await sql`SELECT stories.title, chapters.heading, chapters.content, chapters.sort_position
+    await sql`SELECT stories.title, chapters.heading, chapters.content
     FROM stories, chapters
     WHERE stories.id= ${storyId}
     AND chapters.story_id = stories.id
-    ORDER BY sort_position ASC`;
+    ORDER BY chapters.sort_position ASC
+    `;
   return chapters.map((chapter) => camelcaseKeys(chapter));
 }
 

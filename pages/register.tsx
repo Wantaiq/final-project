@@ -55,6 +55,10 @@ export default function Register() {
                 value: true,
                 message: 'This field is required',
               },
+              minLength: {
+                value: 2,
+                message: 'Please choose username longer than 2 characters',
+              },
             })}
             id="username"
           />

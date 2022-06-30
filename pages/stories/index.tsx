@@ -15,13 +15,18 @@ export default function Stories(props: Props) {
       <div className="grid grid-cols-5 gap-6">
         {props.stories.map((story) => {
           return (
-            <div key={`storyId-${story.id}`} className="border-2 rounded p-4">
-              <h1 className="mb-4">
+            <div
+              key={`storyId-${story.id}`}
+              className="border-2 px-6 py-12 rounded-lg"
+            >
+              <h1 className="font-bold text-lg tracking-wide text-amber-400 mb-4">
                 <span>
                   <Link href={`/stories/${story.id}`}>{story.title}</Link>
                 </span>
               </h1>
-              <h2 className="border-b-2 mb-4 pb-2">{story.description}</h2>
+              <h2 className="border-b-2 mb-4 pb-4 font-medium tracking-wide">
+                {story.description}
+              </h2>
               <p>
                 Written by:{' '}
                 <span>
