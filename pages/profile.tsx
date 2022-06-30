@@ -94,7 +94,6 @@ export default function Profile(props: Props) {
     setUserStories((prevState) => prevState.filter((story) => story.id !== id));
     setNumberOfStories((prevNumber) => prevNumber - 1);
   }
-  console.log(props);
 
   return (
     <>

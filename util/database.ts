@@ -66,9 +66,10 @@ export type Comments = {
 export type StoryOverview = {
   id: number;
   storyId: number;
-  username: string;
+  author: string;
   title: string;
   description: string;
+  numberOfChapters: number;
 };
 export async function createUserWithHashedPassword(
   username: string,
@@ -207,7 +208,7 @@ export async function getAllUserStoriesByUserId(userId: number) {
 
 export async function getAllStoryChaptersByStoryId(storyId: number) {
   const chapters =
-    await sql`SELECT stories.title, chapters.heading, chapters.content
+    await sql`SELECT chapters.id, stories.title, chapters.heading, chapters.content
     FROM stories, chapters
     WHERE stories.id= ${storyId}
     AND chapters.story_id = stories.id
@@ -216,12 +217,14 @@ export async function getAllStoryChaptersByStoryId(storyId: number) {
   return chapters.map((chapter) => camelcaseKeys(chapter));
 }
 export async function getStoryOverviewByStoryId(storyId: number) {
-  const [profile] = await sql<
+  const [overview] = await sql<
     [StoryOverview | undefined]
-  >`SELECT users.id, stories.id as story_id, users.username, stories.title, stories.description
-    FROM users, stories
-    WHERE stories.id = ${storyId} AND stories.user_id = users.id`;
-  return !profile ? undefined : camelcaseKeys(profile);
+  >`SELECT stories.id as story_id, users.username as author, stories.title, stories.description, MAX(chapters.sort_position) as number_of_chapters
+    FROM users, stories, chapters
+    WHERE stories.id = ${storyId} AND stories.user_id = users.id
+    GROUP BY stories.id, users.username, stories.title, stories.description
+    `;
+  return !overview ? undefined : camelcaseKeys(overview);
 }
 
 export async function createNewComment(
@@ -236,6 +239,14 @@ export async function createNewComment(
   return camelcaseKeys(comment);
 }
 
+export async function deleteComment(commentId: number) {
+  const [deletedComment] = await sql`DELETE FROM comments
+    WHERE id=${commentId}
+    RETURNING id
+    `;
+  return camelcaseKeys(deletedComment);
+}
+
 export async function getAllStoryCommentsByStoryId(storyId: number) {
   const comments = await sql<
     [Comments]
@@ -243,6 +254,7 @@ export async function getAllStoryCommentsByStoryId(storyId: number) {
     FROM comments, users,stories
     WHERE comments.story_id = ${storyId}
     AND users.id = comments.creator_id
+    ORDER BY comments.id DESC
     `;
   return comments.map((comment) => camelcaseKeys(comment));
 }

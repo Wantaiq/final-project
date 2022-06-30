@@ -27,10 +27,12 @@ export default function Overview(props: Props) {
   const {
     register,
     handleSubmit,
+    resetField,
     formState: { errors },
   } = useForm<Comment>();
   const [isComment, setIsComment] = useState(false);
   const [storyComments, setStoryComments] = useState(props.comments);
+
   async function createNewCommentHandler(commentInput: Comment) {
     if (props.userId && props.overview) {
       const response = await fetch('/api/comments', {
@@ -47,12 +49,24 @@ export default function Overview(props: Props) {
       });
       const data = await response.json();
       setStoryComments((prevComments) => [
-        ...prevComments,
         { ...data.newComment, username: userProfile },
+        ...prevComments,
       ]);
     }
+    setIsComment(false);
+    resetField('comment');
   }
-  console.log(storyComments);
+  async function removeCommentHandler(commentId: number) {
+    const response = await fetch('/api/comments', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ commentId, csrfToken: props.csrfToken }),
+    });
+    const data = await response.json();
+    setStoryComments((prevComments) =>
+      prevComments.filter((comment) => comment.id !== data.deletedComment.id),
+    );
+  }
   if (props.overview === null) return <h1>Oops something went wrong</h1>;
   return (
     <div className="w-[75%] mx-auto mt-24">
@@ -63,7 +77,8 @@ export default function Overview(props: Props) {
         <h2 className="tracking-wide text-md mb-2">
           {props.overview.description}
         </h2>
-        <p className="opacity-80 mb-4">Author: {props.overview.username}</p>
+        <p>Number of chapters: {props.overview.numberOfChapters}</p>
+        <p className="opacity-80 mb-4">Author: {props.overview.author}</p>
         <div className="border-b-2 px-[2em] border-amber-500 mb-6 bg-amber-500 w-fit py-[.5em] rounded">
           <Link href={`/stories/${props.overview.storyId}`}>Read story</Link>
         </div>
@@ -72,11 +87,19 @@ export default function Overview(props: Props) {
         {storyComments.length === 0 ? (
           <h1>Be the first one to comment!</h1>
         ) : (
-          storyComments.map((item) => {
+          storyComments.map((comment) => {
             return (
-              <div key={`commentId-${item.id}`} className="border-2 mb-4">
-                <h1>{item.username}</h1>
-                <h2>{item.content}</h2>
+              <div key={`commentId-${comment.id}`} className="border-2 mb-">
+                <h1>{comment.username}</h1>
+                <h2>{comment.content}</h2>
+                {userProfile === comment.username && (
+                  <button
+                    onClick={() => removeCommentHandler(comment.id)}
+                    className="mt-6 bg-red-500 px-3 py-1 rounded-full font-bold"
+                  >
+                    Remove comment
+                  </button>
+                )}
               </div>
             );
           })
@@ -89,7 +112,7 @@ export default function Overview(props: Props) {
             onSubmit={handleSubmit(createNewCommentHandler)}
           >
             <label htmlFor="comment">
-              Let {props.overview.username} know what you think!
+              Let {props.overview.author} know what you think!
             </label>
             <textarea
               id="comment"

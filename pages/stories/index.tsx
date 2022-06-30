@@ -21,7 +21,9 @@ export default function Stories(props: Props) {
             >
               <h1 className="font-bold text-lg tracking-wide text-amber-400 mb-4">
                 <span>
-                  <Link href={`/stories/${story.id}`}>{story.title}</Link>
+                  <Link href={`/stories/${story.id}/overview`}>
+                    {story.title}
+                  </Link>
                 </span>
               </h1>
               <h2 className="border-b-2 mb-4 pb-4 font-medium tracking-wide">

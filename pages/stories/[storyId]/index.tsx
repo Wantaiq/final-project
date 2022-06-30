@@ -1,15 +1,18 @@
 import { GetServerSidePropsContext } from 'next';
+import Link from 'next/link';
 import { useState } from 'react';
 import { getAllStoryChaptersByStoryId } from '../../../util/database';
 
 type Props = {
   chapters:
     | {
+        id: number;
         title: any;
         heading: any;
         content: any;
       }[]
     | null;
+  storyId: number;
 };
 export default function Story(props: Props) {
   const [currentChapter, setCurrentChapter] = useState(0);
@@ -43,7 +46,7 @@ export default function Story(props: Props) {
       {props.chapters.map((chapter, index) => {
         return (
           <div
-            key={`chapterTitle-${chapter.heading}`}
+            key={`chapterTitle-${chapter.id}`}
             className={`px-8 my-6 ${
               index === currentChapter ? 'block' : 'hidden'
             } `}
@@ -58,10 +61,13 @@ export default function Story(props: Props) {
             </div>
             <div className="flex justify-between w-[50%] mx-auto my-20">
               <button onClick={() => previousChapter()}>Previous</button>
-              <button onClick={() => nextChapter()}>Next</button>
               {currentChapter === props.chapters.length - 1 ? (
-                <button>Overview</button>
-              ) : null}
+                <Link href={`/stories/${props.storyId}/overview`}>
+                  Back to overview
+                </Link>
+              ) : (
+                <button onClick={() => nextChapter()}>Next</button>
+              )}
             </div>
           </div>
         );
@@ -76,7 +82,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   );
   if (chapters.length > 0) {
     return {
-      props: { chapters },
+      props: { chapters, storyId: Number(context.query.storyId) },
     };
   }
   return { props: { chapters: null } };
