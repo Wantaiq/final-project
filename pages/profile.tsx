@@ -47,7 +47,7 @@ export default function Profile(props: Props) {
   async function createNewStoryHandler(storyInput: StoryInput) {
     const isStoryInputValid = await trigger();
     if (isStoryInputValid) {
-      const response = await fetch('http://localhost:3000/api/stories', {
+      const response = await fetch('/api/stories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -67,7 +67,7 @@ export default function Profile(props: Props) {
   async function createNewChapterHandler(userChapterInput: StoryInput) {
     const isStoryInputValid = await trigger();
     if (isStoryInputValid) {
-      await fetch('http://localhost:3000/api/stories/chapters', {
+      await fetch('/api/stories/chapters', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -85,7 +85,7 @@ export default function Profile(props: Props) {
     }
   }
   async function deleteStoryHandler(storyId: number) {
-    const response = await fetch('http://localhost:3000/api/stories', {
+    const response = await fetch('/api/stories', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
