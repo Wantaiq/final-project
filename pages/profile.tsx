@@ -8,6 +8,7 @@ import {
   getAllUserStoriesByUserId,
   getCsrfSeedByValidUserToken,
   getUserProfileByValidSessionToken,
+  UserComments,
   UserProfile,
   UserStory,
 } from '../util/database';
@@ -17,6 +18,7 @@ type Props = {
   csrfToken: string;
   userStories: UserStory[];
   tab: string | undefined;
+  userComments: UserComments;
 };
 
 type StoryInput = {
@@ -113,7 +115,7 @@ export default function Profile(props: Props) {
             </h1>
             <p className="">
               <span className="font-bold text-3xl">{numberOfStories}</span>{' '}
-              {numberOfStories > 1 ? 'Stories' : 'Story'}
+              {numberOfStories === 1 ? 'Story' : 'Stories'}
             </p>
           </div>
         </div>
@@ -276,6 +278,23 @@ export default function Profile(props: Props) {
             </form>
           </div>
         ))}
+      {props.tab === 'comments' && (
+        <div>
+          {props.userComments.map((comment) => {
+            return (
+              <div
+                key={`commentId-${comment.id}`}
+                className="w-[65%] mx-auto px-20 py-10 border-b-2 mt-6 flex justify-evenly items-center"
+              >
+                <Link href={`/stories/${comment.storyId}/overview`}>
+                  <a>Story : {comment.storyTitle}</a>
+                </Link>
+                <p> You wrote : {comment.content}</p>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </>
   );
 }
@@ -290,7 +309,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     const { csrfSeed } = await getCsrfSeedByValidUserToken(
       context.req.cookies.sessionToken,
     );
-    const comments = await getAllUsersCommentsByUserId(userProfile.userId);
+    const userComments = await getAllUsersCommentsByUserId(userProfile.userId);
     const csrfToken = createCsrfToken(csrfSeed);
     return {
       props: {
@@ -298,6 +317,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         csrfToken,
         userStories,
         tab,
+        userComments,
       },
     };
   }

@@ -34,6 +34,13 @@ export type UserProfile = {
   userId: number;
 };
 
+export type UserComments = {
+  id: number;
+  storyId: number;
+  storyTitle: string;
+  content: string;
+}[];
+
 export type UserStory = {
   id: number;
   title: string;
@@ -226,7 +233,6 @@ export async function getStoryOverviewByStoryId(storyId: number) {
     AND stories.id = chapters.story_id
     GROUP BY stories.id, users.username, stories.title, stories.description
     `;
-  console.log(overview);
   return !overview ? undefined : camelcaseKeys(overview);
 }
 
@@ -264,12 +270,15 @@ export async function getAllStoryCommentsByStoryId(storyId: number) {
 }
 
 export async function getAllUsersCommentsByUserId(userId: number) {
-  const comments = await sql`SELECT comments.content, stories.title
+  const comments = await sql<
+    [UserComments]
+  >`SELECT comments.id, stories.id as story_id, stories.title as story_title, comments.content
     FROM comments, stories
     WHERE comments.creator_id = ${userId}
     AND stories.id = comments.story_id
+    ORDER BY comments.id DESC
     `;
-  console.log(comments);
+  return comments.map((comment) => camelcaseKeys(comment));
 }
 export async function deleteStory(storyId: number) {
   const [deletedStory] = await sql<[DeletedStory]>`

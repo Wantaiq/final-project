@@ -60,7 +60,9 @@ export default function Story(props: Props) {
               </p>
             </div>
             <div className="flex justify-between w-[50%] mx-auto my-20">
-              <button onClick={() => previousChapter()}>Previous</button>
+              {currentChapter > 0 && (
+                <button onClick={() => previousChapter()}>Previous</button>
+              )}
               {currentChapter === props.chapters.length - 1 ? (
                 <Link href={`/stories/${props.storyId}/overview`}>
                   Back to overview
