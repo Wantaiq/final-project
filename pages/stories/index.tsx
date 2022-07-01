@@ -47,6 +47,7 @@ export default function Stories(props: Props) {
 
 export async function getServerSideProps() {
   const stories = await getAllStories();
+  console.log(stories);
   return {
     props: { stories },
   };

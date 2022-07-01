@@ -1,8 +1,9 @@
 import { GetServerSidePropsContext } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { createCsrfToken } from '../util/auth';
+import { createCsrfToken } from '../../util/auth';
 import {
   getAllUsersCommentsByUserId,
   getAllUserStoriesByUserId,
@@ -11,7 +12,7 @@ import {
   UserComments,
   UserProfile,
   UserStory,
-} from '../util/database';
+} from '../../util/database';
 
 type Props = {
   userProfile: UserProfile;
@@ -104,7 +105,13 @@ export default function Profile(props: Props) {
       <div className="p-20 w-[65%] border-b-2 mx-auto flex justify-between">
         <div className="flex space-x-14">
           <div className="flex flex-col space-y-4">
-            <div className="bg-white w-[175px] h-[175px] rounded-full" />
+            <div className="bg-white w-[175px] h-[175px] rounded-full">
+              <Image
+                src="https://res.cloudinary.com/dxbam2d2r/image/upload/v1656662127/avatars/three-dogs.jpg"
+                width={175}
+                height={175}
+              />
+            </div>
             <button className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider">
               Update profile
             </button>
@@ -271,7 +278,7 @@ export default function Profile(props: Props) {
                 </button>
                 <Link href={`/stories/${newStory?.id}/overview`}>
                   <button className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em]">
-                    Finish writing
+                    Publish!
                   </button>
                 </Link>
               </div>
