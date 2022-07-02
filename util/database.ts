@@ -30,6 +30,7 @@ export type User = {
 
 export type UserProfile = {
   bio: string | null;
+  avatar: string;
   username: string;
   userId: number;
 };
@@ -109,11 +110,23 @@ export async function getUserWithHashedPassword(username: string) {
 
 export async function createUserProfile(userId: number) {
   const [userProfile] = await sql<[UserProfile]>`
-  INSERT INTO user_profiles(user_id)
-    VALUES(${userId})
+  INSERT INTO user_profiles(user_id, profile_avatar_url)
+    VALUES(${userId}, 'https://res.cloudinary.com/dxbam2d2r/image/upload/v1656662127/avatars/three-dogs.jpg')
     RETURNING bio, user_id
     `;
   return camelcaseKeys(userProfile);
+}
+
+export async function updateUserProfileAvatar(img: string, userId: number) {
+  const [newUserProfile] =
+    await sql`UPDATE user_profiles SET profile_avatar_url = ${img} WHERE user_id = ${userId} RETURNING *`;
+  return camelcaseKeys(newUserProfile);
+}
+
+export async function updateUserProfileBio(bio: string, userId: number) {
+  const [newUserProfile] =
+    await sql`UPDATE user_profiles SET bio = ${bio} WHERE user_id = ${userId} RETURNING *`;
+  return camelcaseKeys(newUserProfile);
 }
 
 export async function createSession(
@@ -146,7 +159,7 @@ export async function deleteSessionByToken(token: string) {
 export async function getUserProfileByUsername(username: string) {
   if (!username) return undefined;
   const [userProfile] =
-    await sql`SELECT users.id, users.username, user_profiles.bio, user_profiles.user_id
+    await sql`SELECT users.id, users.username, user_profiles.profile_avatar_url as avatar,user_profiles.bio, user_profiles.user_id
   FROM users, user_profiles
   WHERE users.username = ${username}
   AND user_profiles.user_id = users.id`;
@@ -163,7 +176,7 @@ export async function getCurrentUserIdBySessionToken(token: string) {
 export async function getUserProfileByValidSessionToken(token: string) {
   if (!token) return undefined;
   const [user] = await sql<[UserProfile]>`
-  SELECT users.id as user_id, users.username, user_profiles.bio
+  SELECT users.id as user_id, users.username, user_profiles.profile_avatar_url as avatar,user_profiles.bio
   FROM users, user_profiles, sessions
   WHERE sessions.token = ${token}
   AND sessions.expiry_timestamp > now()
