@@ -1,8 +1,9 @@
 import { GetServerSidePropsContext } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useContext, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { profileContext } from '../../context/ProfileProvider';
 import { createCsrfToken } from '../../util/auth';
 import {
   getAllUsersCommentsByUserId,
@@ -96,6 +97,8 @@ export default function Profile(props: Props) {
   const [isUserBioUpdate, setIsUserBioUpdate] = useState(false);
   const [userBio, setUserBio] = useState('');
 
+  const { handleUserProfile } = useContext(profileContext);
+
   async function createNewStoryHandler(storyInput: StoryInput) {
     const isStoryInputValid = await trigger();
     if (isStoryInputValid) {
@@ -150,7 +153,7 @@ export default function Profile(props: Props) {
     setNumberOfStories((prevNumber) => prevNumber - 1);
   }
 
-  async function handleProfileUpload(imgEncoded: string) {
+  async function handleProfilePictureUpload(imgEncoded: string) {
     if (!imgEncoded) {
       setIsAvatarUpdate(false);
       return;
@@ -168,13 +171,14 @@ export default function Profile(props: Props) {
         throw new Error('Maximum image size is 1mb');
       }
       setIsAvatarUpdate(false);
+      handleUserProfile();
     } catch (error) {
       setImgUploadError(error.message);
     }
   }
   async function handleSubmitProfileImage(event: FormEvent) {
     event.preventDefault();
-    await handleProfileUpload(selectedImg);
+    await handleProfilePictureUpload(selectedImg);
   }
   function previewImg(img: Blob) {
     if (typeof img === 'undefined') return;
@@ -187,13 +191,16 @@ export default function Profile(props: Props) {
 
   function handleAvatarInput(event) {
     const uploadedImg = event.target.files[0];
-    const fileSize = Math.round(event.target.files[0].size / 1000);
-    if (fileSize > 1000) {
-      setImgUploadError('Maximum image size is 1mb');
-      return;
+    if (uploadedImg) {
+      const fileSize = Math.round(event.target.files[0].size / 1000);
+      if (fileSize > 1000) {
+        setImgUploadError('Maximum image size is 1mb');
+        return;
+      }
+      previewImg(uploadedImg);
+      setAvatarImgInput(event.currentTarget.value);
     }
-    previewImg(uploadedImg);
-    setAvatarImgInput(event.currentTarget.value);
+    return;
   }
 
   async function handleUserBioSubmit() {
@@ -201,12 +208,11 @@ export default function Profile(props: Props) {
       setIsUserBioUpdate(false);
       return;
     }
-    const response = await fetch('/api/profile', {
+    await fetch('/api/profile', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userBio, csrfToken: props.csrfToken }),
     });
-    const data = await response.json();
     setUserBio('');
     setIsUserBioUpdate(false);
   }

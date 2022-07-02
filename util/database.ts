@@ -210,8 +210,7 @@ export async function createChapter(
 }
 
 export async function getAllStories() {
-  const stories =
-    await sql`SELECT stories.id, users.username, stories.title, stories.description
+  const stories = await sql`SELECT stories.id, users.username, stories.title
     FROM users, stories
     WHERE users.id = stories.user_id
     ORDER BY stories.id DESC`;

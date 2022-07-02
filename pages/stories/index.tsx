@@ -6,7 +6,6 @@ type Props = {
     id: number;
     username: string;
     title: string;
-    description: string;
   }[];
 };
 export default function Stories(props: Props) {
@@ -26,9 +25,6 @@ export default function Stories(props: Props) {
                   </Link>
                 </span>
               </h1>
-              <h2 className="border-b-2 mb-4 pb-4 font-medium tracking-wide">
-                {story.description}
-              </h2>
               <p>
                 Written by:{' '}
                 <span>

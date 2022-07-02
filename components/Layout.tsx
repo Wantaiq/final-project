@@ -30,7 +30,7 @@ export default function Layout(props: Props) {
                   <Link href="/profile">
                     <a>
                       <Image
-                        src={`${userProfile.avatar}`}
+                        src={userProfile.avatar}
                         alt="Profile picture"
                         width={30}
                         height={30}
