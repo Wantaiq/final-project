@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { useContext, useEffect } from 'react';
 import { profileContext } from '../context/ProfileProvider';
@@ -16,7 +17,7 @@ export default function Layout(props: Props) {
         <nav className="flex justify-between">
           <Link href="/">Home</Link>
 
-          <div className="space-x-8">
+          <div className="space-x-8 flex items-center justify-center">
             <Link href="/stories">Discover stories</Link>
             {!userProfile ? (
               <>
@@ -25,7 +26,19 @@ export default function Layout(props: Props) {
               </>
             ) : (
               <>
-                <Link href="/profile">{userProfile}</Link>
+                <div className="flex space-x-4 cursor-pointer">
+                  <Link href="/profile">
+                    <a>
+                      <Image
+                        src={userProfile.avatar}
+                        alt="Profile picture"
+                        width={30}
+                        height={30}
+                        className="rounded-full"
+                      />
+                    </a>
+                  </Link>
+                </div>
                 <Link href="/logout">Logout</Link>
               </>
             )}

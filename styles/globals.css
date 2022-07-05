@@ -10,7 +10,7 @@
     @apply bg-[#1c1c1c] text-slate-200;
   }
   .text-shadow {
-    text-shadow: 1px 1px #ffffff;
+    text-shadow: 0.4px 0.4px grey;
   }
   input {
     @apply text-[#1c1c1c] font-medium tracking-wide rounded-full py-[.3em] indent-4;

@@ -1,7 +1,9 @@
 import { GetServerSidePropsContext } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { FormEvent, useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { profileContext } from '../context/ProfileProvider';
 import { createCsrfToken } from '../util/auth';
 import {
   getAllUsersCommentsByUserId,
@@ -27,6 +29,7 @@ type StoryInput = {
   chapterContent: string;
   chapterHeading: string;
 };
+
 export default function Profile(props: Props) {
   const {
     register,
@@ -43,6 +46,22 @@ export default function Profile(props: Props) {
   const [numberOfStories, setNumberOfStories] = useState(
     props.userStories.length,
   );
+  const [coverStoryImg, setCoverStoryImg] = useState<any>('');
+  const [coverStoryImgError, setCoverStoryImgError] = useState<
+    undefined | string
+  >(undefined);
+
+  const [imgAvatarUploadError, setImgAvatarUploadError] = useState<
+    string | undefined
+  >(undefined);
+
+  const [selectedAvatarImage, setSelectedAvatarImage] = useState<any>('');
+  const [avatarImgInput, setAvatarImgInput] = useState('');
+  const [isAvatarUpdate, setIsAvatarUpdate] = useState(false);
+  const [isUserBioUpdate, setIsUserBioUpdate] = useState(false);
+  const [userBio, setUserBio] = useState('');
+
+  const { handleUserProfile } = useContext(profileContext);
 
   async function createNewStoryHandler(storyInput: StoryInput) {
     const isStoryInputValid = await trigger();
@@ -55,6 +74,7 @@ export default function Profile(props: Props) {
           title: storyInput.title,
           description: storyInput.description,
           userId: props.userProfile.userId,
+          coverImg: coverStoryImg,
         }),
       });
       const data: { newStory: UserStory } = await response.json();
@@ -98,34 +118,174 @@ export default function Profile(props: Props) {
     setNumberOfStories((prevNumber) => prevNumber - 1);
   }
 
+  async function handleSubmitProfileImage(event: FormEvent) {
+    event.preventDefault();
+    if (!selectedAvatarImage) {
+      setIsAvatarUpdate(false);
+      return;
+    }
+    const response = await fetch('/api/profile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        img: selectedAvatarImage,
+        csrfToken: props.csrfToken,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error();
+    }
+    setIsAvatarUpdate(false);
+    handleUserProfile();
+  }
+
+  function discardAvatarChanges() {
+    setSelectedAvatarImage('');
+    setIsAvatarUpdate(false);
+  }
+
+  function handleCoverStoryInput(event: React.ChangeEvent<HTMLInputElement>) {
+    if (!event.target.files) return;
+    const uploadedImg = event.target.files[0];
+    const fileSize = Math.round(event.target.files[0].size / 1000);
+    if (fileSize > 1000) {
+      setCoverStoryImgError('Maximum image size is 1mb');
+      return;
+    }
+    const reader = new FileReader();
+    reader.readAsDataURL(uploadedImg);
+    reader.onloadend = () => {
+      setCoverStoryImg(reader.result);
+    };
+    setCoverStoryImgError('');
+    setAvatarImgInput(event.currentTarget.value);
+    return;
+  }
+
+  function handleAvatarInput(event: React.ChangeEvent<HTMLInputElement>) {
+    if (!event.target.files) return;
+    const uploadedImg = event.target.files[0];
+    const fileSize = Math.round(event.target.files[0].size / 1000);
+    if (fileSize > 1000) {
+      setImgAvatarUploadError('Maximum image size is 1mb');
+      return;
+    }
+    setImgAvatarUploadError('');
+    const reader = new FileReader();
+    reader.readAsDataURL(uploadedImg);
+    reader.onloadend = () => {
+      setSelectedAvatarImage(reader.result);
+    };
+    setAvatarImgInput(event.currentTarget.value);
+    return;
+  }
+
+  async function handleUserBioSubmit(event: FormEvent) {
+    event.preventDefault();
+    if (!userBio) {
+      setIsUserBioUpdate(false);
+      return;
+    }
+    await fetch('/api/profile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userBio, csrfToken: props.csrfToken }),
+    });
+    setUserBio('');
+    setIsUserBioUpdate(false);
+  }
+
   return (
     <>
       {/* Profile */}
       <div className="p-20 w-[65%] border-b-2 mx-auto flex justify-between">
         <div className="flex space-x-14">
           <div className="flex flex-col space-y-4">
-            <div className="bg-white w-[175px] h-[175px] rounded-full" />
-            <button className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider">
-              Update profile
-            </button>
+            <div className="w-[320px] h-[320px] rounded-full border-2">
+              <Image
+                src={
+                  selectedAvatarImage
+                    ? selectedAvatarImage
+                    : props.userProfile.avatar
+                }
+                width={320}
+                height={320}
+                className="rounded-full"
+                alt="Profile picture"
+              />
+            </div>
+            {isAvatarUpdate ? (
+              <form onSubmit={(e) => handleSubmitProfileImage(e)}>
+                <label
+                  htmlFor="uploadAvatar"
+                  className="font-bold text-2xl tracking-wide mb-6 bg-amber-700 px-[1em] py-[.2em] cursor-pointer"
+                >
+                  Select image
+                </label>
+                <p>{imgAvatarUploadError ? imgAvatarUploadError : null}</p>
+                <input
+                  id="uploadAvatar"
+                  type="file"
+                  accept=".jpg, .png, .jpeg"
+                  hidden
+                  value={avatarImgInput}
+                  onChange={(event) => handleAvatarInput(event)}
+                />
+                <button disabled={imgAvatarUploadError ? true : false}>
+                  Save and exit
+                </button>
+                <button onClick={() => discardAvatarChanges()}>
+                  Discard changes
+                </button>
+              </form>
+            ) : (
+              <button
+                className="bg-amber-600 py-[0.4em] rounded font-bold tracking-wider text-center"
+                onClick={() => setIsAvatarUpdate(true)}
+              >
+                Update profile image
+              </button>
+            )}
           </div>
           <div className="space-y-8 mt-6">
             <h1 className="font-bold text-2xl tracking-wider text-amber-500">
               {props.userProfile.username}
             </h1>
-            <p className="">
-              <span className="font-bold text-3xl">{numberOfStories}</span>{' '}
+            <p>
+              <span className="font-bold text-3xl">{numberOfStories}</span>
               {numberOfStories === 1 ? 'Story' : 'Stories'}
             </p>
           </div>
         </div>
-        <div>
-          <h2 className="text-xl tracking-wide opacity-70">
-            {!props.userProfile.bio
-              ? `Mysterious person that loves to read and write stories`
-              : props.userProfile.bio}
-          </h2>
-        </div>
+        {isUserBioUpdate ? (
+          <form onSubmit={handleUserBioSubmit}>
+            <label htmlFor="userBio">Update your bio</label>
+            <textarea
+              className="text-black indent-4"
+              id="userBio"
+              value={userBio}
+              onChange={(event) => setUserBio(event.currentTarget.value)}
+              placeholder={
+                props.userProfile.bio === null
+                  ? 'About you ...'
+                  : props.userProfile.bio
+              }
+            />
+            <p>* This information will be visible to other users.</p>
+            <button className="font-bold text-2xl tracking-wide mb-6 bg-amber-700 px-[1em] py-[.2em] cursor-pointer">
+              Save and exit
+            </button>
+          </form>
+        ) : (
+          <div>
+            <h2 className="text-xl tracking-wide opacity-70">
+              {!props.userProfile.bio
+                ? `Mysterious person that loves to read and write stories`
+                : props.userProfile.bio}
+            </h2>
+            <button onClick={() => setIsUserBioUpdate(true)}>Edit</button>
+          </div>
+        )}
       </div>
       {/* Tabs */}
       <div className="w-[65%] mx-auto flex justify-between px-44 py-6 border-b-2">
@@ -164,18 +324,19 @@ export default function Profile(props: Props) {
               return (
                 <div
                   key={`storyId-${story.id}`}
-                  className="border-2 px-6 pt-12 pb-6 rounded-lg w-[90%]"
+                  style={{ backgroundImage: `url(${story.coverImgUrl})` }}
+                  className="border-2 px-6 pt-12 pb-6 rounded-lg bg-center bg-cover bg-[#242323] bg-blend-overlay w-[275px] h-[350px]"
                 >
-                  <h1 className="font-bold text-lg tracking-wide text-amber-400 mb-4 border-b-2 pb-4">
+                  <h1 className="font-bold text-lg tracking-wide text-amber-400 mb-4 border-b-2 pb-4 text-shadow">
                     {story.title}
                   </h1>
-                  <h2 className="font-medium tracking-wide">
+                  <h2 className="font-medium tracking-wide text-shadow">
                     {!story.description
                       ? 'Someone ripped out description page.'
                       : story.description}
                   </h2>
                   <div className="flex flex-col">
-                    <Link href={`stories/${story.id}/overview`}>
+                    <Link href={`/stories/${story.id}/overview`}>
                       <a className="mt-6 bg-amber-600 px-3 py-1 rounded-full font-bold text-center">
                         Read story
                       </a>
@@ -233,9 +394,30 @@ export default function Profile(props: Props) {
                   {errors.description.message}
                 </p>
               ) : null}
-              <button className="bg-amber-600 py-[0.6em] px-[1.2em] rounded-md font-medium tracking-wider self-center">
+              <label htmlFor="coverStory">Choose cover story</label>
+              <input
+                type="file"
+                accept=".jpg , .png, .jpeg"
+                disabled={coverStoryImg ? true : false}
+                onChange={handleCoverStoryInput}
+              />
+              {coverStoryImg && (
+                <div className="w-[400px] h-[400px] rounded-md">
+                  <Image
+                    src={coverStoryImg}
+                    width={300}
+                    height={300}
+                    className="rounded-md"
+                  />
+                </div>
+              )}
+              <button
+                className="bg-amber-600 py-[0.6em] px-[1.2em] rounded-md font-medium tracking-wider self-center"
+                disabled={coverStoryImgError ? true : false}
+              >
                 Start new story!
               </button>
+              {coverStoryImgError && <p>{coverStoryImgError}</p>}
             </form>
           </div>
         ) : (
@@ -271,7 +453,7 @@ export default function Profile(props: Props) {
                 </button>
                 <Link href={`/stories/${newStory?.id}/overview`}>
                   <button className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em]">
-                    Finish writing
+                    Publish!
                   </button>
                 </Link>
               </div>

@@ -49,7 +49,7 @@ export default function Overview(props: Props) {
       });
       const data = await response.json();
       setStoryComments((prevComments) => [
-        { ...data.newComment, username: userProfile },
+        { ...data.newComment, username: userProfile?.username },
         ...prevComments,
       ]);
     }
@@ -92,7 +92,7 @@ export default function Overview(props: Props) {
               <div key={`commentId-${comment.id}`} className="border-2 mb-">
                 <h1>{comment.username}</h1>
                 <h2>{comment.content}</h2>
-                {userProfile === comment.username && (
+                {userProfile?.username === comment.username && (
                   <button
                     onClick={() => removeCommentHandler(comment.id)}
                     className="mt-6 bg-red-500 px-3 py-1 rounded-full font-bold"
@@ -164,6 +164,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const comments = await getAllStoryCommentsByStoryId(
     Number(context.query.storyId),
   );
+  console.log(overview, comments);
   if (!overview) {
     return { props: { overview: null } };
   }
