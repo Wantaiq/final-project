@@ -1,13 +1,8 @@
 import Link from 'next/link';
-import { getAllStories } from '../../util/database';
+import { AllStories, getAllStories } from '../../util/database';
 
 type Props = {
-  stories: {
-    id: number;
-    username: string;
-    title: string;
-    coverImgUrl: string;
-  }[];
+  stories: AllStories[];
 };
 export default function Stories(props: Props) {
   return (

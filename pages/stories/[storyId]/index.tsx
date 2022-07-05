@@ -1,16 +1,10 @@
 import { GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
 import { useState } from 'react';
-import { getAllStoryChaptersByStoryId } from '../../../util/database';
+import { Chapters, getAllStoryChaptersByStoryId } from '../../../util/database';
 
 type Props = {
-  chapters:
-    | {
-        id: number;
-        title: any;
-        heading: any;
-        content: any;
-      }[];
+  chapters: Chapters[];
   storyId: number;
 };
 export default function Story(props: Props) {

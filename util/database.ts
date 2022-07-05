@@ -42,6 +42,13 @@ export type UserStory = {
   coverImgUrl: string;
 };
 
+export type Chapters = {
+  id: number;
+  title: string;
+  heading: string;
+  content: string;
+};
+
 type Seed = {
   csrfSeed: string;
 };
@@ -53,6 +60,13 @@ type UserWithHashedPassword = User & {
 export type Session = {
   id: number;
   token: string;
+};
+
+export type AllStories = {
+  id: number;
+  username: string;
+  title: string;
+  coverImgUrl: string;
 };
 
 type DeletedStory = {
@@ -218,8 +232,9 @@ export async function createChapter(
 }
 
 export async function getAllStories() {
-  const stories =
-    await sql`SELECT stories.id, users.username, stories.title, stories.cover_img_url
+  const stories = await sql<
+    [AllStories]
+  >`SELECT stories.id, users.username, stories.title, stories.cover_img_url
     FROM users, stories
     WHERE users.id = stories.user_id
     ORDER BY stories.id DESC`;
@@ -235,8 +250,9 @@ export async function getAllUserStoriesByUserId(userId: number) {
 }
 
 export async function getAllStoryChaptersByStoryId(storyId: number) {
-  const chapters =
-    await sql`SELECT chapters.id, stories.title, chapters.heading, chapters.content
+  const chapters = await sql<
+    [Chapters]
+  >`SELECT chapters.id, stories.title, chapters.heading, chapters.content
     FROM stories, chapters
     WHERE stories.id= ${storyId}
     AND chapters.story_id = stories.id
@@ -314,11 +330,10 @@ export async function isStoryFavorite(storyId: number, userId: number) {
 }
 
 export async function removeFromFavorites(storyId: number, userId: number) {
-  const [previousFavorite] = await sql<[StoryId]>`
+  await sql<[StoryId]>`
   DELETE FROM favorites
   WHERE favorites.story_id = ${storyId}
   AND favorites.user_id = ${userId}`;
-  console.log(previousFavorite);
 }
 
 export async function getAllFavoriteStoriesByUserId(userId: number) {
