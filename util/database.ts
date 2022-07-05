@@ -66,6 +66,10 @@ type DeletedStory = {
   id: number;
 };
 
+type StoryId = {
+  storyId: number;
+};
+
 export type Comments = {
   id: number;
   content: string;
@@ -301,6 +305,30 @@ export async function deleteStory(storyId: number) {
   return camelcaseKeys(deletedStory);
 }
 
+export async function favoriteStory(storyId: number, userId: number) {
+  const [favorite] = await sql`INSERT INTO favorites(story_id, user_id)
+  VALUES(${storyId}, ${userId}) RETURNING * `;
+  console.log(favorite);
+  return camelcaseKeys(favorite);
+}
+
+export async function isStoryFavorite(storyId: number, userId: number) {
+  const [favorite] = await sql<[StoryId | undefined]>`SELECT favorites.story_id
+    FROM favorites, stories, users
+    WHERE favorites.story_id = ${storyId}
+    AND favorites.user_id = ${userId}
+    AND stories.user_id = users.id
+    `;
+  return favorite ? true : false;
+}
+
+export async function removeFromFavorites(storyId: number, userId: number) {
+  const [previousFavorite] = await sql<[StoryId]>`
+  DELETE FROM favorites
+  WHERE favorites.story_id = ${storyId}
+  AND favorites.user_id = ${userId}`;
+  console.log(previousFavorite);
+}
 export async function getCsrfSeedByValidUserToken(token: string) {
   const [seed] = await sql<
     [Seed]

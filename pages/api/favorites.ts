@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { verifyCsrfToken } from '../../util/auth';
 import {
-  createNewComment,
-  deleteComment,
+  favoriteStory,
   getCsrfSeedByValidUserToken,
+  removeFromFavorites,
 } from '../../util/database';
 
-export default async function commentsHandler(
+export default async function favoritesHandler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
@@ -26,19 +26,14 @@ export default async function commentsHandler(
     res.status(401).json({ error: [{ message: 'Unauthorized' }] });
     return;
   }
-
   if (req.method === 'POST') {
-    const newComment = await createNewComment(
-      req.body.storyId,
-      req.body.userId,
-      req.body.content,
-    );
-    res.status(200).json({ newComment });
+    await favoriteStory(req.body.storyId, req.body.userId);
+    res.status(200).json({ message: 'Success' });
     return;
   }
   if (req.method === 'DELETE') {
-    const deletedComment = await deleteComment(req.body.commentId);
-    res.status(200).json({ deletedComment });
+    await removeFromFavorites(req.body.storyId, req.body.userId);
+    res.status(200).json({ message: 'Success' });
     return;
   }
   res.status(405).json({ error: [{ message: 'Method not allowed' }] });

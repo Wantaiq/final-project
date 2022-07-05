@@ -11,14 +11,14 @@ export default async function chaptersHandler(
 ) {
   if (req.method !== 'GET') {
     if (!req.body.csrfToken) {
-      res.status(405).json({ error: [{ message: 'Unauthorized' }] });
+      res.status(401).json({ error: [{ message: 'Unauthorized' }] });
       return;
     }
     const { csrfSeed } = await getCsrfSeedByValidUserToken(
       req.cookies.sessionToken,
     );
     if (!verifyCsrfToken(csrfSeed, req.body.csrfToken)) {
-      res.status(405).json({ error: [{ message: 'Unauthorized' }] });
+      res.status(401).json({ error: [{ message: 'Unauthorized' }] });
       return;
     }
     if (req.method === 'POST') {

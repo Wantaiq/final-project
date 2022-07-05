@@ -10,6 +10,7 @@ import {
   getCsrfSeedByValidUserToken,
   getCurrentUserIdBySessionToken,
   getStoryOverviewByStoryId,
+  isStoryFavorite,
   StoryOverview,
 } from '../../../util/database';
 
@@ -18,6 +19,7 @@ type Props = {
   userId?: { id: number };
   csrfToken: string;
   comments: Comments;
+  isFav: boolean;
 };
 type Comment = {
   comment: string;
@@ -32,7 +34,7 @@ export default function Overview(props: Props) {
   } = useForm<Comment>();
   const [isComment, setIsComment] = useState(false);
   const [storyComments, setStoryComments] = useState(props.comments);
-
+  const [isFav, setIsFav] = useState(props.isFav);
   async function createNewCommentHandler(commentInput: Comment) {
     if (props.userId && props.overview) {
       const response = await fetch('/api/comments', {
@@ -67,15 +69,54 @@ export default function Overview(props: Props) {
       prevComments.filter((comment) => comment.id !== data.deletedComment.id),
     );
   }
-  if (props.overview === null) return <h1>Oops something went wrong</h1>;
+
+  async function addToFavorites(storyId: number, userId: number) {
+    await fetch('/api/favorites', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ storyId, userId, csrfToken: props.csrfToken }),
+    });
+    setIsFav(true);
+  }
+
+  async function removeFromFavorites(storyId: number, userId: number) {
+    await fetch('/api/favorites', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ storyId, userId, csrfToken: props.csrfToken }),
+    });
+    setIsFav(false);
+  }
+  if (!props.overview) {
+    return <h1>Oop something went wrong</h1>;
+  }
   return (
     <div className="w-[75%] mx-auto mt-24">
       <div>
         <h1 className="font-bold text-lg mb-2 pb-2 text-amber-500">
-          {props.overview.title}
+          Title: {props.overview.title}
         </h1>
+        {!isFav ? (
+          <button
+            className="bg-red-300"
+            onClick={() =>
+              addToFavorites(props.overview.storyId, props.userId.id)
+            }
+          >
+            Add to favorites
+          </button>
+        ) : (
+          <button
+            className="bg-red-500"
+            onClick={() =>
+              removeFromFavorites(props.overview.storyId, props.userId.id)
+            }
+          >
+            Remove from favorites
+          </button>
+        )}
         <h2 className="tracking-wide text-md mb-2">
-          {props.overview.description}
+          Description : {props.overview.description}
         </h2>
         <p>Number of chapters: {props.overview.numberOfChapters}</p>
         <p className="opacity-80 mb-4">Author: {props.overview.author}</p>
@@ -164,7 +205,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const comments = await getAllStoryCommentsByStoryId(
     Number(context.query.storyId),
   );
-  console.log(overview, comments);
   if (!overview) {
     return { props: { overview: null } };
   }
@@ -177,7 +217,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     context.req.cookies.sessionToken,
   );
   const csrfToken = createCsrfToken(csrfSeed);
+  const isFav = await isStoryFavorite(Number(context.query.storyId), userId.id);
   return {
-    props: { overview, userId, csrfToken, comments },
+    props: { overview, userId, csrfToken, comments, isFav },
   };
 }

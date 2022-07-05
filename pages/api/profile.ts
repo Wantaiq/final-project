@@ -15,12 +15,12 @@ export default async function profileHandler(
   if (req.method === 'GET') {
     const sessionToken = req.cookies.sessionToken;
     if (!sessionToken) {
-      res.status(405).json({ error: [{ message: 'Unauthorized' }] });
+      res.status(401).json({ error: [{ message: 'Unauthorized' }] });
       return;
     }
     const userProfile = await getUserProfileByValidSessionToken(sessionToken);
     if (!userProfile) {
-      res.status(405).json({ error: [{ message: 'Unauthorized' }] });
+      res.status(401).json({ error: [{ message: 'Unauthorized' }] });
       return;
     }
     res
@@ -30,24 +30,24 @@ export default async function profileHandler(
   }
   if (req.method === 'PUT') {
     if (!req.body.csrfToken) {
-      res.status(405).json({ error: [{ message: 'Unauthorized' }] });
+      res.status(401).json({ error: [{ message: 'Unauthorized' }] });
       return;
     }
     const { csrfSeed } = await getCsrfSeedByValidUserToken(
       req.cookies.sessionToken,
     );
     if (!verifyCsrfToken(csrfSeed, req.body.csrfToken)) {
-      res.status(405).json({ error: [{ message: 'Unauthorized' }] });
+      res.status(401).json({ error: [{ message: 'Unauthorized' }] });
       return;
     }
     const sessionToken = req.cookies.sessionToken;
     if (!sessionToken) {
-      res.status(405).json({ error: [{ message: 'Unauthorized' }] });
+      res.status(401).json({ error: [{ message: 'Unauthorized' }] });
       return;
     }
     const userProfile = await getUserProfileByValidSessionToken(sessionToken);
     if (!userProfile) {
-      res.status(405).json({ error: [{ message: 'Unauthorized' }] });
+      res.status(401).json({ error: [{ message: 'Unauthorized' }] });
       return;
     }
     if (req.body.userBio) {
@@ -58,9 +58,6 @@ export default async function profileHandler(
     if (req.body.img) {
       const uploadImgResponse = await cloudinary.uploader.upload(req.body.img, {
         upload_preset: 'avatars',
-        width: 320,
-        height: 320,
-        crop: 'fit',
       });
       await updateUserProfileAvatar(
         uploadImgResponse.eager[0].secure_url,
