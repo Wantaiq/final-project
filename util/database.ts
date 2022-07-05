@@ -35,13 +35,6 @@ export type UserProfile = {
   userId: number;
 };
 
-export type UserComments = {
-  id: number;
-  storyId: number;
-  storyTitle: string;
-  content: string;
-}[];
-
 export type UserStory = {
   id: number;
   title: string;
@@ -84,6 +77,15 @@ export type StoryOverview = {
   description: string;
   numberOfChapters: number;
 };
+
+export type FavoriteStories = {
+  userId: number;
+  storyId: number;
+  author: string;
+  title: string;
+  description: string;
+  coverImgUrl: string;
+}[];
 export async function createUserWithHashedPassword(
   username: string,
   hashedPassword: string,
@@ -288,17 +290,6 @@ export async function getAllStoryCommentsByStoryId(storyId: number) {
   return comments.map((comment) => camelcaseKeys(comment));
 }
 
-export async function getAllUsersCommentsByUserId(userId: number) {
-  const comments = await sql<
-    [UserComments]
-  >`SELECT comments.id, stories.id as story_id, stories.title as story_title, comments.content
-    FROM comments, stories
-    WHERE comments.creator_id = ${userId}
-    AND stories.id = comments.story_id
-    ORDER BY comments.id DESC
-    `;
-  return comments.map((comment) => camelcaseKeys(comment));
-}
 export async function deleteStory(storyId: number) {
   const [deletedStory] = await sql<[DeletedStory]>`
   DELETE FROM stories where id = ${storyId} RETURNING id`;
@@ -328,6 +319,17 @@ export async function removeFromFavorites(storyId: number, userId: number) {
   WHERE favorites.story_id = ${storyId}
   AND favorites.user_id = ${userId}`;
   console.log(previousFavorite);
+}
+
+export async function getAllFavoriteStoriesByUserId(userId: number) {
+  const favorites = await sql<
+    [FavoriteStories]
+  >`SELECT users.id as userId, stories.id as story_id, users.username as author, stories.title, stories.description, stories.cover_img_url
+    FROM favorites, stories, users
+    WHERE users.id = ${userId}
+    AND favorites.user_id = users.id
+    AND favorites.story_id = stories.id`;
+  return favorites.map((story) => camelcaseKeys(story));
 }
 export async function getCsrfSeedByValidUserToken(token: string) {
   const [seed] = await sql<

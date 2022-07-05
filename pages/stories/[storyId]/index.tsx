@@ -10,13 +10,12 @@ type Props = {
         title: any;
         heading: any;
         content: any;
-      }[]
-    | null;
+      }[];
   storyId: number;
 };
 export default function Story(props: Props) {
   const [currentChapter, setCurrentChapter] = useState(0);
-  if (props.chapters === null) {
+  if (props.chapters.length === 0) {
     return (
       <div className="mx-auto my-24 w-fit">
         <h1 className="font-bold text-3xl tracking-wide text-amber-600">
@@ -87,5 +86,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       props: { chapters, storyId: Number(context.query.storyId) },
     };
   }
-  return { props: { chapters: null } };
 }

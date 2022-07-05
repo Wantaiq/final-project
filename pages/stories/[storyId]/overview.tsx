@@ -15,11 +15,11 @@ import {
 } from '../../../util/database';
 
 type Props = {
-  overview: StoryOverview | null;
+  overview: StoryOverview | undefined;
   userId?: { id: number };
-  csrfToken: string;
+  csrfToken?: string;
   comments: Comments;
-  isFav: boolean;
+  isFav?: boolean;
 };
 type Comment = {
   comment: string;
@@ -96,25 +96,27 @@ export default function Overview(props: Props) {
         <h1 className="font-bold text-lg mb-2 pb-2 text-amber-500">
           Title: {props.overview.title}
         </h1>
-        {!isFav ? (
-          <button
-            className="bg-red-300"
-            onClick={() =>
-              addToFavorites(props.overview.storyId, props.userId.id)
-            }
-          >
-            Add to favorites
-          </button>
-        ) : (
-          <button
-            className="bg-red-500"
-            onClick={() =>
-              removeFromFavorites(props.overview.storyId, props.userId.id)
-            }
-          >
-            Remove from favorites
-          </button>
-        )}
+        {props.userId ? (
+          !isFav ? (
+            <button
+              className="bg-red-300"
+              onClick={() =>
+                addToFavorites(props.overview.storyId, props.userId.id)
+              }
+            >
+              Add to favorites
+            </button>
+          ) : (
+            <button
+              className="bg-red-500"
+              onClick={() =>
+                removeFromFavorites(props.overview.storyId, props.userId.id)
+              }
+            >
+              Remove from favorites
+            </button>
+          )
+        ) : null}
         <h2 className="tracking-wide text-md mb-2">
           Description : {props.overview.description}
         </h2>
@@ -195,6 +197,7 @@ export default function Overview(props: Props) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  if (typeof context.query.storyId !== 'string') return;
   const overview = await getStoryOverviewByStoryId(
     Number(context.query.storyId),
   );

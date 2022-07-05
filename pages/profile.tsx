@@ -6,11 +6,11 @@ import { useForm } from 'react-hook-form';
 import { profileContext } from '../context/ProfileProvider';
 import { createCsrfToken } from '../util/auth';
 import {
-  getAllUsersCommentsByUserId,
+  FavoriteStories,
+  getAllFavoriteStoriesByUserId,
   getAllUserStoriesByUserId,
   getCsrfSeedByValidUserToken,
   getUserProfileByValidSessionToken,
-  UserComments,
   UserProfile,
   UserStory,
 } from '../util/database';
@@ -20,7 +20,7 @@ type Props = {
   csrfToken: string;
   userStories: UserStory[];
   tab: string | undefined;
-  userComments: UserComments;
+  favorites: FavoriteStories;
 };
 
 type StoryInput = {
@@ -305,10 +305,10 @@ export default function Profile(props: Props) {
         </div>
         <div
           className={`font-bold text-xl tracking-wide ${
-            props.tab === 'comments' && 'border-b-2 border-amber-600'
+            props.tab === 'favorites' && 'border-b-2 border-amber-600'
           }`}
         >
-          <Link href="/profile?tab=comments">Comments</Link>
+          <Link href="/profile?tab=favorites">Your favorites</Link>
         </div>
       </div>
       {!props.tab &&
@@ -460,18 +460,23 @@ export default function Profile(props: Props) {
             </form>
           </div>
         ))}
-      {props.tab === 'comments' && (
+      {props.tab === 'favorites' && (
         <div>
-          {props.userComments.map((comment) => {
+          {props.favorites.map((story) => {
             return (
               <div
-                key={`commentId-${comment.id}`}
-                className="w-[65%] mx-auto px-20 py-10 border-b-2 mt-6 flex justify-evenly items-center"
+                key={`favoriteStory-${story.storyId}`}
+                style={{ backgroundImage: `url(${story.coverImgUrl})` }}
+                className="w-[65%] mx-auto px-20 py-10 border-b-2 mt-6 flex justify-evenly items-center bg-no-repeat bg-cover bg-blend-overlay bg-[#242323]"
               >
-                <Link href={`/stories/${comment.storyId}/overview`}>
-                  <a>Story : {comment.storyTitle}</a>
+                <a>Title : {story.title}</a>
+                <p> Description : {story.description}</p>
+                <p>Written by: {story.author}</p>
+                <Link href={`/stories/${story.storyId}/overview`}>
+                  <a className="mt-6 bg-amber-600 px-3 py-1 rounded-full font-bold text-center">
+                    Read story
+                  </a>
                 </Link>
-                <p> You wrote : {comment.content}</p>
               </div>
             );
           })}
@@ -491,15 +496,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     const { csrfSeed } = await getCsrfSeedByValidUserToken(
       context.req.cookies.sessionToken,
     );
-    const userComments = await getAllUsersCommentsByUserId(userProfile.userId);
+    const favorites = await getAllFavoriteStoriesByUserId(userProfile.userId);
     const csrfToken = createCsrfToken(csrfSeed);
+    console.log(favorites);
     return {
       props: {
         userProfile,
         csrfToken,
         userStories,
         tab,
-        userComments,
+        favorites,
       },
     };
   }
