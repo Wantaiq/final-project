@@ -6,6 +6,7 @@ type Props = {
     id: number;
     username: string;
     title: string;
+    coverImgUrl: string;
   }[];
 };
 export default function Stories(props: Props) {
@@ -15,17 +16,18 @@ export default function Stories(props: Props) {
         {props.stories.map((story) => {
           return (
             <div
+              style={{ backgroundImage: `url(${story.coverImgUrl})` }}
               key={`storyId-${story.id}`}
-              className="border-2 px-6 py-12 rounded-lg"
+              className="border-2 px-6 pt-12 pb-6 rounded-lg bg-center bg-cover bg-[#353434] bg-blend-overlay w-[275px] h-[350px]"
             >
-              <h1 className="font-bold text-lg tracking-wide text-amber-400 mb-4">
+              <h1 className="font-bold text-lg tracking-wide text-amber-400 mb-4 border-b-2 pb-4 text-shadow">
                 <span>
                   <Link href={`/stories/${story.id}/overview`}>
                     {story.title}
                   </Link>
                 </span>
               </h1>
-              <p>
+              <p className="text-shadow">
                 Written by:{' '}
                 <span>
                   <Link href={`/authors/${story.username}`}>
@@ -43,7 +45,6 @@ export default function Stories(props: Props) {
 
 export async function getServerSideProps() {
   const stories = await getAllStories();
-  console.log(stories);
   return {
     props: { stories },
   };

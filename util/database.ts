@@ -46,6 +46,7 @@ export type UserStory = {
   id: number;
   title: string;
   description: string;
+  coverImgUrl: string;
 };
 
 type Seed = {
@@ -191,9 +192,10 @@ export async function createUserStory(
   title: string,
   description: string,
   userId: string,
+  coverimgUrl: string,
 ) {
   const [story] =
-    await sql`INSERT INTO stories (title, description, user_id)VALUES (${title}, ${description}, ${userId}) RETURNING id, title, description `;
+    await sql`INSERT INTO stories (title, description, user_id, cover_img_url)VALUES (${title}, ${description}, ${userId}, ${coverimgUrl}) RETURNING id, title, description `;
   return camelcaseKeys(story);
 }
 
@@ -210,7 +212,8 @@ export async function createChapter(
 }
 
 export async function getAllStories() {
-  const stories = await sql`SELECT stories.id, users.username, stories.title
+  const stories =
+    await sql`SELECT stories.id, users.username, stories.title, stories.cover_img_url
     FROM users, stories
     WHERE users.id = stories.user_id
     ORDER BY stories.id DESC`;
@@ -218,7 +221,7 @@ export async function getAllStories() {
 }
 
 export async function getAllUserStoriesByUserId(userId: number) {
-  const stories = await sql`SELECT id, title, description
+  const stories = await sql`SELECT id, title, description, cover_img_url
     FROM stories
     WHERE user_id = ${userId}
     ORDER BY id DESC`;

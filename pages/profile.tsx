@@ -46,9 +46,16 @@ export default function Profile(props: Props) {
   const [numberOfStories, setNumberOfStories] = useState(
     props.userStories.length,
   );
+  const [coverStoryImg, setCoverStoryImg] = useState<any>('');
+  const [coverStoryImgError, setCoverStoryImgError] = useState<
+    undefined | string
+  >(undefined);
 
-  const [imgUploadError, setImgUploadError] = useState('');
-  const [selectedImg, setSelectedImg] = useState<any>('');
+  const [imgAvatarUploadError, setImgAvatarUploadError] = useState<
+    string | undefined
+  >(undefined);
+
+  const [selectedAvatarImage, setSelectedAvatarImage] = useState<any>('');
   const [avatarImgInput, setAvatarImgInput] = useState('');
   const [isAvatarUpdate, setIsAvatarUpdate] = useState(false);
   const [isUserBioUpdate, setIsUserBioUpdate] = useState(false);
@@ -67,6 +74,7 @@ export default function Profile(props: Props) {
           title: storyInput.title,
           description: storyInput.description,
           userId: props.userProfile.userId,
+          coverImg: coverStoryImg,
         }),
       });
       const data: { newStory: UserStory } = await response.json();
@@ -112,7 +120,7 @@ export default function Profile(props: Props) {
 
   async function handleSubmitProfileImage(event: FormEvent) {
     event.preventDefault();
-    if (!selectedImg) {
+    if (!selectedAvatarImage) {
       setIsAvatarUpdate(false);
       return;
     }
@@ -120,7 +128,7 @@ export default function Profile(props: Props) {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        img: selectedImg,
+        img: selectedAvatarImage,
         csrfToken: props.csrfToken,
       }),
     });
@@ -132,16 +140,26 @@ export default function Profile(props: Props) {
   }
 
   function discardAvatarChanges() {
-    setSelectedImg('');
+    setSelectedAvatarImage('');
     setIsAvatarUpdate(false);
   }
-  function previewImg(img: Blob) {
-    if (typeof img === 'undefined') return;
+
+  function handleCoverStoryInput(event: React.ChangeEvent<HTMLInputElement>) {
+    if (!event.target.files) return;
+    const uploadedImg = event.target.files[0];
+    const fileSize = Math.round(event.target.files[0].size / 1000);
+    if (fileSize > 1000) {
+      setCoverStoryImgError('Maximum image size is 1mb');
+      return;
+    }
     const reader = new FileReader();
-    reader.readAsDataURL(img);
+    reader.readAsDataURL(uploadedImg);
     reader.onloadend = () => {
-      setSelectedImg(reader.result);
+      setCoverStoryImg(reader.result);
     };
+    setCoverStoryImgError('');
+    setAvatarImgInput(event.currentTarget.value);
+    return;
   }
 
   function handleAvatarInput(event: React.ChangeEvent<HTMLInputElement>) {
@@ -149,10 +167,15 @@ export default function Profile(props: Props) {
     const uploadedImg = event.target.files[0];
     const fileSize = Math.round(event.target.files[0].size / 1000);
     if (fileSize > 1000) {
-      setImgUploadError('Maximum image size is 1mb');
+      setImgAvatarUploadError('Maximum image size is 1mb');
       return;
     }
-    previewImg(uploadedImg);
+    setImgAvatarUploadError('');
+    const reader = new FileReader();
+    reader.readAsDataURL(uploadedImg);
+    reader.onloadend = () => {
+      setSelectedAvatarImage(reader.result);
+    };
     setAvatarImgInput(event.currentTarget.value);
     return;
   }
@@ -172,9 +195,6 @@ export default function Profile(props: Props) {
     setIsUserBioUpdate(false);
   }
 
-  function handleUserBioInput(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    setUserBio(event.currentTarget.value);
-  }
   return (
     <>
       {/* Profile */}
@@ -183,7 +203,11 @@ export default function Profile(props: Props) {
           <div className="flex flex-col space-y-4">
             <div className="w-[320px] h-[320px] rounded-full border-2">
               <Image
-                src={selectedImg ? selectedImg : props.userProfile.avatar}
+                src={
+                  selectedAvatarImage
+                    ? selectedAvatarImage
+                    : props.userProfile.avatar
+                }
                 width={320}
                 height={320}
                 className="rounded-full"
@@ -198,7 +222,7 @@ export default function Profile(props: Props) {
                 >
                   Select image
                 </label>
-                <p>{imgUploadError}</p>
+                <p>{imgAvatarUploadError ? imgAvatarUploadError : null}</p>
                 <input
                   id="uploadAvatar"
                   type="file"
@@ -207,7 +231,7 @@ export default function Profile(props: Props) {
                   value={avatarImgInput}
                   onChange={(event) => handleAvatarInput(event)}
                 />
-                <button disabled={imgUploadError ? true : false}>
+                <button disabled={imgAvatarUploadError ? true : false}>
                   Save and exit
                 </button>
                 <button onClick={() => discardAvatarChanges()}>
@@ -227,7 +251,7 @@ export default function Profile(props: Props) {
             <h1 className="font-bold text-2xl tracking-wider text-amber-500">
               {props.userProfile.username}
             </h1>
-            <p className="">
+            <p>
               <span className="font-bold text-3xl">{numberOfStories}</span>
               {numberOfStories === 1 ? 'Story' : 'Stories'}
             </p>
@@ -240,7 +264,7 @@ export default function Profile(props: Props) {
               className="text-black indent-4"
               id="userBio"
               value={userBio}
-              onChange={(e) => handleUserBioInput(e)}
+              onChange={(event) => setUserBio(event.currentTarget.value)}
               placeholder={
                 props.userProfile.bio === null
                   ? 'About you ...'
@@ -300,12 +324,13 @@ export default function Profile(props: Props) {
               return (
                 <div
                   key={`storyId-${story.id}`}
-                  className="border-2 px-6 pt-12 pb-6 rounded-lg w-[90%]"
+                  style={{ backgroundImage: `url(${story.coverImgUrl})` }}
+                  className="border-2 px-6 pt-12 pb-6 rounded-lg bg-center bg-cover bg-[#242323] bg-blend-overlay w-[275px] h-[350px]"
                 >
-                  <h1 className="font-bold text-lg tracking-wide text-amber-400 mb-4 border-b-2 pb-4">
+                  <h1 className="font-bold text-lg tracking-wide text-amber-400 mb-4 border-b-2 pb-4 text-shadow">
                     {story.title}
                   </h1>
-                  <h2 className="font-medium tracking-wide">
+                  <h2 className="font-medium tracking-wide text-shadow">
                     {!story.description
                       ? 'Someone ripped out description page.'
                       : story.description}
@@ -369,9 +394,30 @@ export default function Profile(props: Props) {
                   {errors.description.message}
                 </p>
               ) : null}
-              <button className="bg-amber-600 py-[0.6em] px-[1.2em] rounded-md font-medium tracking-wider self-center">
+              <label htmlFor="coverStory">Choose cover story</label>
+              <input
+                type="file"
+                accept=".jpg , .png, .jpeg"
+                disabled={coverStoryImg ? true : false}
+                onChange={handleCoverStoryInput}
+              />
+              {coverStoryImg && (
+                <div className="w-[400px] h-[400px] rounded-md">
+                  <Image
+                    src={coverStoryImg}
+                    width={300}
+                    height={300}
+                    className="rounded-md"
+                  />
+                </div>
+              )}
+              <button
+                className="bg-amber-600 py-[0.6em] px-[1.2em] rounded-md font-medium tracking-wider self-center"
+                disabled={coverStoryImgError ? true : false}
+              >
                 Start new story!
               </button>
+              {coverStoryImgError && <p>{coverStoryImgError}</p>}
             </form>
           </div>
         ) : (

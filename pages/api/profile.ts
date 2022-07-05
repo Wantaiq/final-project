@@ -52,7 +52,7 @@ export default async function profileHandler(
     }
     if (req.body.userBio) {
       await updateUserProfileBio(req.body.userBio, userProfile.userId);
-      res.status(200).json({ message: 'All good' });
+      res.status(200).json({ message: 'Success' });
       return;
     }
     if (req.body.img) {
@@ -66,7 +66,7 @@ export default async function profileHandler(
         uploadImgResponse.eager[0].secure_url,
         userProfile.userId,
       );
-      res.status(200).json({ message: 'All good' });
+      res.status(200).json({ message: 'Success' });
       return;
     }
   }
