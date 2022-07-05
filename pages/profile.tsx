@@ -1,10 +1,10 @@
 import { GetServerSidePropsContext } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FormEvent, useContext, useRef, useState } from 'react';
+import { FormEvent, useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { profileContext } from '../../context/ProfileProvider';
-import { createCsrfToken } from '../../util/auth';
+import { profileContext } from '../context/ProfileProvider';
+import { createCsrfToken } from '../util/auth';
 import {
   getAllUsersCommentsByUserId,
   getAllUserStoriesByUserId,
@@ -13,7 +13,7 @@ import {
   UserComments,
   UserProfile,
   UserStory,
-} from '../../util/database';
+} from '../util/database';
 
 type Props = {
   userProfile: UserProfile;
@@ -30,49 +30,6 @@ type StoryInput = {
   chapterHeading: string;
 };
 
-function UpdateProfileBio(props) {
-  return (
-    <form onSubmit={(e) => props.handleUserBioSubmit(e)}>
-      <label htmlFor="userBio">Update your bio</label>
-      <textarea
-        className="text-black indent-4"
-        id="userBio"
-        value={props.userBio}
-        onChange={(e) => props.handleUserBioInput(e)}
-        placeholder={
-          props.userProfileBio === null ? 'About you ...' : props.userProfileBio
-        }
-      />
-      <p>* This information will be visible to other users.</p>
-      <button className="font-bold text-2xl tracking-wide mb-6 bg-amber-700 px-[1em] py-[.2em] cursor-pointer">
-        Save and exit
-      </button>
-    </form>
-  );
-}
-
-function UpdateProfileImage(props) {
-  return (
-    <form onSubmit={(e) => props.handleSubmitProfileImage(e)}>
-      <label
-        htmlFor="uploadAvatar"
-        className="font-bold text-2xl tracking-wide mb-6 bg-amber-700 px-[1em] py-[.2em] cursor-pointer"
-      >
-        Select image
-      </label>
-      <p>{props.imgUploadError}</p>
-      <input
-        id="uploadAvatar"
-        type="file"
-        accept=".jpg, .png, .jpeg"
-        hidden
-        value={props.avatarImgInput}
-        onChange={(event) => props.handleAvatarInput(event)}
-      />
-      <button disabled={props.imgUploadError}>Save and exit</button>
-    </form>
-  );
-}
 export default function Profile(props: Props) {
   const {
     register,
@@ -102,7 +59,7 @@ export default function Profile(props: Props) {
   async function createNewStoryHandler(storyInput: StoryInput) {
     const isStoryInputValid = await trigger();
     if (isStoryInputValid) {
-      const response = await fetch('http://localhost:3000/api/stories', {
+      const response = await fetch('/api/stories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -122,7 +79,7 @@ export default function Profile(props: Props) {
   async function createNewChapterHandler(userChapterInput: StoryInput) {
     const isStoryInputValid = await trigger();
     if (isStoryInputValid) {
-      await fetch('http://localhost:3000/api/stories/chapters', {
+      await fetch('/api/stories/chapters', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -140,7 +97,7 @@ export default function Profile(props: Props) {
     }
   }
   async function deleteStoryHandler(storyId: number) {
-    const response = await fetch('http://localhost:3000/api/stories', {
+    const response = await fetch('/api/stories', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -153,32 +110,30 @@ export default function Profile(props: Props) {
     setNumberOfStories((prevNumber) => prevNumber - 1);
   }
 
-  async function handleProfilePictureUpload(imgEncoded: string) {
-    if (!imgEncoded) {
+  async function handleSubmitProfileImage(event: FormEvent) {
+    event.preventDefault();
+    if (!selectedImg) {
       setIsAvatarUpdate(false);
       return;
     }
-    try {
-      const response = await fetch('/api/profile', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          img: imgEncoded,
-          csrfToken: props.csrfToken,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error('Maximum image size is 1mb');
-      }
-      setIsAvatarUpdate(false);
-      handleUserProfile();
-    } catch (error) {
-      setImgUploadError(error.message);
+    const response = await fetch('/api/profile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        img: selectedImg,
+        csrfToken: props.csrfToken,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error();
     }
+    setIsAvatarUpdate(false);
+    handleUserProfile();
   }
-  async function handleSubmitProfileImage(event: FormEvent) {
-    event.preventDefault();
-    await handleProfilePictureUpload(selectedImg);
+
+  function discardAvatarChanges() {
+    setSelectedImg('');
+    setIsAvatarUpdate(false);
   }
   function previewImg(img: Blob) {
     if (typeof img === 'undefined') return;
@@ -189,21 +144,21 @@ export default function Profile(props: Props) {
     };
   }
 
-  function handleAvatarInput(event) {
+  function handleAvatarInput(event: React.ChangeEvent<HTMLInputElement>) {
+    if (!event.target.files) return;
     const uploadedImg = event.target.files[0];
-    if (uploadedImg) {
-      const fileSize = Math.round(event.target.files[0].size / 1000);
-      if (fileSize > 1000) {
-        setImgUploadError('Maximum image size is 1mb');
-        return;
-      }
-      previewImg(uploadedImg);
-      setAvatarImgInput(event.currentTarget.value);
+    const fileSize = Math.round(event.target.files[0].size / 1000);
+    if (fileSize > 1000) {
+      setImgUploadError('Maximum image size is 1mb');
+      return;
     }
+    previewImg(uploadedImg);
+    setAvatarImgInput(event.currentTarget.value);
     return;
   }
 
-  async function handleUserBioSubmit() {
+  async function handleUserBioSubmit(event: FormEvent) {
+    event.preventDefault();
     if (!userBio) {
       setIsUserBioUpdate(false);
       return;
@@ -217,7 +172,7 @@ export default function Profile(props: Props) {
     setIsUserBioUpdate(false);
   }
 
-  function handleUserBioInput(event) {
+  function handleUserBioInput(event: React.ChangeEvent<HTMLTextAreaElement>) {
     setUserBio(event.currentTarget.value);
   }
   return (
@@ -236,12 +191,29 @@ export default function Profile(props: Props) {
               />
             </div>
             {isAvatarUpdate ? (
-              <UpdateProfileImage
-                imgUploadError={imgUploadError}
-                avatarImgInput={avatarImgInput}
-                handleAvatarInput={handleAvatarInput}
-                handleSubmitProfileImage={handleSubmitProfileImage}
-              />
+              <form onSubmit={(e) => handleSubmitProfileImage(e)}>
+                <label
+                  htmlFor="uploadAvatar"
+                  className="font-bold text-2xl tracking-wide mb-6 bg-amber-700 px-[1em] py-[.2em] cursor-pointer"
+                >
+                  Select image
+                </label>
+                <p>{imgUploadError}</p>
+                <input
+                  id="uploadAvatar"
+                  type="file"
+                  accept=".jpg, .png, .jpeg"
+                  hidden
+                  value={avatarImgInput}
+                  onChange={(event) => handleAvatarInput(event)}
+                />
+                <button disabled={imgUploadError ? true : false}>
+                  Save and exit
+                </button>
+                <button onClick={() => discardAvatarChanges()}>
+                  Discard changes
+                </button>
+              </form>
             ) : (
               <button
                 className="bg-amber-600 py-[0.4em] rounded font-bold tracking-wider text-center"
@@ -256,18 +228,30 @@ export default function Profile(props: Props) {
               {props.userProfile.username}
             </h1>
             <p className="">
-              <span className="font-bold text-3xl">{numberOfStories}</span>{' '}
+              <span className="font-bold text-3xl">{numberOfStories}</span>
               {numberOfStories === 1 ? 'Story' : 'Stories'}
             </p>
           </div>
         </div>
         {isUserBioUpdate ? (
-          <UpdateProfileBio
-            handleUserBioSubmit={handleUserBioSubmit}
-            userProfileBio={props.userProfile.bio}
-            handleUserBioInput={handleUserBioInput}
-            userBio={userBio}
-          />
+          <form onSubmit={handleUserBioSubmit}>
+            <label htmlFor="userBio">Update your bio</label>
+            <textarea
+              className="text-black indent-4"
+              id="userBio"
+              value={userBio}
+              onChange={(e) => handleUserBioInput(e)}
+              placeholder={
+                props.userProfile.bio === null
+                  ? 'About you ...'
+                  : props.userProfile.bio
+              }
+            />
+            <p>* This information will be visible to other users.</p>
+            <button className="font-bold text-2xl tracking-wide mb-6 bg-amber-700 px-[1em] py-[.2em] cursor-pointer">
+              Save and exit
+            </button>
+          </form>
         ) : (
           <div>
             <h2 className="text-xl tracking-wide opacity-70">
