@@ -88,7 +88,7 @@ export default function Overview(props: Props) {
     setIsFav(false);
   }
   if (!props.overview) {
-    return <h1>Oop something went wrong</h1>;
+    return <h1>This story doesn't have any pages</h1>;
   }
   return (
     <>

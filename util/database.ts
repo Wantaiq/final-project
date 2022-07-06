@@ -262,6 +262,7 @@ export async function getAllStoryChaptersByStoryId(storyId: number) {
   return chapters.map((chapter) => camelcaseKeys(chapter));
 }
 export async function getStoryOverviewByStoryId(storyId: number) {
+  if (!storyId) return;
   const [overview] = await sql<
     [StoryOverview | undefined]
   >`SELECT stories.id as story_id, users.username as author, stories.title, stories.description, stories.cover_img_url, MAX(chapters.sort_position) as number_of_chapters
@@ -295,6 +296,7 @@ export async function deleteComment(commentId: number) {
 }
 
 export async function getAllStoryCommentsByStoryId(storyId: number) {
+  if (!storyId) return;
   const comments = await sql<
     [Comments]
   >`SELECT comments.id, comments.content, users.username

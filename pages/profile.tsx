@@ -459,7 +459,11 @@ export default function Profile(props: Props) {
                   Next chapter
                 </button>
                 <Link href={`/stories/${newStory?.id}/overview`}>
-                  <button className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em]">
+                  <button
+                    className={`bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em] ${
+                      chapterNumber > 1 ? 'inline' : 'hidden'
+                    }`}
+                  >
                     Publish!
                   </button>
                 </Link>
