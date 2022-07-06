@@ -15,7 +15,7 @@ import {
 } from '../../../util/database';
 
 type Props = {
-  overview: StoryOverview | undefined;
+  overview?: StoryOverview;
   userId?: { id: number };
   csrfToken?: string;
   comments: Comments;
@@ -91,108 +91,114 @@ export default function Overview(props: Props) {
     return <h1>Oop something went wrong</h1>;
   }
   return (
-    <div className="w-[75%] mx-auto mt-24">
-      <div>
-        <h1 className="font-bold text-lg mb-2 pb-2 text-amber-500">
-          Title: {props.overview.title}
-        </h1>
-        {props.userId ? (
-          !isFav ? (
-            <button
-              className="bg-red-300"
-              onClick={() =>
-                addToFavorites(props.overview.storyId, props.userId.id)
-              }
-            >
-              Add to favorites
-            </button>
-          ) : (
-            <button
-              className="bg-red-500"
-              onClick={() =>
-                removeFromFavorites(props.overview.storyId, props.userId.id)
-              }
-            >
-              Remove from favorites
-            </button>
-          )
-        ) : null}
-        <h2 className="tracking-wide text-md mb-2">
-          Description : {props.overview.description}
-        </h2>
-        <p>Number of chapters: {props.overview.numberOfChapters}</p>
-        <p className="opacity-80 mb-4">Author: {props.overview.author}</p>
-        <div className="border-b-2 px-[2em] border-amber-500 mb-6 bg-amber-500 w-fit py-[.5em] rounded">
-          <Link href={`/stories/${props.overview.storyId}`}>Read story</Link>
+    <>
+      <div
+        style={{ backgroundImage: `url(${props.overview.coverImgUrl})` }}
+        className="h-[350px] bg-no-repeat bg-cover"
+      />
+      <div className="w-[75%] mx-auto mt-24">
+        <div>
+          <h1 className="font-bold text-lg mb-2 pb-2 text-amber-500">
+            Title: {props.overview.title}
+          </h1>
+          {props.userId ? (
+            !isFav ? (
+              <button
+                className="bg-red-300"
+                onClick={() =>
+                  addToFavorites(props.overview.storyId, props.userId.id)
+                }
+              >
+                Add to favorites
+              </button>
+            ) : (
+              <button
+                className="bg-red-500"
+                onClick={() =>
+                  removeFromFavorites(props.overview.storyId, props.userId.id)
+                }
+              >
+                Remove from favorites
+              </button>
+            )
+          ) : null}
+          <h2 className="tracking-wide text-md mb-2">
+            Description : {props.overview.description}
+          </h2>
+          <p>Number of chapters: {props.overview.numberOfChapters}</p>
+          <p className="opacity-80 mb-4">Author: {props.overview.author}</p>
+          <div className="border-b-2 px-[2em] border-amber-500 mb-6 bg-amber-500 w-fit py-[.5em] rounded">
+            <Link href={`/stories/${props.overview.storyId}`}>Read story</Link>
+          </div>
         </div>
-      </div>
-      <div>
-        {storyComments.length === 0 ? (
-          <h1>Be the first one to comment!</h1>
+        <div>
+          {storyComments.length === 0 ? (
+            <h1>Be the first one to comment!</h1>
+          ) : (
+            storyComments.map((comment) => {
+              return (
+                <div key={`commentId-${comment.id}`} className="border-2 mb-">
+                  <h1>{comment.username}</h1>
+                  <h2>{comment.content}</h2>
+                  {userProfile?.username === comment.username && (
+                    <button
+                      onClick={() => removeCommentHandler(comment.id)}
+                      className="mt-6 bg-red-500 px-3 py-1 rounded-full font-bold"
+                    >
+                      Remove comment
+                    </button>
+                  )}
+                </div>
+              );
+            })
+          )}
+        </div>
+        {isComment ? (
+          <div>
+            <form
+              className="flex flex-col justify-center space-y-4"
+              onSubmit={handleSubmit(createNewCommentHandler)}
+            >
+              <label htmlFor="comment">
+                Let {props.overview.author} know what you think!
+              </label>
+              <textarea
+                id="comment"
+                placeholder="Write a comment..."
+                className="text-black indent-3"
+                {...register('comment', {
+                  required: { value: true, message: 'Write short comment.' },
+                })}
+              />
+              {errors.comment ? (
+                <p className="font-bold tracking-wide text-sm text-red-300">
+                  {errors.comment.message}
+                </p>
+              ) : null}
+              <button className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em]">
+                Submit
+              </button>
+              <button
+                onClick={() => setIsComment(false)}
+                className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em]"
+              >
+                Exit
+              </button>
+            </form>
+          </div>
         ) : (
-          storyComments.map((comment) => {
-            return (
-              <div key={`commentId-${comment.id}`} className="border-2 mb-">
-                <h1>{comment.username}</h1>
-                <h2>{comment.content}</h2>
-                {userProfile?.username === comment.username && (
-                  <button
-                    onClick={() => removeCommentHandler(comment.id)}
-                    className="mt-6 bg-red-500 px-3 py-1 rounded-full font-bold"
-                  >
-                    Remove comment
-                  </button>
-                )}
-              </div>
-            );
-          })
+          <button
+            onClick={() => setIsComment(true)}
+            className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em]"
+            disabled={!props.userId}
+          >
+            {!props.userId
+              ? 'Please login to leave a comment'
+              : 'Write a comment'}
+          </button>
         )}
       </div>
-      {isComment ? (
-        <div>
-          <form
-            className="flex flex-col justify-center space-y-4"
-            onSubmit={handleSubmit(createNewCommentHandler)}
-          >
-            <label htmlFor="comment">
-              Let {props.overview.author} know what you think!
-            </label>
-            <textarea
-              id="comment"
-              placeholder="Write a comment..."
-              className="text-black indent-3"
-              {...register('comment', {
-                required: { value: true, message: 'Write short comment.' },
-              })}
-            />
-            {errors.comment ? (
-              <p className="font-bold tracking-wide text-sm text-red-300">
-                {errors.comment.message}
-              </p>
-            ) : null}
-            <button className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em]">
-              Submit
-            </button>
-            <button
-              onClick={() => setIsComment(false)}
-              className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em]"
-            >
-              Exit
-            </button>
-          </form>
-        </div>
-      ) : (
-        <button
-          onClick={() => setIsComment(true)}
-          className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em]"
-          disabled={!props.userId}
-        >
-          {!props.userId
-            ? 'Please login to leave a comment'
-            : 'Write a comment'}
-        </button>
-      )}
-    </div>
+    </>
   );
 }
 

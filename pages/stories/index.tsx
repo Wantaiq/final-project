@@ -13,7 +13,7 @@ export default function Stories(props: Props) {
             <div
               style={{ backgroundImage: `url(${story.coverImgUrl})` }}
               key={`storyId-${story.id}`}
-              className="border-2 px-6 pt-12 pb-6 rounded-lg bg-center bg-cover bg-[#353434] bg-blend-overlay w-[275px] h-[350px]"
+              className="border-2 px-6 pt-12 pb-6 rounded-lg bg-center bg-[#353434] bg-blend-overlay w-[275px] h-[350px] bg-350"
             >
               <h1 className="font-bold text-lg tracking-wide text-amber-400 mb-4 border-b-2 pb-4 text-shadow">
                 <span>

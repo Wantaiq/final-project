@@ -3,6 +3,13 @@ module.exports = {
     './pages/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
   ],
-  theme: {},
+  theme: {
+    backgroundSize: {
+      auto: 'auto',
+      cover: 'cover',
+      contain: 'contain',
+      350: '350px 350px',
+    },
+  },
   plugins: [],
 };

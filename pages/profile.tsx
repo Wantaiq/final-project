@@ -66,6 +66,8 @@ export default function Profile(props: Props) {
   async function createNewStoryHandler(storyInput: StoryInput) {
     const isStoryInputValid = await trigger();
     if (isStoryInputValid) {
+      setNumberOfStories((prevNumber) => prevNumber + 1);
+      setIsStory(true);
       const response = await fetch('/api/stories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -80,8 +82,6 @@ export default function Profile(props: Props) {
       const data: { newStory: UserStory } = await response.json();
       setNewStory(data.newStory);
       setUserStories((prevStories) => [data.newStory, ...prevStories]);
-      setNumberOfStories((prevNumber) => prevNumber + 1);
-      setIsStory(true);
     }
   }
   async function createNewChapterHandler(userChapterInput: StoryInput) {
@@ -124,6 +124,7 @@ export default function Profile(props: Props) {
       setIsAvatarUpdate(false);
       return;
     }
+    setIsAvatarUpdate(false);
     const response = await fetch('/api/profile', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -135,7 +136,6 @@ export default function Profile(props: Props) {
     if (!response.ok) {
       throw new Error();
     }
-    setIsAvatarUpdate(false);
     handleUserProfile();
   }
 
@@ -146,6 +146,10 @@ export default function Profile(props: Props) {
 
   function handleCoverStoryInput(event: React.ChangeEvent<HTMLInputElement>) {
     if (!event.target.files) return;
+    if (event.target.files.length === 0) {
+      setCoverStoryImg('');
+      return;
+    }
     const uploadedImg = event.target.files[0];
     const fileSize = Math.round(event.target.files[0].size / 1000);
     if (fileSize > 1000) {
@@ -158,12 +162,15 @@ export default function Profile(props: Props) {
       setCoverStoryImg(reader.result);
     };
     setCoverStoryImgError('');
-    setAvatarImgInput(event.currentTarget.value);
     return;
   }
 
   function handleAvatarInput(event: React.ChangeEvent<HTMLInputElement>) {
     if (!event.target.files) return;
+    if (event.target.files.length === 0) {
+      setAvatarImgInput('');
+      return;
+    }
     const uploadedImg = event.target.files[0];
     const fileSize = Math.round(event.target.files[0].size / 1000);
     if (fileSize > 1000) {
@@ -325,7 +332,7 @@ export default function Profile(props: Props) {
                 <div
                   key={`storyId-${story.id}`}
                   style={{ backgroundImage: `url(${story.coverImgUrl})` }}
-                  className="border-2 px-6 pt-12 pb-6 rounded-lg bg-center bg-cover bg-[#242323] bg-blend-overlay w-[275px] h-[350px]"
+                  className="border-2 px-6 pt-12 pb-6 rounded-lg bg-center bg-350 bg-no-repeat bg-[#242323] bg-blend-overlay w-[275px] h-[350px]"
                 >
                   <h1 className="font-bold text-lg tracking-wide text-amber-400 mb-4 border-b-2 pb-4 text-shadow">
                     {story.title}
@@ -498,7 +505,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     );
     const favorites = await getAllFavoriteStoriesByUserId(userProfile.userId);
     const csrfToken = createCsrfToken(csrfSeed);
-    console.log(favorites);
     return {
       props: {
         userProfile,

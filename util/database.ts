@@ -89,6 +89,7 @@ export type StoryOverview = {
   author: string;
   title: string;
   description: string;
+  coverImgUrl: string;
   numberOfChapters: number;
 };
 
@@ -263,7 +264,7 @@ export async function getAllStoryChaptersByStoryId(storyId: number) {
 export async function getStoryOverviewByStoryId(storyId: number) {
   const [overview] = await sql<
     [StoryOverview | undefined]
-  >`SELECT stories.id as story_id, users.username as author, stories.title, stories.description, MAX(chapters.sort_position) as number_of_chapters
+  >`SELECT stories.id as story_id, users.username as author, stories.title, stories.description, stories.cover_img_url, MAX(chapters.sort_position) as number_of_chapters
     FROM users, stories, chapters
     WHERE stories.id = ${storyId}
     AND stories.user_id = users.id
