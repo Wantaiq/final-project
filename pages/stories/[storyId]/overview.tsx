@@ -19,8 +19,9 @@ type Props = {
   userId?: { id: number };
   csrfToken?: string;
   comments: Comments;
-  isFav?: boolean;
+  isFavorite?: boolean;
 };
+
 type Comment = {
   comment: string;
 };
@@ -34,7 +35,7 @@ export default function Overview(props: Props) {
   } = useForm<Comment>();
   const [isComment, setIsComment] = useState(false);
   const [storyComments, setStoryComments] = useState(props.comments);
-  const [isFav, setIsFav] = useState(props.isFav);
+  const [isFavorite, setIsFavorite] = useState(props.isFavorite);
   async function createNewCommentHandler(commentInput: Comment) {
     if (props.userId && props.overview) {
       const response = await fetch('/api/comments', {
@@ -76,7 +77,7 @@ export default function Overview(props: Props) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ storyId, userId, csrfToken: props.csrfToken }),
     });
-    setIsFav(true);
+    setIsFavorite(true);
   }
 
   async function removeFromFavorites(storyId: number, userId: number) {
@@ -85,7 +86,7 @@ export default function Overview(props: Props) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ storyId, userId, csrfToken: props.csrfToken }),
     });
-    setIsFav(false);
+    setIsFavorite(false);
   }
   if (!props.overview) {
     return <h1>This story doesn't have any pages</h1>;
@@ -101,27 +102,32 @@ export default function Overview(props: Props) {
           <h1 className="font-bold text-lg mb-2 pb-2 text-amber-500">
             Title: {props.overview.title}
           </h1>
-          {props.userId ? (
-            !isFav ? (
+          {props.userId &&
+            (!isFavorite ? (
               <button
                 className="bg-red-300"
-                onClick={() =>
-                  addToFavorites(props.overview.storyId, props.userId.id)
-                }
+                onClick={async () => {
+                  await addToFavorites(
+                    (props.overview as StoryOverview).storyId,
+                    (props.userId as { id: number }).id,
+                  );
+                }}
               >
                 Add to favorites
               </button>
             ) : (
               <button
                 className="bg-red-500"
-                onClick={() =>
-                  removeFromFavorites(props.overview.storyId, props.userId.id)
-                }
+                onClick={async () => {
+                  await removeFromFavorites(
+                    (props.overview as StoryOverview).storyId,
+                    (props.userId as { id: number }).id,
+                  );
+                }}
               >
                 Remove from favorites
               </button>
-            )
-          ) : null}
+            ))}
           <h2 className="tracking-wide text-md mb-2">
             Description : {props.overview.description}
           </h2>
@@ -226,8 +232,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     context.req.cookies.sessionToken,
   );
   const csrfToken = createCsrfToken(csrfSeed);
-  const isFav = await isStoryFavorite(Number(context.query.storyId), userId.id);
+  const isFavorite = await isStoryFavorite(
+    Number(context.query.storyId),
+    userId.id,
+  );
   return {
-    props: { overview, userId, csrfToken, comments, isFav },
+    props: { overview, userId, csrfToken, comments, isFavorite },
   };
 }

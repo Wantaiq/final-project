@@ -323,11 +323,11 @@ export async function favoriteStory(storyId: number, userId: number) {
 }
 
 export async function isStoryFavorite(storyId: number, userId: number) {
-  const [favorite] = await sql<[StoryId | undefined]>`SELECT favorites.story_id
-    FROM favorites, stories, users
+  const [favorite] = await sql<[StoryId | undefined]>`
+  SELECT favorites.story_id
+    FROM favorites
     WHERE favorites.story_id = ${storyId}
     AND favorites.user_id = ${userId}
-    AND stories.user_id = users.id
     `;
   return favorite ? true : false;
 }
