@@ -59,7 +59,7 @@ export default function Profile(props: Props) {
   const [avatarImgInput, setAvatarImgInput] = useState('');
   const [isAvatarUpdate, setIsAvatarUpdate] = useState(false);
   const [isUserBioUpdate, setIsUserBioUpdate] = useState(false);
-  const [userBio, setUserBio] = useState('');
+  const [userBio, setUserBio] = useState(props.userProfile.bio);
 
   const { handleUserProfile } = useContext(profileContext);
 
@@ -198,7 +198,6 @@ export default function Profile(props: Props) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userBio, csrfToken: props.csrfToken }),
     });
-    setUserBio('');
     setIsUserBioUpdate(false);
   }
 
@@ -270,13 +269,9 @@ export default function Profile(props: Props) {
             <textarea
               className="text-black indent-4"
               id="userBio"
-              value={userBio}
+              value={userBio ? userBio : ''}
               onChange={(event) => setUserBio(event.currentTarget.value)}
-              placeholder={
-                props.userProfile.bio === null
-                  ? 'About you ...'
-                  : props.userProfile.bio
-              }
+              placeholder={userBio === null ? 'About you ...' : userBio}
             />
             <p>* This information will be visible to other users.</p>
             <button className="font-bold text-2xl tracking-wide mb-6 bg-amber-700 px-[1em] py-[.2em] cursor-pointer">
@@ -286,9 +281,9 @@ export default function Profile(props: Props) {
         ) : (
           <div>
             <h2 className="text-xl tracking-wide opacity-70">
-              {!props.userProfile.bio
+              {!userBio
                 ? `Mysterious person that loves to read and write stories`
-                : props.userProfile.bio}
+                : userBio}
             </h2>
             <button onClick={() => setIsUserBioUpdate(true)}>Edit</button>
           </div>
