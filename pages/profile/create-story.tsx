@@ -35,12 +35,18 @@ export default function CreateStory(props: Props) {
   const [newStory, setNewStory] = useState<UserStory | undefined>(undefined);
   const [chapterNumber, setChapterNumber] = useState(1);
   const [isStory, setIsStory] = useState(false);
-  const [coverStoryImg, setCoverStoryImg] = useState<any>('');
+  const [coverStoryImg, setCoverStoryImg] = useState<
+    string | ArrayBuffer | null
+  >('');
   const [coverStoryImgError, setCoverStoryImgError] = useState<
     undefined | string
   >(undefined);
 
   async function createNewStoryHandler(storyInput: StoryInput) {
+    if (!coverStoryImg) {
+      setCoverStoryImgError('Please choose cover image');
+      return;
+    }
     const isStoryInputValid = await trigger();
     if (isStoryInputValid) {
       setIsStory(true);
@@ -57,7 +63,6 @@ export default function CreateStory(props: Props) {
         }),
       });
       const data: { newStory: UserStory } = await response.json();
-      console.log(data);
       setNewStory(data.newStory);
     }
   }
@@ -83,7 +88,9 @@ export default function CreateStory(props: Props) {
     }
   }
   function handleCoverStoryInput(event: React.ChangeEvent<HTMLInputElement>) {
-    if (!event.target.files) return;
+    if (!event.target.files) {
+      return;
+    }
     if (event.target.files.length === 0) {
       setCoverStoryImg('');
       return;
@@ -130,7 +137,7 @@ export default function CreateStory(props: Props) {
           {...register('description', {
             required: {
               value: true,
-              message: 'Let others know what you story is about.',
+              message: 'Let others know what your story is about.',
             },
           })}
         />
@@ -157,12 +164,14 @@ export default function CreateStory(props: Props) {
         />
         {coverStoryImg && (
           <div className="w-[400px] h-[400px] rounded-md">
-            <Image
-              src={coverStoryImg}
-              width={300}
-              height={300}
-              className="rounded-md"
-            />
+            {typeof coverStoryImg === 'string' && (
+              <Image
+                src={coverStoryImg}
+                width={300}
+                height={300}
+                className="rounded-md"
+              />
+            )}
           </div>
         )}
         <button
@@ -171,13 +180,17 @@ export default function CreateStory(props: Props) {
         >
           Start new story!
         </button>
-        {coverStoryImgError && <p>{coverStoryImgError}</p>}
+        {coverStoryImgError ? (
+          <p className="font-bold tracking-wide text-sm text-red-300">
+            {coverStoryImgError}
+          </p>
+        ) : null}
       </form>
     </div>
   ) : (
     <>
       <h1 className="font-bold text-2xl tracking-wide text-amber-400 mb-6">
-        Write chapter # {chapterNumber}
+        Chapter # {chapterNumber}
       </h1>
       <form
         onSubmit={handleSubmit(createNewChapterHandler)}
@@ -192,14 +205,29 @@ export default function CreateStory(props: Props) {
               required: { value: true, message: 'Write short title.' },
             })}
           />
+          {errors.chapterHeading ? (
+            <p className="font-bold tracking-wide text-sm text-red-300">
+              {errors.chapterHeading.message}
+            </p>
+          ) : null}
         </div>
         <div className="flex flex-col space-y-6">
           <label htmlFor="chapterContent">Chapter:</label>
           <textarea
             id="chapterContent"
             className="text-black indent-3 h-[500px]"
-            {...register('chapterContent')}
+            {...register('chapterContent', {
+              required: {
+                value: true,
+                message: 'Write some content.',
+              },
+            })}
           />
+          {errors.chapterContent ? (
+            <p className="font-bold tracking-wide text-sm text-red-300">
+              {errors.chapterContent.message}
+            </p>
+          ) : null}
         </div>
         <div className="px-12 space-x-12">
           <button className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em]">
@@ -216,7 +244,6 @@ export default function CreateStory(props: Props) {
           </Link>
         </div>
       </form>
-      );
     </>
   );
 }

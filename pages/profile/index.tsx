@@ -2,7 +2,6 @@ import { GetServerSidePropsContext } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FormEvent, useContext, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { profileContext } from '../../context/ProfileProvider';
 import { createCsrfToken } from '../../util/auth';
 import {
@@ -23,24 +22,7 @@ type Props = {
   favorites: FavoriteStories;
 };
 
-type StoryInput = {
-  title: string;
-  description: string;
-  chapterContent: string;
-  category: string;
-  chapterHeading: string;
-};
-
 export default function Profile(props: Props) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    trigger,
-    resetField,
-    setFocus,
-  } = useForm<StoryInput>();
-
   const [userStories, setUserStories] = useState(props.userStories);
 
   const [numberOfStories, setNumberOfStories] = useState(
@@ -50,7 +32,9 @@ export default function Profile(props: Props) {
     string | undefined
   >(undefined);
 
-  const [selectedAvatarImage, setSelectedAvatarImage] = useState<any>('');
+  const [selectedAvatarImage, setSelectedAvatarImage] = useState<
+    string | ArrayBuffer | null
+  >('');
   const [avatarImgInput, setAvatarImgInput] = useState('');
   const [isAvatarUpdate, setIsAvatarUpdate] = useState(false);
   const [isUserBioUpdate, setIsUserBioUpdate] = useState(false);
@@ -90,6 +74,7 @@ export default function Profile(props: Props) {
     if (!response.ok) {
       throw new Error();
     }
+    setSelectedAvatarImage('');
     handleUserProfile();
   }
 
@@ -107,7 +92,7 @@ export default function Profile(props: Props) {
     const uploadedImg = event.target.files[0];
     const fileSize = Math.round(event.target.files[0].size / 1000);
     if (fileSize > 1000) {
-      setImgAvatarUploadError('Maximum image size is 1mb');
+      setImgAvatarUploadError('Maximum image size is 1MB');
       return;
     }
     setImgAvatarUploadError('');
@@ -141,17 +126,19 @@ export default function Profile(props: Props) {
         <div className="flex space-x-14">
           <div className="flex flex-col space-y-4">
             <div className="w-[320px] h-[320px] rounded-full border-2">
-              <Image
-                src={
-                  selectedAvatarImage
-                    ? selectedAvatarImage
-                    : props.userProfile.avatar
-                }
-                width={320}
-                height={320}
-                className="rounded-full"
-                alt="Profile picture"
-              />
+              {typeof selectedAvatarImage === 'string' && (
+                <Image
+                  src={
+                    selectedAvatarImage
+                      ? selectedAvatarImage
+                      : props.userProfile.avatar
+                  }
+                  width={320}
+                  height={320}
+                  className="rounded-full"
+                  alt="Profile picture"
+                />
+              )}
             </div>
             {isAvatarUpdate ? (
               <form onSubmit={(e) => handleSubmitProfileImage(e)}>
@@ -191,7 +178,7 @@ export default function Profile(props: Props) {
               {props.userProfile.username}
             </h1>
             <p>
-              <span className="font-bold text-3xl">{numberOfStories}</span>
+              <span className="font-bold text-3xl">{numberOfStories} </span>
               {numberOfStories === 1 ? 'Story' : 'Stories'}
             </p>
           </div>
@@ -233,10 +220,17 @@ export default function Profile(props: Props) {
         </div>
         <div
           className={`font-bold text-xl tracking-wide ${
-            props.tab === 'favorites' && 'border-b-2 border-amber-600'
+            props.tab === 'library' && 'border-b-2 border-amber-600'
           }`}
         >
-          <Link href="/profile?tab=favorites">Your favorites</Link>
+          <Link href="/profile?tab=library">Library</Link>
+        </div>
+        <div
+          className={`font-bold text-xl tracking-wide ${
+            props.tab === 'messages' && 'border-b-2 border-amber-600'
+          }`}
+        >
+          <Link href="/profile?tab=messages">Messages</Link>
         </div>
       </div>
       {!props.tab &&
@@ -245,9 +239,15 @@ export default function Profile(props: Props) {
             <h1 className="font-bold text-3xl tracking-wide text-amber-600">
               You don't have any stories
             </h1>
+            <Link href="/profile/create-story">
+              <a>Create story</a>
+            </Link>
           </div>
         ) : (
           <div className="w-[65%] mx-auto grid grid-cols-4 px-14 py-8 gap-7">
+            <Link href="/profile/create-story">
+              <a>Create story</a>
+            </Link>
             {userStories.map((story) => {
               return (
                 <div
@@ -281,7 +281,12 @@ export default function Profile(props: Props) {
             })}
           </div>
         ))}
-      {props.tab === 'favorites' && (
+      {props.tab === 'messages' && (
+        <div>
+          <h1>Hi</h1>
+        </div>
+      )}
+      {props.tab === 'library' && (
         <div>
           {props.favorites.map((story) => {
             return (

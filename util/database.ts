@@ -262,6 +262,12 @@ export async function getAllStoryChaptersByStoryId(storyId: number) {
     `;
   return chapters.map((chapter) => camelcaseKeys(chapter));
 }
+
+export async function getAllStoryChapterTitlesByStoryId(storyId: number) {
+  const chapterTitles =
+    await sql`SELECT heading, sort_position AS chapter_number FROM chapters WHERE story_id = ${storyId} ORDER BY sort_position ASC`;
+  return chapterTitles.map((title) => camelcaseKeys(title));
+}
 export async function getStoryOverviewByStoryId(storyId: number) {
   if (!storyId) return;
   const [overview] = await sql<
@@ -319,7 +325,6 @@ export async function deleteStory(storyId: number) {
 export async function favoriteStory(storyId: number, userId: number) {
   const [favorite] = await sql`INSERT INTO favorites(story_id, user_id)
   VALUES(${storyId}, ${userId}) RETURNING * `;
-  console.log(favorite);
   return camelcaseKeys(favorite);
 }
 
