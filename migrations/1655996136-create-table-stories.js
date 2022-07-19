@@ -5,6 +5,7 @@ exports.up = async (sql) => {
       title VARCHAR(50),
       description text,
       cover_img_url VARCHAR,
+      category VARCHAR(50),
 			user_id integer REFERENCES users (id) ON DELETE CASCADE
     )
   `;

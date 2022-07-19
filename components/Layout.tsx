@@ -15,7 +15,7 @@ export default function Layout(props: Props) {
     <>
       <header className="bg-transparent px-20 py-6 font-bold tracking-wider text-xl w-[50%] mx-auto">
         <nav className="flex justify-between">
-          <Link href="/">Home</Link>
+          <Link href="/">Qualia</Link>
 
           <div className="space-x-8 flex items-center justify-center">
             <Link href="/stories">Discover stories</Link>

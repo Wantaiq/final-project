@@ -213,10 +213,11 @@ export async function createUserStory(
   title: string,
   description: string,
   userId: string,
-  coverimgUrl: string,
+  coverImgUrl: string,
+  category: string,
 ) {
   const [story] =
-    await sql`INSERT INTO stories (title, description, user_id, cover_img_url)VALUES (${title}, ${description}, ${userId}, ${coverimgUrl}) RETURNING id, title, description `;
+    await sql`INSERT INTO stories (title, description, category, user_id, cover_img_url)VALUES (${title}, ${description}, ${category}, ${userId}, ${coverImgUrl}) RETURNING id, title, description `;
   return camelcaseKeys(story);
 }
 

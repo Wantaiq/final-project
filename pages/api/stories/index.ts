@@ -36,6 +36,7 @@ export default async function storiesHandler(
         req.body.description,
         req.body.userId,
         uploadImgResponse.eager[0].secure_url,
+        req.body.category,
       );
       res.status(200).json({ newStory });
       return;
