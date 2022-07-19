@@ -35,7 +35,6 @@ export default function Overview(props: Props) {
     resetField,
     formState: { errors },
   } = useForm<Comment>();
-  const [isComment, setIsComment] = useState(false);
   const [storyComments, setStoryComments] = useState(props.comments);
   const [isFavorite, setIsFavorite] = useState(props.isFavorite);
   async function createNewCommentHandler(commentInput: Comment) {
@@ -58,7 +57,6 @@ export default function Overview(props: Props) {
         ...prevComments,
       ]);
     }
-    setIsComment(false);
     resetField('comment');
   }
   async function removeCommentHandler(commentId: number) {
@@ -135,10 +133,10 @@ export default function Overview(props: Props) {
         </div>
       </div>
       <div>
-        <h1>Table of content</h1>
+        <h1>Table of contents</h1>
         {props.chapterTitles.map((title) => {
           return (
-            <div key={`title${title}`}>
+            <div key={`title${title.heading}`}>
               <p>
                 <span>#{title.chapterNumber} </span>
                 {title.heading}
@@ -169,7 +167,9 @@ export default function Overview(props: Props) {
           })
         )}
       </div>
-      {isComment ? (
+      {!props.userId ? (
+        <h1>Login to leave comments</h1>
+      ) : (
         <div>
           <form
             className="flex flex-col justify-center space-y-4"
@@ -192,26 +192,10 @@ export default function Overview(props: Props) {
               </p>
             ) : null}
             <button className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em]">
-              Submit
-            </button>
-            <button
-              onClick={() => setIsComment(false)}
-              className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em]"
-            >
-              Exit
+              Leave a comment
             </button>
           </form>
         </div>
-      ) : (
-        <button
-          onClick={() => setIsComment(true)}
-          className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em]"
-          disabled={!props.userId}
-        >
-          {!props.userId
-            ? 'Please login to leave a comment'
-            : 'Write a comment'}
-        </button>
       )}
     </div>
   );

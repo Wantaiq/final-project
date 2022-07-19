@@ -1,7 +1,11 @@
 import { GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Chapters, getAllStoryChaptersByStoryId } from '../../../util/database';
+import {
+  Chapters,
+  getAllStoryChaptersByStoryId,
+  getAuthorProfileByStoryId,
+} from '../../../util/database';
 
 type Props = {
   chapters: Chapters[];
@@ -75,9 +79,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const chapters = await getAllStoryChaptersByStoryId(
     Number(context.query.storyId),
   );
-  if (chapters.length > 0) {
-    return {
-      props: { chapters, storyId: Number(context.query.storyId) },
-    };
-  }
+  const authorProfile = await getAuthorProfileByStoryId(
+    Number(context.query.storyId),
+  );
+  console.log(authorProfile);
+  return {
+    props: { chapters, storyId: Number(context.query.storyId) },
+  };
 }

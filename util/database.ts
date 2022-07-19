@@ -47,6 +47,7 @@ export type Chapters = {
   title: string;
   heading: string;
   content: string;
+  chapterNumber: number;
 };
 
 type Seed = {
@@ -67,7 +68,8 @@ export type AllStories = {
   username: string;
   title: string;
   coverImgUrl: string;
-};
+  category: string;
+}[];
 
 type DeletedStory = {
   id: number;
@@ -236,7 +238,7 @@ export async function createChapter(
 export async function getAllStories() {
   const stories = await sql<
     [AllStories]
-  >`SELECT stories.id, users.username, stories.title, stories.cover_img_url
+  >`SELECT stories.id, users.username, stories.title, stories.cover_img_url, stories.category
     FROM users, stories
     WHERE users.id = stories.user_id
     ORDER BY stories.id DESC`;
@@ -252,9 +254,10 @@ export async function getAllUserStoriesByUserId(userId: number) {
 }
 
 export async function getAllStoryChaptersByStoryId(storyId: number) {
+  if (isNaN(storyId)) return [];
   const chapters = await sql<
     [Chapters]
-  >`SELECT chapters.id, stories.title, chapters.heading, chapters.content
+  >`SELECT chapters.id, stories.title, chapters.heading, chapters.content, chapters.sort_position as chapter_number
     FROM stories, chapters
     WHERE stories.id= ${storyId}
     AND chapters.story_id = stories.id
@@ -264,10 +267,12 @@ export async function getAllStoryChaptersByStoryId(storyId: number) {
 }
 
 export async function getAllStoryChapterTitlesByStoryId(storyId: number) {
+  if (isNaN(storyId)) return;
   const chapterTitles =
     await sql`SELECT heading, sort_position AS chapter_number FROM chapters WHERE story_id = ${storyId} ORDER BY sort_position ASC`;
   return chapterTitles.map((title) => camelcaseKeys(title));
 }
+
 export async function getStoryOverviewByStoryId(storyId: number) {
   if (!storyId) return;
   const [overview] = await sql<
@@ -280,6 +285,17 @@ export async function getStoryOverviewByStoryId(storyId: number) {
     GROUP BY stories.id, users.username, stories.title, stories.description
     `;
   return !overview ? undefined : camelcaseKeys(overview);
+}
+
+export async function getAuthorProfileByStoryId(storyId: number) {
+  if (isNaN(storyId)) return;
+  const [profile] =
+    await sql`SELECT users.username, user_profiles.profile_avatar_url as avatar, user_profiles.bio
+    FROM users, user_profiles, stories
+    WHERE stories.id = ${storyId}
+    AND stories.user_id = users.id
+    AND users.id = user_profiles.id`;
+  return profile;
 }
 
 export async function createNewComment(

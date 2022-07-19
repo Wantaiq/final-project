@@ -87,6 +87,7 @@ export default function CreateStory(props: Props) {
       setChapterNumber((prevNumber) => prevNumber + 1);
     }
   }
+
   function handleCoverStoryInput(event: React.ChangeEvent<HTMLInputElement>) {
     if (!event.target.files) {
       return;
@@ -109,6 +110,7 @@ export default function CreateStory(props: Props) {
     setCoverStoryImgError('');
     return;
   }
+
   return !isStory ? (
     <div>
       <form
@@ -148,7 +150,7 @@ export default function CreateStory(props: Props) {
         ) : null}
         <label htmlFor="category">Category</label>
         <select id="category" {...register('category')}>
-          <option value="random">Random</option>
+          <option value="random">Other</option>
           <option value="adventure">Adventure</option>
           <option value="shortStory">Short story</option>
           <option value="humor">Humor</option>
