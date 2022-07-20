@@ -7,7 +7,7 @@
     height: 100vh;
   }
   body {
-    @apply bg-[#F3E5AB] text-[#1c1c1c] overflow-hidden;
+    @apply bg-[#FCDE67] text-[#1c1c1c] scroll-smooth;
     font-family: 'Montserrat', sans-serif;
   }
   .text-shadow {

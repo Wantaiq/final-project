@@ -40,6 +40,7 @@ export type UserStory = {
   title: string;
   description: string;
   coverImgUrl: string;
+  category: string;
 };
 
 export type Chapters = {
@@ -101,6 +102,7 @@ export type FavoriteStories = {
   author: string;
   title: string;
   description: string;
+  category: string;
   coverImgUrl: string;
 }[];
 export async function createUserWithHashedPassword(
@@ -246,7 +248,8 @@ export async function getAllStories() {
 }
 
 export async function getAllUserStoriesByUserId(userId: number) {
-  const stories = await sql`SELECT id, title, description, cover_img_url
+  const stories =
+    await sql`SELECT id, title, description, category, cover_img_url
     FROM stories
     WHERE user_id = ${userId}
     ORDER BY id DESC`;
@@ -355,16 +358,17 @@ export async function isStoryFavorite(storyId: number, userId: number) {
 }
 
 export async function removeFromFavorites(storyId: number, userId: number) {
-  await sql<[StoryId]>`
+  const [removedFavoriteStory] = await sql<[StoryId]>`
   DELETE FROM favorites
   WHERE favorites.story_id = ${storyId}
-  AND favorites.user_id = ${userId}`;
+  AND favorites.user_id = ${userId} RETURNING favorites.story_id`;
+  return camelcaseKeys(removedFavoriteStory);
 }
 
 export async function getAllFavoriteStoriesByUserId(userId: number) {
   const favorites = await sql<
     [FavoriteStories]
-  >`SELECT users.id as userId, stories.id as story_id, users.username as author, stories.title, stories.description, stories.cover_img_url
+  >`SELECT users.id as userId, stories.id as story_id, users.username as author, stories.title, stories.description, stories.cover_img_url, stories.category
     FROM favorites, stories, users
     WHERE users.id = ${userId}
     AND favorites.user_id = users.id

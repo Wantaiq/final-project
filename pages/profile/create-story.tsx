@@ -152,10 +152,10 @@ export default function CreateStory(props: Props) {
         <select id="category" {...register('category')}>
           <option value="random">Other</option>
           <option value="adventure">Adventure</option>
-          <option value="shortStory">Short story</option>
+          <option value="shortStory">Short</option>
           <option value="humor">Humor</option>
           <option value="mystery">Mystery</option>
-          <option value="fantasy">fantasy</option>
+          <option value="fantasy">Fantasy</option>
         </select>
         <label htmlFor="coverStory">Choose story cover</label>
         <input

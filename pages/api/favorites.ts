@@ -32,8 +32,11 @@ export default async function favoritesHandler(
     return;
   }
   if (req.method === 'DELETE') {
-    await removeFromFavorites(req.body.storyId, req.body.userId);
-    res.status(200).json({ message: 'Success' });
+    const removedFavoriteStory = await removeFromFavorites(
+      req.body.storyId,
+      req.body.userId,
+    );
+    res.status(200).json({ removedFavoriteStory });
     return;
   }
   res.status(405).json({ error: [{ message: 'Method not allowed' }] });

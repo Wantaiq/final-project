@@ -8,7 +8,7 @@ module.exports = {
       auto: 'auto',
       cover: 'cover',
       contain: 'contain',
-      350: '350px 350px',
+      350: '170px 350px',
     },
     extend: {
       backgroundImage: {
@@ -19,8 +19,10 @@ module.exports = {
         ink: "url('/images/ink.svg')",
         'ink-blot': "url('/images/ink-blot.svg')",
         'ink-splatter': "url('/images/ink-splatter.svg')",
+        'bg-noise': "url('/images/nnnoise.svg')",
+        'ink-light': "url('/images/ink-light.svg')",
       },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/line-clamp')],
 };

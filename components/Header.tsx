@@ -16,7 +16,7 @@ export default function Header(props: Props) {
   }, [handleUserProfile]);
   return (
     <>
-      <header className="bg-transparent px-20 py-6 font-bold tracking-wider text-xl w-[50%] mx-auto">
+      <header className="bg-transparent px-20 py-6 font-bold tracking-wider text-xl w-[50%] mx-auto sticky top-0">
         <nav className="flex justify-between">
           <Link href="/">Qualia</Link>
 
@@ -25,7 +25,7 @@ export default function Header(props: Props) {
             {!userProfile ? (
               <>
                 <Link href="/login">Login</Link>
-                <Link href="/register">Register</Link>
+                <Link href="/registration">Register</Link>
               </>
             ) : (
               <>
