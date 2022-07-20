@@ -112,141 +112,184 @@ export default function CreateStory(props: Props) {
   }
 
   return !isStory ? (
-    <div>
-      <form
-        className="flex flex-col space-y-4"
-        onSubmit={handleSubmit(createNewStoryHandler)}
-      >
-        <label htmlFor="title">Title</label>
-        <input
-          id="title"
-          {...register('title', {
-            required: {
-              value: true,
-              message: 'Hmm, story without title?',
-            },
-          })}
-        />
-        {errors.title ? (
-          <p className="font-bold tracking-wide text-sm text-red-300">
-            {errors.title.message}
-          </p>
-        ) : null}
-        <label htmlFor="description">Description</label>
-        <textarea
-          id="description"
-          className="text-black indent-3"
-          {...register('description', {
-            required: {
-              value: true,
-              message: 'Let others know what your story is about.',
-            },
-          })}
-        />
-        {errors.description ? (
-          <p className="font-bold tracking-wide text-sm text-red-300">
-            {errors.description.message}
-          </p>
-        ) : null}
-        <label htmlFor="category">Category</label>
-        <select id="category" {...register('category')}>
-          <option value="random">Other</option>
-          <option value="adventure">Adventure</option>
-          <option value="shortStory">Short</option>
-          <option value="humor">Humor</option>
-          <option value="mystery">Mystery</option>
-          <option value="fantasy">Fantasy</option>
-        </select>
-        <label htmlFor="coverStory">Choose story cover</label>
-        <input
-          type="file"
-          accept=".jpg , .png, .jpeg"
-          disabled={coverStoryImg ? true : false}
-          onChange={handleCoverStoryInput}
-        />
-        {coverStoryImg && (
-          <div className="w-[400px] h-[400px] rounded-md">
-            {typeof coverStoryImg === 'string' && (
-              <Image
-                src={coverStoryImg}
-                width={300}
-                height={300}
+    <div className="mx-auto bg-ink-light bg-[bottom_left_1000px] bg-[length:1700px] w-full h-full bg-no-repeat">
+      <div className="w-[100%] min-h-full pt-36 px-96 bg-ink-blot bg-[top_right_1200px] bg-no-repeat bg-[length:1800px]">
+        <form
+          className="flex flex-col space-y-4"
+          onSubmit={handleSubmit(createNewStoryHandler)}
+        >
+          <div className="flex flex-col space-y-2">
+            <label
+              htmlFor="title"
+              className="text-cyan-400 font-semibold tracking-wider indent-5 text-lg"
+            >
+              Title
+            </label>
+            <input
+              id="title"
+              {...register('title', {
+                required: {
+                  value: true,
+                  message: 'Hmm, story without title?',
+                },
+              })}
+            />
+            {errors.title ? (
+              <p className="font-bold tracking-wide text-sm text-red-500 text-center">
+                {errors.title.message}
+              </p>
+            ) : null}
+            <label
+              htmlFor="description"
+              className="indent-5 text-cyan-400 font-semibold tracking-wide text-lg"
+            >
+              Description
+            </label>
+            <textarea
+              id="description"
+              className="text-black indent-4 resize-none rounded-md h-[80px]"
+              {...register('description', {
+                required: {
+                  value: true,
+                  message: 'Let others know what your story is about.',
+                },
+              })}
+            />
+            {errors.description ? (
+              <p className="font-bold tracking-wide text-sm text-red-500 text-center">
+                {errors.description.message}
+              </p>
+            ) : null}
+          </div>
+          <div className="px-10 py-8 flex justify-around items-start">
+            <div className="flex flex-col space-y-2">
+              <label
+                htmlFor="category"
+                className="text-cyan-400 font-semibold tracking-wide text-lg"
+              >
+                Category
+              </label>
+              <select
+                id="category"
+                {...register('category')}
                 className="rounded-md"
-              />
+              >
+                <option value="random">Other</option>
+                <option value="adventure">Adventure</option>
+                <option value="shortStory">Short</option>
+                <option value="humor">Humor</option>
+                <option value="mystery">Mystery</option>
+                <option value="fantasy">Fantasy</option>
+              </select>
+            </div>
+            {!coverStoryImg && (
+              <>
+                <label
+                  htmlFor="storyCover"
+                  className="font-lg font-bold px-[1em] py-[.7em] mt-7 rounded-full text-slate-200 bg-purple-400 scale-100 duration-200 ease-in hover:scale-105 hover:bg-red-300 hover:text-inherit focus:scale-105 focus:bg-red-800 focus:text-inherit cursor-pointer"
+                >
+                  Choose cover
+                </label>
+                <input
+                  type="file"
+                  id="storyCover"
+                  hidden
+                  accept=".jpg , .png, .jpeg"
+                  disabled={coverStoryImg ? true : false}
+                  onChange={handleCoverStoryInput}
+                />
+              </>
+            )}
+            {coverStoryImg && (
+              <div className="rounded-md ">
+                {typeof coverStoryImg === 'string' && (
+                  <Image
+                    src={coverStoryImg}
+                    width={150}
+                    height={200}
+                    className="rounded-md"
+                  />
+                )}
+              </div>
             )}
           </div>
-        )}
-        <button
-          className="bg-amber-600 py-[0.6em] px-[1.2em] rounded-md font-medium tracking-wider self-center"
-          disabled={coverStoryImgError ? true : false}
-        >
-          Start new story!
-        </button>
-        {coverStoryImgError ? (
-          <p className="font-bold tracking-wide text-sm text-red-300">
-            {coverStoryImgError}
-          </p>
-        ) : null}
-      </form>
+          <button
+            className="py-[1em] px-[1em] w-fit mx-auto text-lg font-bold rounded-full bg-cyan-400 scale-100 duration-200 ease-in hover:bg-[length: 240px] hover:scale-110 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer"
+            disabled={coverStoryImgError ? true : false}
+          >
+            Start new story
+          </button>
+          {coverStoryImgError ? (
+            <p className="font-bold tracking-wide text-base text-red-300 text-center">
+              {coverStoryImgError}
+            </p>
+          ) : null}
+        </form>
+      </div>
     </div>
   ) : (
-    <>
-      <h1 className="font-bold text-2xl tracking-wide text-amber-400 mb-6">
-        Chapter # {chapterNumber}
-      </h1>
-      <form
-        onSubmit={handleSubmit(createNewChapterHandler)}
-        className="space-y-6"
-      >
-        <div className="flex flex-col space-y-6">
-          <label htmlFor="chapterHeading">Chapter heading</label>
-          <textarea
-            id="chapterHeading"
-            className="text-black indent-3"
-            {...register('chapterHeading', {
-              required: { value: true, message: 'Write short title.' },
-            })}
-          />
-          {errors.chapterHeading ? (
-            <p className="font-bold tracking-wide text-sm text-red-300">
-              {errors.chapterHeading.message}
-            </p>
-          ) : null}
-        </div>
-        <div className="flex flex-col space-y-6">
-          <label htmlFor="chapterContent">Chapter:</label>
-          <textarea
-            id="chapterContent"
-            className="text-black indent-3 h-[500px]"
-            {...register('chapterContent', {
-              required: {
-                value: true,
-                message: 'Write some content.',
-              },
-            })}
-          />
-          {errors.chapterContent ? (
-            <p className="font-bold tracking-wide text-sm text-red-300">
-              {errors.chapterContent.message}
-            </p>
-          ) : null}
-        </div>
-        <div className="px-12 space-x-12">
-          <button className="bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em]">
-            Next chapter
-          </button>
-          <Link href={`/stories/${newStory?.id}/overview`}>
-            <button
-              className={`bg-amber-600 py-[0.4em] rounded font-medium tracking-wider self-center px-[1.2em] ${
-                chapterNumber > 1 ? 'inline' : 'hidden'
-              }`}
-            >
-              Publish!
+    <div className="mx-auto bg-ink-light bg-[bottom_left_1000px] bg-[length:1700px] w-full h-full bg-no-repeat">
+      <div className="w-[100%] min-h-full px-96 bg-ink-blot bg-[top_right_1200px] bg-no-repeat bg-[length:1800px]">
+        <h1 className="font-bold text-2xl tracking-wide text-cyan-400 mt-12">
+          Chapter # {chapterNumber}
+        </h1>
+        <form
+          onSubmit={handleSubmit(createNewChapterHandler)}
+          className="space-y-4"
+        >
+          <div className="flex flex-col justify-center w-full mt-10 items-center space-y-3">
+            <label htmlFor="chapterHeading">
+              <textarea
+                id="chapterHeading"
+                placeholder="Title"
+                className="text-black text-lg font-medium resize-none rounded-lg text-center"
+                {...register('chapterHeading', {
+                  required: { value: true, message: 'Write short title' },
+                })}
+              />
+            </label>
+            {errors.chapterHeading ? (
+              <p className="font-bold tracking-wide text-base text-red-300">
+                {errors.chapterHeading.message}
+              </p>
+            ) : null}
+            <div className="flex flex-col space-y-6 w-full">
+              <label htmlFor="chapterContent">
+                <textarea
+                  id="chapterContent"
+                  className="text-black indent-2 h-[500px] w-full resize-none px-24 leading-7 font-light tracking-wider"
+                  {...register('chapterContent', {
+                    required: {
+                      value: true,
+                      message: 'Write some content',
+                    },
+                  })}
+                />
+              </label>
+              {errors.chapterContent ? (
+                <p className="font-bold text-base tracking-wide text-red-300 text-center">
+                  {errors.chapterContent.message}
+                </p>
+              ) : null}
+            </div>
+          </div>
+          <div className="px-12 space-x-12">
+            <button className="bg-purple-400 py-[0.4em] text-slate-200 font-bold rounded-full tracking-wider self-center scale-100 duration-200 ease-in hover:bg-[length: 240px] hover:scale-110 hover:text-inherit hover:bg-red-300 focus:scale-105 focus:bg-red-300 cursor-pointer px-[1.2em]">
+              Next chapter
             </button>
-          </Link>
-        </div>
-      </form>
-    </>
+            <Link href={`/stories/${newStory?.id}/overview`}>
+              <button
+                className={`bg-cyan-400 py-[0.5em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:bg-[length: 240px] hover:scale-110 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer ${
+                  chapterNumber > 1 ? 'inline' : 'hidden'
+                }`}
+              >
+                Publish
+              </button>
+            </Link>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 }
 

@@ -140,7 +140,7 @@ export default function Profile(props: Props) {
     <main>
       <div className="flex h-full items-start">
         <section>
-          <div className="flex flex-col items-center justify-start w-[30%] h-[1300px] px-14 py-20 pl-24 bg-ink-splatter bg-no-repeat bg-[right_top_200px] bg-[length:1000px] fixed">
+          <div className="flex flex-col items-center justify-start w-[30%] h-[1300px] px-14 py-20 pl-24 bg-ink-splatter bg-no-repeat bg-[right_top_340px] bg-[length:800px] fixed">
             <div className="flex items-start justify-center space-x-6">
               <div className="flex flex-col items-center space-y-4">
                 {typeof selectedAvatarImage === 'string' && (
@@ -252,7 +252,7 @@ export default function Profile(props: Props) {
         </section>
         {/* Tabs */}
         <div className="mt-10 w-[60%] relative left-[30%]">
-          <div className="flex py-6 justify-around shadow-md shadow-[#2B6777f2] ">
+          <div className="flex py-6 justify-center space-x-20">
             <Link href="/profile">
               <a
                 className={`font-bold text-xl  tracking-wide bg-[length:210px] bg-no-repeat p-[1.2em] bg-center bg-ink text-slate-50 scale-100 duration-200 ease-in hover:bg-[length:215px] hover:scale-110 focus:bg-[length:215px] focus:scale-105 ${
@@ -316,8 +316,8 @@ export default function Profile(props: Props) {
                             <Image
                               src={story.coverImgUrl}
                               alt={`${story.title} book cover`}
-                              width="200"
-                              height="250"
+                              width={200}
+                              height={250}
                               className="rounded-lg"
                             />
                           </div>
@@ -377,7 +377,7 @@ export default function Profile(props: Props) {
           )}
           {props.tab === 'library' &&
             (favorites.length !== 0 ? (
-              <section className="mt-[3em]">
+              <section className="mt-[7em]">
                 <div className="w-[95%] mx-auto h-full grid grid-cols-2 gap-4]">
                   {favorites.map((favorite) => {
                     return (

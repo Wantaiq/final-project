@@ -7,8 +7,12 @@
     height: 100vh;
   }
   body {
-    @apply bg-[#FCDE67] text-[#1c1c1c] scroll-smooth;
     font-family: 'Montserrat', sans-serif;
+    overflow: hidden;
+
+    background: hsla(256, 47%, 30%, 1);
+
+    background: linear-gradient(200deg, #3c2970 47%, #0975f1 100%);
   }
   .text-shadow {
     text-shadow: 0.4px 0.4px grey;

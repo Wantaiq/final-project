@@ -16,7 +16,7 @@ export default function Header(props: Props) {
   }, [handleUserProfile]);
   return (
     <>
-      <header className="bg-transparent px-20 py-6 font-bold tracking-wider text-xl w-[50%] mx-auto sticky top-0">
+      <header className="bg-transparent px-20 py-2 font-bold tracking-wider text-xl w-[50%] mx-auto">
         <nav className="flex justify-between">
           <Link href="/">Qualia</Link>
 
