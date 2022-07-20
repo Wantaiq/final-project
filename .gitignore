@@ -28,9 +28,9 @@ yarn-error.log*
 # local env files
 .env*.local
 .env
+request.rest
 
 # vercel
 .vercel
-request.rest
 .eslintcache
 *.tsbuildinfo

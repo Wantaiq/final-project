@@ -1,24 +1,27 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ResponseBody } from './api/register';
-import { UserInput } from './registration';
 
-export default function Login() {
-  const [loginError, setLoginError] = useState('');
+export type UserInput = {
+  username: string;
+  password: string;
+};
+export default function Register() {
+  const [registrationError, setRegistrationError] = useState('');
   const {
-    handleSubmit,
     register,
+    handleSubmit,
     formState: { errors },
     trigger,
   } = useForm<UserInput>();
-
   const router = useRouter();
-  async function handleUserLogin(userInput: UserInput) {
+  async function handleUserRegistration(userInput: UserInput) {
     const isUserInputValid = await trigger();
     if (isUserInputValid) {
-      const response = await fetch('/api/login', {
+      const response = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -28,18 +31,9 @@ export default function Login() {
       });
       const data: ResponseBody = await response.json();
       if ('error' in data) {
-        setLoginError(data.error[0].message);
-        return;
-      }
-
-      const returnTo = router.query.returnTo;
-      if (
-        returnTo &&
-        !Array.isArray(returnTo) &&
-        /^\/[a-zA-Z0-9-?=/]*$/.test(returnTo)
-      ) {
-        await router.push(returnTo);
+        setRegistrationError(data.error[0].message);
       } else {
+        setRegistrationError('');
         await router.push('/');
       }
     }
@@ -47,7 +41,7 @@ export default function Login() {
   return (
     <div className="bg-ink-splatter bg-no-repeat bg-[top_right_470px] bg-cover w-full h-full mt-32">
       <form
-        onSubmit={handleSubmit(handleUserLogin)}
+        onSubmit={handleSubmit(handleUserRegistration)}
         className="flex justify-center h-[40%] items-center"
       >
         <div className="flex flex-col justify-center items-center mx-auto my-24 py-10 px-20 space-y-4">
@@ -64,6 +58,10 @@ export default function Login() {
                   required: {
                     value: true,
                     message: 'This field is required',
+                  },
+                  minLength: {
+                    value: 2,
+                    message: 'Please choose username longer than 2 characters',
                   },
                 })}
                 id="username"
@@ -87,6 +85,10 @@ export default function Login() {
                     value: true,
                     message: 'This field is required',
                   },
+                  minLength: {
+                    value: 5,
+                    message: 'Please choose password longer than 5 characters',
+                  },
                 })}
                 id="password"
                 type="password"
@@ -96,25 +98,23 @@ export default function Login() {
                   {errors.password.message}
                 </p>
               ) : null}
-              {loginError.length > 0 ? (
-                <p className="font-bold tracking-wide text-sm text-red-500">
-                  {loginError}
+              {registrationError.length > 0 ? (
+                <p className="font-bold tracking-wide text-sm text-red-300">
+                  {registrationError}
                 </p>
               ) : null}
             </div>
           </div>
-          <div className="flex flex-col items-center">
-            <button className="p-8 font-bold text-xl bg-ink bg-[length:140px] bg-center flex items-center bg-no-repeat text-slate-100 transition-all scale-100 duration-200 ease-in hover:bg-[length:150px] hover:scale-110 focus:bg-[length:150px] focus:scale-110">
-              Login
-            </button>
-            <div className="text-lg font-m text-center flex flex-col justify-center items-center space-y-2">
-              <p>Don't have an account?</p>
-              <Link href="/registration">
-                <a className="p-10 font-bold bg-ink bg-[length:150px] bg-center flex items-center bg-no-repeat text-slate-100 transition-all scale-100 duration-200 ease-in hover:bg-[length:170px] hover:scale-110 focus:bg-[length:170px] focus:scale-110">
-                  Register
-                </a>
-              </Link>
-            </div>
+          <button className="p-8 font-bold text-xl bg-ink bg-[length:160px] bg-center flex items-center bg-no-repeat text-slate-100 transition-all scale-100 duration-200 ease-in hover:bg-[length:170px] hover:scale-110 focus:bg-[length:170px] focus:scale-110">
+            Register
+          </button>
+          <div className="text-lg font-m text-center flex flex-col justify-center items-center">
+            <p>Already have an account?</p>
+            <Link href="/login">
+              <a className="p-8 font-bold bg-ink bg-[length:140px] bg-center flex items-center bg-no-repeat text-slate-100 transition-all scale-100 duration-200 ease-in hover:bg-[length:150px] hover:scale-110 focus:bg-[length:150px] focus:scale-110">
+                Login
+              </a>
+            </Link>
           </div>
         </div>
       </form>

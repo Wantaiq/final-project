@@ -1,13 +1,13 @@
 import '../styles/globals.css';
-import Layout from '../components/Layout';
+import Header from '../components/Header';
 import ProfileProvider from '../context/ProfileProvider';
 
 function MyApp({ Component, pageProps }) {
   return (
     <ProfileProvider>
-      <Layout>
+      <Header>
         <Component {...pageProps} />
-      </Layout>
+      </Header>
     </ProfileProvider>
   );
 }

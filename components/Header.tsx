@@ -6,7 +6,10 @@ import { profileContext } from '../context/ProfileProvider';
 type Props = {
   children: JSX.Element;
 };
-export default function Layout(props: Props) {
+function Anchor({ children, ...restProps }) {
+  return <a {...restProps}>{children}</a>;
+}
+export default function Header(props: Props) {
   const { userProfile, handleUserProfile } = useContext(profileContext);
   useEffect(() => {
     handleUserProfile();
@@ -39,7 +42,7 @@ export default function Layout(props: Props) {
                     </a>
                   </Link>
                 </div>
-                <Link href="/logout">Logout</Link>
+                <Anchor href="/logout">Logout</Anchor>
               </>
             )}
           </div>
