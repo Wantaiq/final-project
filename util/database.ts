@@ -85,6 +85,7 @@ export type Comments = {
   id: number;
   content: string;
   username: string;
+  profileAvatarUrl: string;
 }[];
 
 export type StoryOverview = {
@@ -326,11 +327,12 @@ export async function getAllStoryCommentsByStoryId(storyId: number) {
   if (!storyId) return;
   const comments = await sql<
     [Comments]
-  >`SELECT comments.id, comments.content, users.username
-    FROM comments, users, stories
+  >`SELECT comments.id, comments.content, users.username, user_profiles.profile_avatar_url
+    FROM comments, users, stories, user_profiles
     WHERE comments.story_id = ${storyId}
     AND users.id = comments.creator_id
     AND comments.story_id = stories.id
+    AND user_profiles.user_id = users.id
     ORDER BY comments.id DESC
     `;
   return comments.map((comment) => camelcaseKeys(comment));

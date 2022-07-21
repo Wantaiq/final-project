@@ -158,9 +158,9 @@ export default function Profile(props: Props) {
   }
 
   return (
-    <main className="bg-ink-light bg-[bottom_left_1000px] bg-[length:1700px] w-full h-full bg-no-repeat">
-      <div className="flex h-full items-start bg-ink-blot bg-[top_right_1100px] bg-no-repeat bg-[length:1800px]">
-        <div className="flex flex-col items-center justify-start w-[30%] h-[1300px] px-14 py-20 pl-24">
+    <main className="h-full">
+      <div className="flex h-full items-start bg-ink-blot bg-[top_-20px_right_1200px] bg-no-repeat bg-[length:1200px]">
+        <div className="flex flex-col items-center justify-start w-[30%] h-full px-14 py-20 pl-24">
           <div className="flex items-start justify-center space-x-6">
             <div className="flex flex-col items-center space-y-4">
               {typeof selectedAvatarImage === 'string' && (
@@ -204,7 +204,7 @@ export default function Profile(props: Props) {
                 </form>
               ) : (
                 <button
-                  className="bg-cyan-400 py-[0.4em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer"
+                  className="bg-cyan-600 py-[0.4em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 cursor-pointer"
                   onClick={() => setIsAvatarUpdate(true)}
                 >
                   Upload image
@@ -280,13 +280,13 @@ export default function Profile(props: Props) {
                 Your stories
               </a>
             </Link>
-            <Link href="/profile?tab=library">
+            <Link href="/profile?tab=favorites">
               <a
                 className={`font-bold text-xl pb-2 tracking-wide text-slate-50 scale-100 duration-200 ease-in  hover:scale-105 focus:scale-105 ${
-                  props.tab === 'library' && 'border-b-2 border-cyan-400'
+                  props.tab === 'favorites' && 'border-b-2 border-cyan-400'
                 }`}
               >
-                Library
+                Favorites
               </a>
             </Link>
             <Link href="/profile/create-story">
@@ -332,22 +332,22 @@ export default function Profile(props: Props) {
                               <p className="text-slate-200 border-b-2 pb-2 border-b-cyan-500 font-bold tracking-wide">
                                 {story.title}
                               </p>
-                              <p className="font-semibold text-sm line-clamp-6 text-slate-200 pt-2">
+                              <p className="font-semibold text-sm line-clamp-4 text-slate-200 pt-2">
                                 {story.description}
                               </p>
                             </div>
                             <div>
-                              <div className="py-1 px-3 rounded-md w-fit text-sm mb-auto">
+                              <div className="py-2 px-3 rounded-md w-fit text-sm mb-auto">
                                 <Link
                                   href={`/stories?q=${story.category.toLowerCase()}`}
                                 >
-                                  <a className="mt-12  bg-cyan-500/50 px-[0.5em] py-[.1em] rounded font-bold opacity-75 hover:text-slate-200">
+                                  <a className="mt-12  bg-cyan-500/70 px-[0.5em] py-[.1em] rounded font-bold opacity-75 hover:text-slate-200">
                                     {story.category.toLowerCase()}
                                   </a>
                                 </Link>
                               </div>
                               <div className="flex space-x-4 min-w-[90%] mx-auto shrink-0 mt-auto">
-                                <Link href={`/stories/${story.id}/overview`}>
+                                <Link href={`/stories/${story.id}`}>
                                   <a className="bg-cyan-800 rounded-full min-w-[190px] flex justify-center items-center scale-100 duration-200 ease-in  hover:scale-105 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer">
                                     <BookOpenIcon
                                       width="40"
@@ -381,7 +381,7 @@ export default function Profile(props: Props) {
                 />
               </section>
             ))}
-          {props.tab === 'library' &&
+          {props.tab === 'favorites' &&
             (favorites.length !== 0 ? (
               <section className="mt-[7em]">
                 <div className="w-[95%] mx-auto h-full grid grid-cols-2 gap-x-10 gap-y-20">
@@ -430,9 +430,7 @@ export default function Profile(props: Props) {
                                 </Link>
                               </div>
                               <div className="flex space-x-4 min-w-[90%] mx-auto shrink-0 mt-1">
-                                <Link
-                                  href={`/stories/${favorite.storyId}/overview`}
-                                >
+                                <Link href={`/stories/${favorite.storyId}`}>
                                   <a className="bg-cyan-800 rounded-full min-w-[190px] flex justify-center items-center scale-100 duration-200 ease-in  hover:scale-105 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer">
                                     <BookOpenIcon
                                       width="40"
@@ -469,7 +467,7 @@ export default function Profile(props: Props) {
               <section>
                 <div className="flex flex-col space-y-10 items-center mt-40">
                   <p className="font-bold text-3xl tracking-wide text-slate-200 mb-22">
-                    Oops. Library looks empty.
+                    Oops. You don't have any favorites
                   </p>
                   <Link href="/stories">
                     <a className="bg-cyan-400 py-[0.5em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer">

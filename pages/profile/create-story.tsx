@@ -147,7 +147,7 @@ export default function CreateStory(props: Props) {
             </label>
             <textarea
               id="description"
-              className="text-black indent-4 resize-none rounded-md h-[80px]"
+              className="text-black indent-4 resize-none rounded-md h-[80px] px-4"
               {...register('description', {
                 required: {
                   value: true,
@@ -176,7 +176,7 @@ export default function CreateStory(props: Props) {
               >
                 <option value="other">Other</option>
                 <option value="adventure">Adventure</option>
-                <option value="shortStory">Short</option>
+                <option value="short">Short</option>
                 <option value="humor">Humor</option>
                 <option value="mystery">Mystery</option>
                 <option value="fantasy">Fantasy</option>
@@ -186,7 +186,7 @@ export default function CreateStory(props: Props) {
               <>
                 <label
                   htmlFor="storyCover"
-                  className="font-lg font-bold px-[1em] py-[.7em] mt-7 rounded-full text-slate-200 bg-purple-400 scale-100 duration-200 ease-in hover:scale-105 hover:bg-red-300 hover:text-inherit focus:scale-105 focus:bg-red-800 focus:text-inherit cursor-pointer"
+                  className="font-lg font-bold px-[1em] py-[.7em] mt-7 rounded-full text-slate-200 bg-cyan-800 scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-300 hover:text-inherit focus:scale-105 focus:cyan-300 focus:text-inherit cursor-pointer"
                 >
                   Choose cover
                 </label>
@@ -274,10 +274,10 @@ export default function CreateStory(props: Props) {
             </div>
           </div>
           <div className="px-12 space-x-12">
-            <button className="bg-purple-400 py-[0.4em] text-slate-200 font-bold rounded-full tracking-wider self-center scale-100 duration-200 ease-in hover:scale-110 hover:text-inherit hover:bg-red-300 focus:scale-105 focus:bg-red-300 cursor-pointer px-[1.2em]">
+            <button className="bg-cyan-700 py-[0.4em] text-slate-200 font-bold rounded-full tracking-wider self-center scale-100 duration-200 ease-in hover:scale-110 hover:text-inherit hover:bg-cyan-300 focus:scale-105 focus:bg-cyan-300 cursor-pointer px-[1.2em]">
               Next chapter
             </button>
-            <Link href={`/stories/${newStory?.id}/overview`}>
+            <Link href={`/stories/${newStory?.id}`}>
               <button
                 className={`bg-cyan-400 py-[0.5em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:bg-hover:scale-110 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer ${
                   chapterNumber > 1 ? 'inline' : 'hidden'

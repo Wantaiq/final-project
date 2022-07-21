@@ -33,14 +33,14 @@ export default function Register() {
         setRegistrationError(data.error[0].message);
       } else {
         setRegistrationError('');
-        await router.push('/');
+        await router.push('/profile');
       }
     }
   }
   return (
-    <div className="mx-auto bg-ink-light bg-[bottom_left_1000px] bg-[length:1700px] w-full h-full bg-no-repeat">
-      <main>
-        <div className="flex justify-center py-32">
+    <div className="mx-auto bg-ink-light bg-[bottom_left_1150px] bg-[length:1600px] w-full h-full bg-no-repeat">
+      <main className="py-32">
+        <div className="flex justify-center">
           <h1 className="text-cyan-400 text-3xl font-bold tracking-wider ">
             Register
           </h1>
@@ -117,7 +117,7 @@ export default function Register() {
               <div className="text-lg font-m text-center flex flex-col justify-center items-center text-slate-300">
                 <p>Already have an account?</p>
                 <Link href="/login">
-                  <a className="bg-purple-600  px-[1.2em] mt-4 py-[0.2em] text-slate-200 font-bold rounded-full tracking-wider self-center scale-100 duration-200 ease-in hover:scale-110 hover:text-[#1c1c1c] hover:bg-red-300 focus:scale-105 focus:bg-red-300 cursor-pointer">
+                  <a className="bg-cyan-800 px-[1.2em] mt-2 py-[0.2em] text-slate-200 font-bold rounded-full tracking-wider self-center scale-100 duration-200 ease-in hover:scale-110 hover:text-[#1c1c1c] hover:bg-cyan-400 focus:scale-105 focus:bg-cyan-400 cursor-pointer">
                     Login
                   </a>
                 </Link>

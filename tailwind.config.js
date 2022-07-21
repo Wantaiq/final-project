@@ -8,7 +8,6 @@ module.exports = {
       auto: 'auto',
       cover: 'cover',
       contain: 'contain',
-      350: '170px 350px',
     },
     extend: {
       boxShadow: {

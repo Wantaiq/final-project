@@ -23,13 +23,22 @@ export default function Stories(props: Props) {
   };
 
   return (
-    <div className="w-full min-h-full bg-ink-blot bg-[top_right_1100px] bg-no-repeat bg-[length:1800px]">
-      <div className="mt-24">
-        <nav className="flex justify-center items-center border-b-2 w-[50%] mx-auto py-2 space-x-12 text-sm">
+    <div className="w-full h-[94.6%] bg-ink-blot bg-[top_right_1250px] bg-no-repeat bg-[length:1200px]">
+      <div className="w-[40%] mx-auto mt-12 px-12">
+        <p className="text-xl text-cyan-600 font-md italic">
+          "If there is a book that you want to read, but it hasn't been written
+          yet, then you must write it."
+        </p>
+        <p className="text-lg text-cyan-600 font-bold italic indent-4">
+          -Toni Morrison
+        </p>
+      </div>
+      <div className="mt-10">
+        <nav className="flex justify-center items-center border-b-2 w-[50%] mx-auto space-x-12 text-sm pb-4">
           <Link href="/stories">
             <a
               className={`font-semibold text-slate-300 py-2 mx-10 px-2 ${
-                props.query === null && ' text-cyan-300'
+                props.query === null && 'border-b-2 border-cyan-500'
               }`}
             >
               Recent
@@ -38,7 +47,7 @@ export default function Stories(props: Props) {
           <Link href="/stories?q=mystery">
             <a
               className={`font-semibold text-slate-300 py-2 mx-10 px-2 ${
-                props.query === 'mystery' && 'text-cyan-300'
+                props.query === 'mystery' && 'border-b-2 border-cyan-500'
               }`}
             >
               Mystery
@@ -47,7 +56,7 @@ export default function Stories(props: Props) {
           <Link href="/stories?q=adventure">
             <a
               className={`font-semibold text-slate-300 py-2 mx-10 px-2 ${
-                props.query === 'adventure' && 'text-cyan-300'
+                props.query === 'adventure' && 'border-b-2 border-cyan-500'
               }`}
             >
               Adventure
@@ -56,7 +65,7 @@ export default function Stories(props: Props) {
           <Link href="/stories?q=short">
             <a
               className={`font-semibold text-slate-300 py-2 mx-10 px-2 ${
-                props.query === 'short' && 'text-cyan-300'
+                props.query === 'short' && 'border-b-2 border-cyan-500'
               }`}
             >
               Short
@@ -65,7 +74,7 @@ export default function Stories(props: Props) {
           <Link href="/stories?q=humor">
             <a
               className={`font-semibold text-slate-300 py-2 mx-10 px-2 ${
-                props.query === 'humor' && 'text-cyan-300'
+                props.query === 'humor' && 'border-b-2 border-cyan-500'
               }`}
             >
               Humor
@@ -74,7 +83,7 @@ export default function Stories(props: Props) {
           <Link href="/stories?q=fantasy">
             <a
               className={`font-semibold text-slate-300 py-2 mx-10 px-2 ${
-                props.query === 'fantasy' && 'text-cyan-300'
+                props.query === 'fantasy' && 'border-b-2 border-cyan-500'
               }`}
             >
               Fantasy
@@ -92,7 +101,7 @@ export default function Stories(props: Props) {
         </nav>
       </div>
       <main>
-        <div className="mx-auto mt-20 shadow-md shadow-black w-[80%]">
+        <div className="mx-auto mt-12 shadow-md shadow-black w-[80%]">
           <Slider {...settings}>
             {stories.map((story) => {
               return (
@@ -125,7 +134,7 @@ export default function Stories(props: Props) {
                         </p>
                       </div>
                       <div>
-                        <p className="font-semibold text-sm line-clamp-6 text-slate-200 pt-2">
+                        <p className="font-semibold text-sm line-clamp-4 text-slate-200 pt-2 mb-2">
                           {story.description}
                         </p>
                       </div>
@@ -133,13 +142,13 @@ export default function Stories(props: Props) {
                         <Link
                           href={`/stories?q=${story.category.toLowerCase()}`}
                         >
-                          <a className="mt-12  bg-cyan-500/50 px-[0.5em] py-[.1em] rounded font-bold opacity-75 hover:text-slate-200">
+                          <a className="mt-12  bg-cyan-200/70 px-[0.5em] py-[.1em] rounded font-bold opacity-75 hover:text-slate-200">
                             {story.category.toLowerCase()}
                           </a>
                         </Link>
                       </div>
                       <div className="flex space-x-4 min-w-[90%] mx-auto shrink-0 mt-1">
-                        <Link href={`/stories/${story.id}/overview`}>
+                        <Link href={`/stories/${story.id}`}>
                           <a className="bg-cyan-800 rounded-full min-w-[190px] flex justify-center items-center scale-100 duration-200 ease-in  hover:scale-105 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer">
                             <BookOpenIcon
                               width="40"

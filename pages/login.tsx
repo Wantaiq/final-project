@@ -45,9 +45,9 @@ export default function Login() {
     }
   }
   return (
-    <div className="bg-ink-splatter bg-no-repeat bg-[top_right_470px] bg-cover w-full h-full mt-24">
-      <main className="flex justify-center">
-        <h1 className="text-cyan-400 text-3xl font-bold tracking-wider ">
+    <div className="bg-ink-blot bg-no-repeat bg-[top_50px_right_1250px] bg-[length:1400px] w-full h-full">
+      <main className="flex justify-center py-32">
+        <h1 className="text-cyan-300 text-3xl font-bold tracking-wider">
           Login
         </h1>
         <form
@@ -114,7 +114,7 @@ export default function Login() {
               <div className="text-lg font-m text-center flex flex-col justify-center items-center space-y-3 text-slate-300">
                 <p>Don't have an account?</p>
                 <Link href="/registration">
-                  <a className="bg-purple-600 px-[1.2em] py-[0.2em] text-slate-200 font-bold rounded-full tracking-wider self-center scale-100 duration-200 ease-in hover:scale-110 hover:text-[#1c1c1c] hover:bg-red-300 focus:scale-105 focus:bg-red-300 cursor-pointer">
+                  <a className="bg-cyan-800 px-[1.2em] py-[0.2em] text-slate-200 font-bold rounded-full tracking-wider self-center scale-100 duration-200 ease-in hover:scale-110 hover:text-[#1c1c1c] hover:bg-cyan-400 focus:scale-105 focus:bg-cyan-400 cursor-pointer">
                     Register
                   </a>
                 </Link>
