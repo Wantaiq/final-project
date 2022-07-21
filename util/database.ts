@@ -70,6 +70,7 @@ export type AllStories = {
   title: string;
   coverImgUrl: string;
   category: string;
+  description: string;
 }[];
 
 type DeletedStory = {
@@ -240,7 +241,7 @@ export async function createChapter(
 export async function getAllStories() {
   const stories = await sql<
     [AllStories]
-  >`SELECT stories.id, users.username, stories.title, stories.cover_img_url, stories.category
+  >`SELECT stories.id, users.username, stories.title, stories.cover_img_url, stories.category, stories.description
     FROM users, stories
     WHERE users.id = stories.user_id
     ORDER BY stories.id DESC`;

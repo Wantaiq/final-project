@@ -11,15 +11,13 @@ module.exports = {
       350: '170px 350px',
     },
     extend: {
+      boxShadow: {
+        reviewBox: '0px 10.1px 8px 1px rgba (0,0,0)',
+      },
       backgroundImage: {
-        bubble: "url('/images/bubble.svg')",
-        'chat-bubble': "url('/images/chat-bubble.svg')",
-        circle: "url('/images/circle.svg')",
-        'scratch-line': "url('/images/scratch-line.svg')",
         ink: "url('/images/ink.svg')",
         'ink-blot': "url('/images/ink-blot.svg')",
         'ink-splatter': "url('/images/ink-splatter.svg')",
-        'bg-noise': "url('/images/nnnoise.svg')",
         'ink-light': "url('/images/ink-light.svg')",
       },
     },

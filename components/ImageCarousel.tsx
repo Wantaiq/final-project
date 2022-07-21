@@ -1,9 +1,9 @@
 import Image from 'next/image';
 import Slider from 'react-slick';
-import { UserStory } from '../util/database';
+import { AllStories } from '../util/database';
 
 type Props = {
-  userStories: UserStory[];
+  stories: AllStories;
 };
 export default function ImageCarousel(props: Props) {
   const settings = {
@@ -16,7 +16,7 @@ export default function ImageCarousel(props: Props) {
 
   return (
     <Slider {...settings}>
-      {props.userStories.map((story) => {
+      {props.stories.map((story) => {
         return (
           <div
             key={`storyId-${story.id}`}

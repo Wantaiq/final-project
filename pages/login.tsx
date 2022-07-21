@@ -45,79 +45,84 @@ export default function Login() {
     }
   }
   return (
-    <div className="bg-ink-splatter bg-no-repeat bg-[top_right_470px] bg-cover w-full h-full mt-32">
-      <form
-        onSubmit={handleSubmit(handleUserLogin)}
-        className="flex justify-center h-[40%] items-center"
-      >
-        <div className="flex flex-col justify-center items-center mx-auto my-24 py-10 px-20 space-y-4">
-          <div className="space-y-3">
-            <div className="flex flex-col justify-center items-center space-y-2">
-              <label
-                htmlFor="username"
-                className="font-bold text-lg tracking-wider"
-              >
-                Username
-              </label>
-              <input
-                {...register('username', {
-                  required: {
-                    value: true,
-                    message: 'This field is required',
-                  },
-                })}
-                id="username"
-              />
-              {errors.username ? (
-                <p className="font-bold tracking-wide text-sm text-red-500">
-                  {errors.username.message}
-                </p>
-              ) : null}
+    <div className="bg-ink-splatter bg-no-repeat bg-[top_right_470px] bg-cover w-full h-full mt-24">
+      <main className="flex justify-center">
+        <h1 className="text-cyan-400 text-3xl font-bold tracking-wider ">
+          Login
+        </h1>
+        <form
+          onSubmit={handleSubmit(handleUserLogin)}
+          className="flex justify-center h-[40%] items-center"
+        >
+          <div className="flex flex-col justify-center items-center mx-auto my-24 px-20 space-y-6">
+            <div className="space-y-3">
+              <div className="flex flex-col justify-center items-center space-y-2">
+                <label
+                  htmlFor="username"
+                  className="font-bold text-lg tracking-wider text-slate-200"
+                >
+                  Username
+                </label>
+                <input
+                  {...register('username', {
+                    required: {
+                      value: true,
+                      message: 'This field is required',
+                    },
+                  })}
+                  id="username"
+                />
+                {errors.username ? (
+                  <p className="font-bold tracking-wide text-sm text-red-500">
+                    {errors.username.message}
+                  </p>
+                ) : null}
+              </div>
+              <div className="flex flex-col justify-center items-center space-y-3">
+                <label
+                  htmlFor="password"
+                  className="font-bold text-lg tracking-wider text-slate-200"
+                >
+                  Password
+                </label>
+                <input
+                  {...register('password', {
+                    required: {
+                      value: true,
+                      message: 'This field is required',
+                    },
+                  })}
+                  id="password"
+                  type="password"
+                />
+                {errors.password ? (
+                  <p className="font-bold tracking-wide text-sm text-red-300">
+                    {errors.password.message}
+                  </p>
+                ) : null}
+                {loginError.length > 0 ? (
+                  <p className="font-bold tracking-wide text-sm text-red-300">
+                    {loginError}
+                  </p>
+                ) : null}
+              </div>
             </div>
-            <div className="flex flex-col justify-center items-center space-y-3">
-              <label
-                htmlFor="password"
-                className="font-bold text-lg tracking-wider"
-              >
-                Password
-              </label>
-              <input
-                {...register('password', {
-                  required: {
-                    value: true,
-                    message: 'This field is required',
-                  },
-                })}
-                id="password"
-                type="password"
-              />
-              {errors.password ? (
-                <p className="font-bold tracking-wide text-sm text-red-500">
-                  {errors.password.message}
-                </p>
-              ) : null}
-              {loginError.length > 0 ? (
-                <p className="font-bold tracking-wide text-sm text-red-500">
-                  {loginError}
-                </p>
-              ) : null}
+            <div className="flex flex-col items-center">
+              <button className="bg-cyan-400 py-[0.4em] mb-3 px-[1.2em] rounded-full font-bold tracking-wider self-center scale-100 duration-200 ease-in hover:scale-110 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer">
+                Login
+              </button>
+              <div className="text-lg font-m text-center flex flex-col justify-center items-center space-y-3 text-slate-300">
+                <p>Don't have an account?</p>
+                <Link href="/registration">
+                  <a className="bg-purple-600 px-[1.2em] py-[0.2em] text-slate-200 font-bold rounded-full tracking-wider self-center scale-100 duration-200 ease-in hover:scale-110 hover:text-[#1c1c1c] hover:bg-red-300 focus:scale-105 focus:bg-red-300 cursor-pointer">
+                    Register
+                  </a>
+                </Link>
+              </div>
             </div>
           </div>
-          <div className="flex flex-col items-center">
-            <button className="p-8 font-bold text-xl bg-ink bg-[length:140px] bg-center flex items-center bg-no-repeat text-slate-100 transition-all scale-100 duration-200 ease-in hover:bg-[length:150px] hover:scale-110 focus:bg-[length:150px] focus:scale-110">
-              Login
-            </button>
-            <div className="text-lg font-m text-center flex flex-col justify-center items-center space-y-2">
-              <p>Don't have an account?</p>
-              <Link href="/registration">
-                <a className="p-10 font-bold bg-ink bg-[length:150px] bg-center flex items-center bg-no-repeat text-slate-100 transition-all scale-100 duration-200 ease-in hover:bg-[length:170px] hover:scale-110 focus:bg-[length:170px] focus:scale-110">
-                  Register
-                </a>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </form>
+        </form>
+      </main>
     </div>
   );
 }

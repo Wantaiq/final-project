@@ -113,7 +113,7 @@ export default function CreateStory(props: Props) {
 
   return !isStory ? (
     <div className="mx-auto bg-ink-light bg-[bottom_left_1000px] bg-[length:1700px] w-full h-full bg-no-repeat">
-      <div className="w-[100%] min-h-full pt-36 px-96 bg-ink-blot bg-[top_right_1200px] bg-no-repeat bg-[length:1800px]">
+      <div className="w-full min-h-full pt-36 px-96 bg-ink-blot bg-[top_right_1200px] bg-no-repeat bg-[length:1800px]">
         <form
           className="flex flex-col space-y-4"
           onSubmit={handleSubmit(createNewStoryHandler)}
@@ -174,7 +174,7 @@ export default function CreateStory(props: Props) {
                 {...register('category')}
                 className="rounded-md"
               >
-                <option value="random">Other</option>
+                <option value="other">Other</option>
                 <option value="adventure">Adventure</option>
                 <option value="shortStory">Short</option>
                 <option value="humor">Humor</option>
@@ -214,7 +214,7 @@ export default function CreateStory(props: Props) {
             )}
           </div>
           <button
-            className="py-[1em] px-[1em] w-fit mx-auto text-lg font-bold rounded-full bg-cyan-400 scale-100 duration-200 ease-in hover:bg-[length: 240px] hover:scale-110 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer"
+            className="py-[1em] px-[1em] w-fit mx-auto text-lg font-bold rounded-full bg-cyan-400 scale-100 duration-200 ease-in  hover:scale-110 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer"
             disabled={coverStoryImgError ? true : false}
           >
             Start new story
@@ -274,12 +274,12 @@ export default function CreateStory(props: Props) {
             </div>
           </div>
           <div className="px-12 space-x-12">
-            <button className="bg-purple-400 py-[0.4em] text-slate-200 font-bold rounded-full tracking-wider self-center scale-100 duration-200 ease-in hover:bg-[length: 240px] hover:scale-110 hover:text-inherit hover:bg-red-300 focus:scale-105 focus:bg-red-300 cursor-pointer px-[1.2em]">
+            <button className="bg-purple-400 py-[0.4em] text-slate-200 font-bold rounded-full tracking-wider self-center scale-100 duration-200 ease-in hover:scale-110 hover:text-inherit hover:bg-red-300 focus:scale-105 focus:bg-red-300 cursor-pointer px-[1.2em]">
               Next chapter
             </button>
             <Link href={`/stories/${newStory?.id}/overview`}>
               <button
-                className={`bg-cyan-400 py-[0.5em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:bg-[length: 240px] hover:scale-110 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer ${
+                className={`bg-cyan-400 py-[0.5em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:bg-hover:scale-110 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer ${
                   chapterNumber > 1 ? 'inline' : 'hidden'
                 }`}
               >
