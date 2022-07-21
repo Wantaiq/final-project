@@ -1,7 +1,9 @@
 import {
   BookOpenIcon,
+  CheckCircleIcon,
   PencilAltIcon,
   TrashIcon,
+  XCircleIcon,
 } from '@heroicons/react/outline';
 import { GetServerSidePropsContext } from 'next';
 import Image from 'next/image';
@@ -194,12 +196,22 @@ export default function Profile(props: Props) {
                       value={avatarImgInput}
                       onChange={(event) => handleAvatarInput(event)}
                     />
-                    <button disabled={imgAvatarUploadError ? true : false}>
-                      Save and exit
-                    </button>
-                    <button onClick={() => discardAvatarChanges()}>
-                      Discard changes
-                    </button>
+                    <div className="flex space-x-4">
+                      <button
+                        aria-label="Save changes"
+                        disabled={imgAvatarUploadError ? true : false}
+                        className="bg-cyan-600 py-[0.5em] rounded-full font-bold tracking-wider self-center px-[.6em] scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 cursor-pointer"
+                      >
+                        <CheckCircleIcon width={25} height={25} />
+                      </button>
+                      <button
+                        aria-label="Discard changes"
+                        onClick={() => discardAvatarChanges()}
+                        className="bg-red-300 py-[.5em] font-bold tracking-wider rounded-full px-[.6em] self-center fill-red-400 scale-100 duration-200 ease-in hover:scale-105 hover:bg-red-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 cursor-pointer"
+                      >
+                        <XCircleIcon width={25} height={25} />
+                      </button>
+                    </div>
                   </div>
                 </form>
               ) : (
@@ -244,7 +256,7 @@ export default function Profile(props: Props) {
                     placeholder={userBio === null ? 'About you ...' : userBio}
                   />
                   <button className="py-[.2em] px-[.5em] w-fit mx-auto text-lg font-bold rounded-full bg-cyan-400 scale-100 duration-200 ease-in  hover:scale-105 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer">
-                    Save and exit
+                    <CheckCircleIcon width={25} height={25} />
                   </button>
                   <p className="text-red-400 font-bold">
                     * This information will be visible to other users.
@@ -261,8 +273,13 @@ export default function Profile(props: Props) {
                 <button
                   aria-label="Edit bio"
                   onClick={() => setIsUserBioUpdate(true)}
+                  className="scale-100 transition-all focus:scale-105 hover:scale-105 duration-200 ease-in-out"
                 >
-                  <PencilAltIcon width="40" height="30" stroke="#ad6de8" />
+                  <PencilAltIcon
+                    width="40"
+                    height="30"
+                    stroke="rgb(34 211 238)"
+                  />
                 </button>
               </div>
             )}
@@ -373,12 +390,14 @@ export default function Profile(props: Props) {
                       </div>
                     );
                   })}
+                  <div className="absolute bottom-[50px] right-[50%] left-[50%]">
+                    <Pagination
+                      storiesPerPage={storiesPerPage}
+                      totalStories={numberOfStories}
+                      paginate={paginate}
+                    />
+                  </div>
                 </div>
-                <Pagination
-                  storiesPerPage={storiesPerPage}
-                  totalStories={numberOfStories}
-                  paginate={paginate}
-                />
               </section>
             ))}
           {props.tab === 'favorites' &&
