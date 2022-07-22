@@ -63,6 +63,8 @@ export default function Profile(props: Props) {
     indexOfPreviousStory,
   );
 
+  // Test
+
   function paginate(pageNumber: number) {
     setCurrentPage(pageNumber);
   }
