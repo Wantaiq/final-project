@@ -139,7 +139,7 @@ export async function getUserWithHashedPassword(username: string) {
 export async function createUserProfile(userId: number) {
   const [userProfile] = await sql<[UserProfile]>`
   INSERT INTO user_profiles(user_id, profile_avatar_url)
-    VALUES(${userId}, 'https://res.cloudinary.com/dxbam2d2r/image/upload/v1656662127/avatars/three-dogs.jpg')
+    VALUES(${userId}, 'https://res.cloudinary.com/dxbam2d2r/image/upload/v1658480225/avatars/zyi3w247idihrh4qdwt1.jpg')
     RETURNING bio, user_id
     `;
   return camelcaseKeys(userProfile);

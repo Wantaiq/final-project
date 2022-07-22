@@ -1,12 +1,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { useContext, useEffect } from 'react';
+import { AnchorHTMLAttributes, useContext, useEffect } from 'react';
 import { profileContext } from '../context/ProfileProvider';
 
 type Props = {
   children: JSX.Element;
 };
-function Anchor({ children, ...restProps }) {
+
+type AnchorProps = AnchorHTMLAttributes<HTMLAnchorElement>;
+
+function Anchor({ children, ...restProps }: AnchorProps) {
   return <a {...restProps}>{children}</a>;
 }
 export default function Header(props: Props) {
@@ -16,16 +19,26 @@ export default function Header(props: Props) {
   }, [handleUserProfile]);
   return (
     <>
-      <header className="bg-transparent px-20 py-2 font-bold tracking-wider text-xl w-[50%] mx-auto">
+      <header className="bg-transparent font-bold tracking-wider text-xl mx-auto w-full px-80 py-2">
         <nav className="flex justify-between">
-          <Link href="/">Qualia</Link>
+          <Link href="/">
+            <a className="text-cyan-500 text-[2rem]">Qualia</a>
+          </Link>
 
           <div className="space-x-8 flex items-center justify-center">
-            <Link href="/stories">Discover stories</Link>
+            <Link href="/stories">
+              <a className="text-slate-200 hover:text-cyan-400">
+                Discover stories
+              </a>
+            </Link>
             {!userProfile ? (
               <>
-                <Link href="/login">Login</Link>
-                <Link href="/registration">Register</Link>
+                <Link href="/login">
+                  <a className="text-slate-200 hover:text-cyan-400">Login</a>
+                </Link>
+                <Link href="/registration">
+                  <a className="text-slate-200 hover:text-cyan-400">Register</a>
+                </Link>
               </>
             ) : (
               <>
@@ -42,7 +55,9 @@ export default function Header(props: Props) {
                     </a>
                   </Link>
                 </div>
-                <Anchor href="/logout">Logout</Anchor>
+                <Anchor href="/logout">
+                  <a className="text-slate-200 hover:text-cyan-400">Logout</a>
+                </Anchor>
               </>
             )}
           </div>
