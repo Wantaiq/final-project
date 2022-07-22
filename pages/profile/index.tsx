@@ -53,8 +53,6 @@ export default function Profile(props: Props) {
 
   const { handleUserProfile } = useContext(profileContext);
 
-  // Pagination
-
   const [currentPage, setCurrentPage] = useState(1);
   const storiesPerPage = 4;
 
