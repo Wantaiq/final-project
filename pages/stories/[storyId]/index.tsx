@@ -168,7 +168,7 @@ export default function Overview(props: Props) {
                     </span>
                   </p>
                 </div>
-                <div className="break-all leading-6 line-clamp-6 mt-4 mb-4">
+                <div className="break-words leading-6 line-clamp-6 mt-4 mb-4">
                   <p className="tracking-wide text-md mb-2 text-cyan-200 font-semibold">
                     Description
                   </p>
@@ -278,7 +278,7 @@ export default function Overview(props: Props) {
             </div>
           </div>
           <div className="flex flex-col w-[50%] space-y-8">
-            <div className="bg-[#fdf5e8] rounded-lg overflow-y-scroll max-h-[600px] min-h-[600px] scrollbar break-all">
+            <div className="bg-[#fdf5e8] rounded-lg overflow-y-scroll max-h-[600px] min-h-[600px] scrollbar break-words">
               {props.chapters.map((chapter, index) => {
                 return (
                   <div
