@@ -26,7 +26,7 @@ export default function Home() {
             <div className="mt-10">
               <div className="flex flex-col space-y-4 items-center">
                 <p className="text-lg text-cyan-500">Are you a writer?</p>
-                <Link href="/register">
+                <Link href="/registration">
                   <a className="bg-cyan-500 py-[0.5em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:scale-110 hover:bg-cyan-400 focus:scale-105 focus:bg-cyan-400 cursor-pointer">
                     Register
                   </a>
