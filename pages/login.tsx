@@ -41,7 +41,7 @@ export default function Login() {
       ) {
         await router.push(returnTo);
       } else {
-        await router.push('/');
+        await router.push('/stories');
       }
     }
   }
