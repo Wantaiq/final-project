@@ -408,7 +408,7 @@ export default function Profile(props: Props) {
                     return (
                       <div
                         key={`favorite-${favorite.storyId}`}
-                        className="w-full shrink-0 px-10 justify-start py-2"
+                        className="w-full shrink-0 px-10 justify-start py-2 shadow-md shadow-black"
                       >
                         <div className="flex">
                           <div className="shrink-0">
