@@ -13,12 +13,11 @@
     "allowSyntheticDefaultImports": true,
     "downlevelIteration": true,
     "forceConsistentCasingInFileNames": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
-    "strict": true,
-    "incremental": true
+    "strict": true
   },
   "include": [
     "**/.eslintrc.cjs",

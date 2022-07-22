@@ -34,3 +34,4 @@ request.rest
 .vercel
 .eslintcache
 *.tsbuildinfo
+*.tsbuildinfo
