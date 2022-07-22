@@ -3,7 +3,9 @@ import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useContext, useEffect } from 'react';
 import Slider from 'react-slick';
+import { profileContext } from '../../context/ProfileProvider';
 import { AllStories, getAllStories } from '../../util/database';
 
 type Props = {
@@ -22,6 +24,11 @@ export default function Stories(props: Props) {
     slidesToShow: 3,
     slidesToScroll: 2,
   };
+
+  const { handleUserProfile } = useContext(profileContext);
+  useEffect(() => {
+    handleUserProfile();
+  }, [handleUserProfile]);
 
   return (
     <>

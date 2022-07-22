@@ -354,7 +354,7 @@ export default function Profile(props: Props) {
                                 height={250}
                               />
                             </div>
-                            <div className="py-4 px-4 flex flex-col justify-between break-all">
+                            <div className="py-4 px-4 flex flex-col justify-between break-words">
                               <div className="space-y-2">
                                 <p className="text-slate-200 border-b-2 pb-2 border-b-cyan-500 font-bold tracking-wide">
                                   {story.title}
