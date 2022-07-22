@@ -202,9 +202,7 @@ export default function Overview(props: Props) {
                 })}
               </div>
             </div>
-            {!props.userId ? (
-              <h1>Login to leave comments</h1>
-            ) : (
+            {!props.userId ? null : (
               <form
                 onSubmit={handleSubmit(createNewCommentHandler)}
                 className="mt-6"

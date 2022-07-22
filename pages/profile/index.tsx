@@ -9,7 +9,7 @@ import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FormEvent, useContext, useState } from 'react';
+import { FormEvent, useContext, useEffect, useState } from 'react';
 import Pagination from '../../components/Pagination';
 import { profileContext } from '../../context/ProfileProvider';
 import { createCsrfToken } from '../../util/auth';
@@ -63,7 +63,9 @@ export default function Profile(props: Props) {
     indexOfPreviousStory,
   );
 
-  // Test
+  useEffect(() => {
+    handleUserProfile();
+  }, [handleUserProfile]);
 
   function paginate(pageNumber: number) {
     setCurrentPage(pageNumber);
@@ -115,7 +117,6 @@ export default function Profile(props: Props) {
     if (!response.ok) {
       throw new Error();
     }
-    setSelectedAvatarImage('');
     handleUserProfile();
   }
 
