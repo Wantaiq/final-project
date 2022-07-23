@@ -63,6 +63,8 @@ export default function Profile(props: Props) {
     indexOfPreviousStory,
   );
 
+  // Update header
+
   useEffect(() => {
     handleUserProfile();
   }, [handleUserProfile]);
