@@ -171,7 +171,7 @@ export default function Profile(props: Props) {
       </Head>
       <main className="h-full">
         <div className="flex h-full items-start bg-ink-blot bg-[top_-20px_right_1200px] bg-no-repeat bg-[length:1200px]">
-          <div className="flex flex-col items-center justify-start w-[30%] h-full px-14 py-20 pl-24">
+          <div className="flex flex-col items-center justify-start w-[30%] h-full px-14 py-20">
             <div className="flex items-start justify-center space-x-6">
               <div className="flex flex-col items-center space-y-4">
                 {typeof selectedAvatarImage === 'string' && (

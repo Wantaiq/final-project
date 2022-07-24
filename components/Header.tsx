@@ -55,8 +55,11 @@ export default function Header(props: Props) {
                     </a>
                   </Link>
                 </div>
-                <Anchor href="/logout">
-                  <a className="text-slate-200 hover:text-cyan-400">Logout</a>
+                <Anchor
+                  href="/logout"
+                  className="text-slate-200 hover:text-cyan-400"
+                >
+                  Logout
                 </Anchor>
               </>
             )}
