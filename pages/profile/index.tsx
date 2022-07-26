@@ -329,11 +329,17 @@ export default function Profile(props: Props) {
               (userStories.length === 0 ? (
                 <section>
                   <div className="flex flex-col space-y-10 items-center mt-40">
-                    <p className="font-bold text-3xl tracking-wide text-slate-200 mb-22">
+                    <p
+                      className="font-bold text-3xl tracking-wide text-slate-200 mb-22"
+                      data-test-id="no-stories-banner"
+                    >
                       You don't have any stories.
                     </p>
                     <Link href="/profile/create-story">
-                      <a className="bg-cyan-400 py-[0.5em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer">
+                      <a
+                        className="bg-cyan-400 py-[0.5em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer"
+                        data-test-id="storyCreation"
+                      >
                         Create story
                       </a>
                     </Link>

@@ -76,10 +76,14 @@ export default function Login() {
                         message: 'This field is required',
                       },
                     })}
+                    data-test-id="loginUsername"
                     id="username"
                   />
                   {errors.username ? (
-                    <p className="font-bold tracking-wide text-sm text-red-500">
+                    <p
+                      className="font-bold tracking-wide text-sm text-red-500"
+                      date-test-id="loginUsernameError"
+                    >
                       {errors.username.message}
                     </p>
                   ) : null}
@@ -100,21 +104,31 @@ export default function Login() {
                     })}
                     id="password"
                     type="password"
+                    data-test-id="loginPassword"
                   />
                   {errors.password ? (
-                    <p className="font-bold tracking-wide text-sm text-red-300">
+                    <p
+                      className="font-bold tracking-wide text-sm text-red-300"
+                      data-test-id="loginPasswordError"
+                    >
                       {errors.password.message}
                     </p>
                   ) : null}
                   {loginError.length > 0 ? (
-                    <p className="font-bold tracking-wide text-sm text-red-300">
+                    <p
+                      className="font-bold tracking-wide text-sm text-red-300"
+                      data-test-id="loginServerResponseError"
+                    >
                       {loginError}
                     </p>
                   ) : null}
                 </div>
               </div>
               <div className="flex flex-col items-center">
-                <button className="bg-cyan-400 py-[0.4em] mb-3 px-[1.2em] rounded-full font-bold tracking-wider self-center scale-100 duration-200 ease-in hover:scale-110 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer">
+                <button
+                  className="bg-cyan-400 py-[0.4em] mb-3 px-[1.2em] rounded-full font-bold tracking-wider self-center scale-100 duration-200 ease-in hover:scale-110 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer"
+                  data-test-id="loginButton"
+                >
                   Login
                 </button>
                 <div className="text-lg font-m text-center flex flex-col justify-center items-center space-y-3 text-slate-300">

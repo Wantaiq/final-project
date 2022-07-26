@@ -34,10 +34,20 @@ export default function Header(props: Props) {
             {!userProfile ? (
               <>
                 <Link href="/login">
-                  <a className="text-slate-200 hover:text-cyan-400">Login</a>
+                  <a
+                    className="text-slate-200 hover:text-cyan-400"
+                    data-test-id="login"
+                  >
+                    Login
+                  </a>
                 </Link>
                 <Link href="/registration">
-                  <a className="text-slate-200 hover:text-cyan-400">Register</a>
+                  <a
+                    className="text-slate-200 hover:text-cyan-400"
+                    data-test-id="register"
+                  >
+                    Register
+                  </a>
                 </Link>
               </>
             ) : (

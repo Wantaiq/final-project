@@ -132,10 +132,18 @@ export default function CreateStory(props: Props) {
                   value: true,
                   message: 'Hmm, story without title?',
                 },
+                minLength: {
+                  value: 3,
+                  message: 'Minimum length is 3 characters',
+                },
               })}
+              data-test-id="story-title"
             />
             {errors.title ? (
-              <p className="font-bold tracking-wide text-sm text-red-500 text-center">
+              <p
+                className="font-bold tracking-wide text-sm text-red-500 text-center"
+                data-test-id="story-title-error"
+              >
                 {errors.title.message}
               </p>
             ) : null}
@@ -153,10 +161,18 @@ export default function CreateStory(props: Props) {
                   value: true,
                   message: 'Let others know what your story is about.',
                 },
+                minLength: {
+                  value: 20,
+                  message: 'Minimum length is 20 characters',
+                },
               })}
+              data-test-id="story-description"
             />
             {errors.description ? (
-              <p className="font-bold tracking-wide text-sm text-red-500 text-center">
+              <p
+                className="font-bold tracking-wide text-sm text-red-500 text-center"
+                data-test-id="story-description-error"
+              >
                 {errors.description.message}
               </p>
             ) : null}
@@ -216,11 +232,15 @@ export default function CreateStory(props: Props) {
           <button
             className="py-[1em] px-[1em] w-fit mx-auto text-lg font-bold rounded-full bg-cyan-400 scale-100 duration-200 ease-in  hover:scale-110 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer"
             disabled={coverStoryImgError ? true : false}
+            data-test-id="start-story-button"
           >
             Start new story
           </button>
           {coverStoryImgError ? (
-            <p className="font-bold tracking-wide text-base text-red-300 text-center">
+            <p
+              className="font-bold tracking-wide text-base text-red-300 text-center"
+              data-test-id="coverImgError"
+            >
               {coverStoryImgError}
             </p>
           ) : null}
@@ -245,6 +265,10 @@ export default function CreateStory(props: Props) {
                 className="text-black text-lg font-medium resize-none rounded-lg text-center"
                 {...register('chapterHeading', {
                   required: { value: true, message: 'Write short title' },
+                  minLength: {
+                    value: 3,
+                    message: 'Minimum length is 3 characters',
+                  },
                 })}
               />
             </label>
@@ -262,6 +286,10 @@ export default function CreateStory(props: Props) {
                     required: {
                       value: true,
                       message: 'Write some content',
+                    },
+                    minLength: {
+                      value: 20,
+                      message: 'Minimum length is 20 characters',
                     },
                   })}
                 />

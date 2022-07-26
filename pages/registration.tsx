@@ -76,9 +76,13 @@ export default function Register() {
                         },
                       })}
                       id="username"
+                      data-test-id="registrationUsername"
                     />
                     {errors.username ? (
-                      <p className="font-bold tracking-wide text-sm text-red-300">
+                      <p
+                        className="font-bold tracking-wide text-sm text-red-300"
+                        data-test-id="registrationUsernameError"
+                      >
                         {errors.username.message}
                       </p>
                     ) : null}
@@ -104,9 +108,13 @@ export default function Register() {
                       })}
                       id="password"
                       type="password"
+                      data-test-id="registrationPassword"
                     />
                     {errors.password ? (
-                      <p className="font-bold tracking-wide text-sm text-red-300">
+                      <p
+                        className="font-bold tracking-wide text-sm text-red-300"
+                        data-test-id="registrationPasswordError"
+                      >
                         {errors.password.message}
                       </p>
                     ) : null}
@@ -117,7 +125,10 @@ export default function Register() {
                     ) : null}
                   </div>
                 </div>
-                <button className="bg-cyan-400 py-[0.5em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:scale-110 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer">
+                <button
+                  className="bg-cyan-400 py-[0.5em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:scale-110 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer"
+                  data-test-id="registrationButton"
+                >
                   Register
                 </button>
                 <div className="text-lg font-m text-center flex flex-col justify-center items-center text-slate-300">
