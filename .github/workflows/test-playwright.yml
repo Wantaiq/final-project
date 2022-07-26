@@ -5,13 +5,13 @@ jobs:
   e2e-tests:
     runs-on: ubuntu-latest # or macos-latest, windows-latest
     env:
-      PGHOST: test
-      PGDATABASE: test
-      PGUSERNAME: test
-      PGPASSWORD: test
-      CLOUDINARY_NAME: xxx
-      CLOUDINARY_API_KEY: xxx
-      CLOUDINARY_API_SECRET: xxx
+      PGHOST: ${{secrets.PGHOST}}
+      PGDATABASE: ${{secrets.PGNAME}}
+      PGUSERNAME: ${{secrets.PGUSER}}
+      PGPASSWORD: ${{secrets.PGPASSWORD}}
+      CLOUDINARY_NAME = ${{secrets.CLOUDNAME}}
+      CLOUDINARY_API_KEY = ${{secrets.CLOUDKEY}}
+      CLOUDINARY_API_SECRET = ${{secrets.CLOUDSECRET}}
 
     steps:
       - name: Start preinstalled PostgreSQL on Ubuntu
@@ -20,10 +20,10 @@ jobs:
           pg_isready
       - name: Create database user
         run: |
-          sudo -u postgres psql --command="CREATE USER test PASSWORD 'test'" --command="\du"
+          sudo -u postgres psql --command="CREATE USER $PGUSERNAME PASSWORD '$PGPASSWORD'" --command="\du"
       - name: Create database and allow user
         run: |
-          sudo -u postgres createdb --owner=test test
+          sudo -u postgres createdb --owner=$PGDATABASE $PGUSERNAME
       - uses: actions/checkout@v2
         # Use the official setup-node action (sets up Node.js):
       # https://github.com/actions/setup-node
