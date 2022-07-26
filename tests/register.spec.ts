@@ -1,9 +1,5 @@
 import { expect, test } from '@playwright/test';
 
-const urls = {
-  baseUrl: 'http://localhost:3000',
-};
-
 const testIds = {
   registration: 'data-test-id=register',
   registrationUsername: 'data-test-id=registrationUsername',
@@ -14,10 +10,8 @@ const testIds = {
 };
 
 test('user registration', async ({ page }) => {
-  await page.goto(urls.baseUrl);
+  await page.goto('http://localhost:3000/registration');
 
-  await page.locator(testIds.registration).click();
-  await page.waitForNavigation({ url: `${urls.baseUrl}/registration` });
   await expect(page.locator(testIds.registrationUsername)).toBeVisible();
   await expect(page.locator(testIds.registrationPassword)).toBeEditable();
   await expect(page.locator(testIds.registrationUsername)).toBeVisible();

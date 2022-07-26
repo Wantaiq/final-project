@@ -15,15 +15,9 @@ const testIds = {
   coverImgError: 'data-test-id=coverImgError',
 };
 
-const urls = {
-  baseUrl: 'http://localhost:3000',
-};
-
 test('storyCreation', async ({ page }) => {
-  await page.goto(urls.baseUrl);
+  await page.goto(`http://localhost:3000/registration`);
 
-  await page.locator(testIds.registration).click();
-  await page.waitForNavigation({ url: `${urls.baseUrl}/registration` });
   await expect(page.locator(testIds.registrationUsername)).toBeVisible();
   await expect(page.locator(testIds.registrationPassword)).toBeEditable();
   await expect(page.locator(testIds.registrationUsername)).toBeVisible();
@@ -32,14 +26,16 @@ test('storyCreation', async ({ page }) => {
   await page.locator(testIds.registrationPassword).fill('hejhej!');
   await expect(page.locator(testIds.registrationButton)).toBeVisible();
   await page.locator(testIds.registrationButton).click();
-  await page.waitForNavigation({ url: `${urls.baseUrl}/profile` });
+  await page.waitForNavigation({ url: `http://localhost:3000/profile` });
   await expect(page.locator(testIds.noStoriesBanner)).toBeVisible();
   await expect(page.locator(testIds.noStoriesBanner)).toHaveText(
     `You don't have any stories.`,
   );
   await expect(page.locator(testIds.storyCreation)).toBeVisible();
   await page.locator(testIds.storyCreation).click();
-  await page.waitForNavigation({ url: `${urls.baseUrl}/profile/create-story` });
+  await page.waitForNavigation({
+    url: `http://localhost:3000/profile/create-story`,
+  });
   await expect(page.locator(testIds.storyTitle)).toBeVisible();
   await expect(page.locator(testIds.storyTitle)).toBeEditable();
   await expect(page.locator(testIds.storyTitleError)).not.toBeVisible();
