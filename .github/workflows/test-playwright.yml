@@ -5,10 +5,11 @@ jobs:
   e2e-tests:
     runs-on: ubuntu-latest # or macos-latest, windows-latest
     env:
-      PGHOST: ${{secrets.PGHOST}}
-      PGDATABASE: ${{secrets.PGNAME}}
-      PGUSERNAME: ${{secrets.PGUSER}}
-      PGPASSWORD: ${{secrets.PGPASSWORD}}
+      env:
+      PGHOST: localhost
+      PGDATABASE: test
+      PGUSERNAME: test
+      PGPASSWORD: test
 
     steps:
       - name: Start preinstalled PostgreSQL on Ubuntu
