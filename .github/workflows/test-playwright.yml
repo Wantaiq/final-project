@@ -9,9 +9,9 @@ jobs:
       PGDATABASE: ${{secrets.PGNAME}}
       PGUSERNAME: ${{secrets.PGUSER}}
       PGPASSWORD: ${{secrets.PGPASSWORD}}
-      CLOUDINARY_NAME = ${{secrets.CLOUDNAME}}
-      CLOUDINARY_API_KEY = ${{secrets.CLOUDKEY}}
-      CLOUDINARY_API_SECRET = ${{secrets.CLOUDSECRET}}
+      CLOUDINARY_NAME: ${{secrets.CLOUDNAME}}
+      CLOUDINARY_API_KEY: ${{secrets.CLOUDKEY}}
+      CLOUDINARY_API_SECRET: ${{secrets.CLOUDSECRET}}
 
     steps:
       - name: Start preinstalled PostgreSQL on Ubuntu
