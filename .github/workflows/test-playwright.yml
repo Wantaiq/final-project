@@ -5,14 +5,13 @@ jobs:
   e2e-tests:
     runs-on: ubuntu-latest # or macos-latest, windows-latest
     env:
-      env:
-      PGHOST: localhost
+      PGHOST: test
       PGDATABASE: test
       PGUSERNAME: test
       PGPASSWORD: test
-      CLOUDINARY_NAME = xxx
-      CLOUDINARY_API_KEY = xxx
-      CLOUDINARY_API_SECRET = xxx
+      CLOUDINARY_NAME: xxx
+      CLOUDINARY_API_KEY: xxx
+      CLOUDINARY_API_SECRET: xxx
 
     steps:
       - name: Start preinstalled PostgreSQL on Ubuntu
