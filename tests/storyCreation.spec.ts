@@ -10,7 +10,7 @@ const testIds = {
   storyTitle: 'data-test-id=story-title',
   storyTitleError: 'data-test-id="story-title-error',
   storyDescription: 'data-test-id=story-description',
-  storyDescriptionError: 'data-test-id="story-description-error',
+  storyDescriptionError: 'data-test-id=story-description-error',
   startNewStoryButton: 'data-test-id=start-story-button',
   coverImgError: 'data-test-id=coverImgError',
 };
@@ -19,7 +19,7 @@ const urls = {
   baseUrl: 'http://localhost:3000',
 };
 
-test('storyCreation', async ({ page }) => {
+test.only('storyCreation', async ({ page }) => {
   await page.goto(urls.baseUrl);
 
   await page.locator(testIds.registration).click();
@@ -28,7 +28,7 @@ test('storyCreation', async ({ page }) => {
   await expect(page.locator(testIds.registrationPassword)).toBeEditable();
   await expect(page.locator(testIds.registrationUsername)).toBeVisible();
   await expect(page.locator(testIds.registrationPassword)).toBeEditable();
-  await page.locator(testIds.registrationUsername).fill('wantaisqsx!!');
+  await page.locator(testIds.registrationUsername).fill('hej');
   await page.locator(testIds.registrationPassword).fill('hejhej!');
   await expect(page.locator(testIds.registrationButton)).toBeVisible();
   await page.locator(testIds.registrationButton).click();
@@ -48,6 +48,13 @@ test('storyCreation', async ({ page }) => {
   await expect(page.locator(testIds.storyDescription)).toBeEditable();
   await expect(page.locator(testIds.storyDescriptionError)).not.toBeVisible();
   await page.locator(testIds.storyDescription).fill('Description');
+  await page.locator(testIds.startNewStoryButton).click();
+  await expect(page.locator(testIds.storyDescriptionError)).toHaveText(
+    'Minimum length is 20 characters',
+  );
+  await page
+    .locator(testIds.storyDescription)
+    .fill('Description, description, description, description');
   await page.locator(testIds.startNewStoryButton).click();
   await expect(page.locator(testIds.coverImgError)).toBeVisible();
   await expect(page.locator(testIds.coverImgError)).toHaveText(
