@@ -3,7 +3,6 @@ import { config } from 'dotenv-safe';
 import postgres from 'postgres';
 import setPostgresDefaultsOnHeroku from './setPostgresDefaultsOnHeroku';
 
-// Test
 setPostgresDefaultsOnHeroku();
 
 config();
