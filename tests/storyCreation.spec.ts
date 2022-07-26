@@ -19,7 +19,7 @@ const urls = {
   baseUrl: 'http://localhost:3000',
 };
 
-test.only('storyCreation', async ({ page }) => {
+test('storyCreation', async ({ page }) => {
   await page.goto(urls.baseUrl);
 
   await page.locator(testIds.registration).click();
