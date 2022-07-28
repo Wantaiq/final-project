@@ -169,10 +169,10 @@ export default function Profile(props: Props) {
         <title>{props.userProfile.username}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="h-full">
-        <div className="flex h-full items-start bg-ink-blot bg-[top_-20px_right_1200px] bg-no-repeat bg-[length:1200px]">
-          <div className="flex flex-col items-center justify-start w-[30%] h-full px-14 py-20">
-            <div className="flex items-start justify-center space-x-6">
+      <main>
+        <div className="flex h-full items-start">
+          <div className="flex flex-col items-center justify-start w-[30%] h-full">
+            <div className="flex items-start justify-center space-x-2">
               <div className="flex flex-col items-center space-y-4">
                 {typeof selectedAvatarImage === 'string' && (
                   <Image
@@ -181,8 +181,8 @@ export default function Profile(props: Props) {
                         ? selectedAvatarImage
                         : props.userProfile.avatar
                     }
-                    width={120}
-                    height={120}
+                    width={80}
+                    height={80}
                     className="rounded-full"
                     alt="Profile picture"
                   />
@@ -192,7 +192,7 @@ export default function Profile(props: Props) {
                     <div className="flex flex-col items-center space-y-2">
                       <label
                         htmlFor="uploadAvatar"
-                        className="py-[.3em] px-[.8em] w-fit mx-auto text-lg font-bold rounded-full bg-cyan-400 scale-100 duration-200 ease-in  hover:scale-105 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer"
+                        className="py-[.2em] px-[.6em] w-fit mx-auto font-bold rounded-full bg-cyan-400 scale-100 duration-200 ease-in  hover:scale-105 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer"
                       >
                         Select image
                       </label>
@@ -207,27 +207,27 @@ export default function Profile(props: Props) {
                         value={avatarImgInput}
                         onChange={(event) => handleAvatarInput(event)}
                       />
-                      <div className="flex space-x-4">
+                      <div className="flex space-x-2">
                         <button
                           aria-label="Save changes"
                           disabled={imgAvatarUploadError ? true : false}
-                          className="bg-cyan-600 py-[0.5em] rounded-full font-bold tracking-wider self-center px-[.6em] scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 cursor-pointer"
+                          className="bg-cyan-600 py-[0.3em] rounded-full font-bold tracking-wider self-center px-[.4em] scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 cursor-pointer"
                         >
-                          <CheckCircleIcon width={25} height={25} />
+                          <CheckCircleIcon width={20} height={20} />
                         </button>
                         <button
                           aria-label="Discard changes"
                           onClick={() => discardAvatarChanges()}
-                          className="bg-red-300 py-[.5em] font-bold tracking-wider rounded-full px-[.6em] self-center fill-red-400 scale-100 duration-200 ease-in hover:scale-105 hover:bg-red-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 cursor-pointer"
+                          className="bg-red-300 py-[.3em] font-bold tracking-wider rounded-full px-[.4em] self-center fill-red-400 scale-100 duration-200 ease-in hover:scale-105 hover:bg-red-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 cursor-pointer"
                         >
-                          <XCircleIcon width={25} height={25} />
+                          <XCircleIcon width={20} height={20} />
                         </button>
                       </div>
                     </div>
                   </form>
                 ) : (
                   <button
-                    className="bg-cyan-600 py-[0.4em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 cursor-pointer"
+                    className="bg-cyan-600 py-[0.2em] rounded-full font-bold tracking-wider self-center px-[.4em] scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 cursor-pointer"
                     onClick={() => setIsAvatarUpdate(true)}
                   >
                     Upload image
@@ -236,7 +236,7 @@ export default function Profile(props: Props) {
               </div>
               {/* Profile details */}
               <div className="mt-6 flex flex-col space-y-2 items-center p-[1em] ">
-                <p className="font-bold text-2xl tracking-wider text-slate-200">
+                <p className="font-bold text-xl tracking-wider text-slate-200">
                   {props.userProfile.username}
                 </p>
                 <div className="flex items-center space-x-2">
@@ -268,8 +268,8 @@ export default function Profile(props: Props) {
                       }
                       placeholder={userBio === null ? 'About you ...' : userBio}
                     />
-                    <button className="py-[.2em] px-[.5em] w-fit mx-auto text-lg font-bold rounded-full bg-cyan-400 scale-100 duration-200 ease-in  hover:scale-105 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer">
-                      <CheckCircleIcon width={25} height={25} />
+                    <button className="py-[.3em] px-[.4em] w-fit mx-auto text-lg font-bold rounded-full bg-cyan-400 scale-100 duration-200 ease-in  hover:scale-105 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer">
+                      <CheckCircleIcon width={20} height={20} />
                     </button>
                     <p className="text-red-400 font-bold">
                       * This information will be visible to other users.
@@ -277,8 +277,8 @@ export default function Profile(props: Props) {
                   </div>
                 </form>
               ) : (
-                <div className="flex flex-col items-center">
-                  <p className="text-xl tracking-wide text-slate-300 font-bold">
+                <div className="flex flex-col items-center px-12">
+                  <p className="tracking-wide text-slate-300 font-bold">
                     {!userBio
                       ? `Mysterious person that loves to read and write stories.`
                       : userBio}
@@ -289,8 +289,8 @@ export default function Profile(props: Props) {
                     className="scale-100 transition-all focus:scale-105 hover:scale-105 duration-200 ease-in-out"
                   >
                     <PencilAltIcon
-                      width="40"
-                      height="30"
+                      width="25"
+                      height="25"
                       stroke="rgb(34 211 238)"
                     />
                   </button>
@@ -299,11 +299,11 @@ export default function Profile(props: Props) {
             </div>
           </div>
           {/* Tabs */}
-          <div className="mt-24 w-[75%]">
+          <div className="w-[95%]">
             <div className="flex pb-4 w-[80%] mx-auto justify-around mb-10">
               <Link href="/profile">
                 <a
-                  className={`font-bold text-xl pb-2 tracking-wide text-slate-50 scale-100 duration-200 ease-in hover:scale-105 focus:scale-105 ${
+                  className={`font-bold text-lg pb-2 tracking-wide text-slate-50 scale-100 duration-200 ease-in hover:scale-105 focus:scale-105 ${
                     !props.tab && 'border-b-2 border-cyan-400'
                   }`}
                 >
@@ -312,7 +312,7 @@ export default function Profile(props: Props) {
               </Link>
               <Link href="/profile?tab=favorites">
                 <a
-                  className={`font-bold text-xl pb-2 tracking-wide text-slate-50 scale-100 duration-200 ease-in  hover:scale-105 focus:scale-105 ${
+                  className={`font-bold text-lg pb-2 tracking-wide text-slate-50 scale-100 duration-200 ease-in  hover:scale-105 focus:scale-105 ${
                     props.tab === 'favorites' && 'border-b-2 border-cyan-400'
                   }`}
                 >
@@ -320,55 +320,54 @@ export default function Profile(props: Props) {
                 </a>
               </Link>
               <Link href="/profile/create-story">
-                <a className="font-bold text-xl tracking-wide bg-no-repeat rounded-full text-slate-50  scale-100 duration-200 ease-in  hover:scale-105 focus:scale-105">
+                <a className="font-bold text-lg tracking-wide bg-no-repeat rounded-full text-slate-50  scale-100 duration-200 ease-in  hover:scale-105 focus:scale-105">
                   Create new story
                 </a>
               </Link>
             </div>
             {!props.tab &&
               (userStories.length === 0 ? (
-                <section>
-                  <div className="flex flex-col space-y-10 items-center mt-40">
-                    <p
-                      className="font-bold text-3xl tracking-wide text-slate-200 mb-22"
-                      data-test-id="no-stories-banner"
+                <div className="flex flex-col space-y-10 items-center mt-40">
+                  <p
+                    className="font-bold text-3xl tracking-wide text-slate-200 mb-22"
+                    data-test-id="no-stories-banner"
+                  >
+                    You don't have any stories.
+                  </p>
+                  <Link href="/profile/create-story">
+                    <a
+                      className="bg-cyan-400 py-[0.5em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer"
+                      data-test-id="storyCreation"
                     >
-                      You don't have any stories.
-                    </p>
-                    <Link href="/profile/create-story">
-                      <a
-                        className="bg-cyan-400 py-[0.5em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer"
-                        data-test-id="storyCreation"
-                      >
-                        Create story
-                      </a>
-                    </Link>
-                  </div>
-                </section>
+                      Create story
+                    </a>
+                  </Link>
+                </div>
               ) : (
-                <section>
-                  <div className="w-[95%] mx-auto h-full grid grid-cols-2 gap-x-10 gap-y-10">
+                <div className="flex flex-col items-center space-y-4">
+                  <div className="w-[90%] mx-auto grid grid-cols-2 gap-x-5 gap-y-5 grid-rows-1">
                     {currentStories.map((story) => {
                       return (
                         <div
                           key={`storyId-${story.id}`}
-                          className="w-full shrink-0 px-10 justify-start py-4 shadow-md shadow-black"
+                          className="group px-10   shadow-lg shadow-black pt-2"
                         >
-                          <div className="flex">
+                          <div className="flex align-center justify-center transition-all duration-500 ease-in-out group-hover:scale-105">
                             <div className="shrink-0">
                               <Image
                                 src={story.coverImgUrl}
                                 alt={`${story.title} book cover`}
-                                width={200}
-                                height={250}
+                                width={150}
+                                height={200}
+                                className="rounded-lg"
                               />
                             </div>
-                            <div className="py-4 px-4 flex flex-col justify-between break-words">
+                            <div className="flex py-4 px-4 flex-col justify-between break-all min-h-full">
                               <div className="space-y-2">
                                 <p className="text-slate-200 border-b-2 pb-2 border-b-cyan-500 font-bold tracking-wide">
                                   {story.title}
                                 </p>
-                                <p className="font-semibold text-sm line-clamp-4 text-slate-200 pt-2">
+                                <p className="font-semibold text-sm line-clamp-2 text-slate-200 pt-2 break-all px-2">
                                   {story.description}
                                 </p>
                               </div>
@@ -382,7 +381,7 @@ export default function Profile(props: Props) {
                                     </a>
                                   </Link>
                                 </div>
-                                <div className="flex space-x-4 min-w-[90%] mx-auto shrink-0 mt-auto">
+                                <div className="flex space-x-2 min-w-[90%] mx-auto shrink-0 ">
                                   <Link href={`/stories/${story.id}`}>
                                     <a className="bg-cyan-800 rounded-full min-w-[190px] flex justify-center items-center scale-100 duration-200 ease-in  hover:scale-105 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer">
                                       <BookOpenIcon
@@ -409,90 +408,75 @@ export default function Profile(props: Props) {
                         </div>
                       );
                     })}
-                    <div className="absolute bottom-[50px] right-[50%] left-[50%]">
-                      <Pagination
-                        storiesPerPage={storiesPerPage}
-                        totalStories={numberOfStories}
-                        paginate={paginate}
-                      />
-                    </div>
                   </div>
-                </section>
+                  <Pagination
+                    storiesPerPage={storiesPerPage}
+                    totalStories={numberOfStories}
+                    paginate={paginate}
+                  />
+                </div>
               ))}
             {props.tab === 'favorites' &&
               (favorites.length !== 0 ? (
-                <section className="mt-[7em]">
+                <section>
                   <div className="w-[95%] mx-auto h-full grid grid-cols-2 gap-x-10 gap-y-20">
                     {favorites.map((favorite) => {
                       return (
                         <div
-                          key={`favorite-${favorite.storyId}`}
-                          className="w-full shrink-0 px-10 justify-start py-2 shadow-md shadow-black"
+                          key={`storyId-${favorite.storyId}`}
+                          className="group px-10 h-full shadow-lg shadow-black pt-2"
                         >
-                          <div className="flex">
+                          <div className="flex align-center justify-center transition-all duration-500 ease-in-out group-hover:scale-105 py-2">
                             <div className="shrink-0">
                               <Image
                                 src={favorite.coverImgUrl}
                                 alt={`${favorite.title} book cover`}
-                                width={200}
-                                height={250}
+                                width={150}
+                                height={200}
                                 className="rounded-lg"
                               />
                             </div>
-                            <div className="py-4 px-4 flex flex-col justify-between break-all">
+                            <div className="flex px-4 flex-col justify-between break-all min-h-full">
                               <div className="space-y-2">
-                                <p className="text-slate-200 font-bold tracking-wider">
+                                <p className="text-slate-200 font-bold tracking-wide">
                                   {favorite.title}
                                 </p>
-
                                 <p className="font-semibold text-slate-200 mt-2 border-b-2 pb-3">
-                                  By:{' '}
-                                  <span className="text-cyan-400 font-semibold tracking-wider">
+                                  By:
+                                  <span className="text-cyan-400 font-semibold tracking-wider ml-2">
                                     <Link href={`/users/${favorite.author}`}>
                                       {favorite.author}
                                     </Link>
                                   </span>
                                 </p>
-                                <p className="font-semibold text-sm line-clamp-6 text-slate-200 tracking-wide">
+                              </div>
+                              <div className="h-[80px] pt-2">
+                                <p className="font-semibold text-sm line-clamp-3 text-slate-200">
                                   {favorite.description}
                                 </p>
                               </div>
-                              <div>
-                                <div className="py-1 px-3 rounded-md w-fit text-sm mb-auto mt-2">
-                                  <Link
-                                    href={`stories?q=${favorite.category.toLowerCase()}`}
-                                  >
-                                    <a className="mt-12  bg-cyan-500/50 px-[0.5em] py-[.1em] rounded font-bold opacity-75 hover:text-slate-200">
-                                      {favorite.category.toLowerCase()}
-                                    </a>
-                                  </Link>
-                                </div>
-                                <div className="flex space-x-4 min-w-[90%] mx-auto shrink-0 mt-1">
-                                  <Link href={`/stories/${favorite.storyId}`}>
-                                    <a className="bg-cyan-800 rounded-full min-w-[190px] flex justify-center items-center scale-100 duration-200 ease-in  hover:scale-105 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer">
-                                      <BookOpenIcon
-                                        width="40"
-                                        height="30"
-                                        stroke="#ffffff"
-                                      />
-                                      <p className="font-bold text-slate-200">
-                                        Read story
-                                      </p>
-                                    </a>
-                                  </Link>
-                                  <button
-                                    aria-label="Remove from favorites"
-                                    onClick={() =>
-                                      removeFromFavorites(
-                                        favorite.storyId,
-                                        props.userProfile.userId,
-                                      )
-                                    }
-                                    className="bg-red-400 px-2 py-1 rounded-full hover:bg-red-600 focus:bg-red-600 scale-100 duration-200 ease-in  hover:scale-105 focus:scale-105 "
-                                  >
-                                    <TrashIcon width="20" height="20" />
-                                  </button>
-                                </div>
+                              <div className="px-3 rounded-md text-sm">
+                                <Link
+                                  href={`/stories?q=${favorite.category.toLowerCase()}`}
+                                >
+                                  <a className=" bg-cyan-200/70 px-[0.2em] py-[.06em] rounded font-bold opacity-75 hover:text-slate-200">
+                                    {favorite.category.toLowerCase()}
+                                  </a>
+                                </Link>
+                              </div>
+                              <div className="flex space-x-4 min-w-[90%] mx-auto shrink-0 mt-1 mb-1">
+                                <Link href={`/stories/${favorite.storyId}`}>
+                                  <a className="bg-cyan-800 rounded-full min-w-[150px] flex justify-center items-center scale-100 duration-200 ease-in  hover:scale-105 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer">
+                                    <BookOpenIcon
+                                      width="30"
+                                      height="20"
+                                      stroke="#ffffff"
+                                    />
+                                    <p className="font-bold text-slate-200">
+                                      Read story
+                                    </p>
+                                  </a>
+                                </Link>
                               </div>
                             </div>
                           </div>

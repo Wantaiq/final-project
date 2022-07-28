@@ -14,8 +14,8 @@ export default function Home() {
         <title>Qualia</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="w-full h-full mx-auto flex justify-center items-center bg-ink-blot bg-no-repeat bg-center bg-[length:1100px]">
-        <div className="flex flex-col mb-28">
+      <main className="w-full mt-32 mx-auto flex justify-center items-center ">
+        <div className="flex flex-col mb-20">
           <div>
             <h1 className="text-[3rem] font-semibold tracking-wider text-cyan-500">
               Qualia

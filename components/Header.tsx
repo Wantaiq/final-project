@@ -19,7 +19,7 @@ export default function Header(props: Props) {
   }, [handleUserProfile]);
   return (
     <>
-      <header className="bg-transparent font-bold tracking-wider text-xl mx-auto w-full px-80 py-2">
+      <header className="bg-transparent font-bold tracking-wider text-lg mx-auto w-full px-80 pt-8 pb-4 border-b-2 mb-8">
         <nav className="flex justify-between">
           <Link href="/">
             <a className="text-cyan-500 text-[2rem]">Qualia</a>

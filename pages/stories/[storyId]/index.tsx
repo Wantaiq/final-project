@@ -126,8 +126,8 @@ export default function Overview(props: Props) {
         <title>{props.overview.title}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="mx-auto bg-ink-blot bg-[top_20px_left_1200px] bg-[length:1400px] h-[94%] bg-no-repeat">
-        <div className="flex mx-auto px-4 justify-around mt-14 h-full">
+      <main className="mx-auto">
+        <div className="flex mx-auto px-4 justify-around h-full">
           <div className=" flex flex-col w-[40%]">
             {props.userId &&
               (!isFavorite ? (
@@ -153,7 +153,7 @@ export default function Overview(props: Props) {
                   <HeartIcon width={30} height={30} fill="rgb(252 165 165)" />
                 </button>
               ))}
-            <div className="flex mt-12 text-slate-200 border-b-2 w-full px-12 justify-between text-md">
+            <div className="flex text-slate-200 border-b-2 w-full px-12 justify-between text-md">
               <div className="flex flex-col">
                 <div className="space-y-2 px-2">
                   <p className="text-cyan-400 font-bold">
@@ -168,7 +168,7 @@ export default function Overview(props: Props) {
                     </span>
                   </p>
                 </div>
-                <div className="break-words leading-6 line-clamp-6 mt-4 mb-4">
+                <div className="break-all leading-6 line-clamp-6 mt-4 mb-4">
                   <p className="tracking-wide text-md mb-2 text-cyan-200 font-semibold">
                     Description
                   </p>
@@ -183,19 +183,21 @@ export default function Overview(props: Props) {
                   return (
                     <div
                       key={`title${title.heading}`}
-                      className={`max-w-[350px] min-w-[250px] text-center my-2 border-b-2 pb-2 hover:border-cyan-200 ${
+                      className={`max-w-[350px] min-w-[250px] text-center my-2 border-b-2 pb-2 break-all  hover:border-cyan-200 ${
                         currentChapter === title.chapterNumber - 1
                           ? 'border-cyan-200'
                           : 'border-slate-200/500'
                       }`}
                     >
                       <button
-                        className="font-semibold tracking-wider"
+                        className="font-semibold tracking-wider break-all"
                         onClick={() =>
                           setCurrentChapter(title.chapterNumber - 1)
                         }
                       >
-                        #{title.chapterNumber} {title.heading}
+                        <p className="break-all line-clamp-3">
+                          #{title.chapterNumber} {title.heading}
+                        </p>
                       </button>
                     </div>
                   );
@@ -240,11 +242,11 @@ export default function Overview(props: Props) {
                     return (
                       <div
                         key={`commentId-${comment.id}`}
-                        className="shadow-md shadow-cyan-300  mt-6 px-10 pb-4 pt-2"
+                        className="shadow-md shadow-cyan-300 px-10 pt-2 mb-2"
                       >
                         <div>
                           <div className="flex">
-                            <div className="flex items-center space-x-4 border-b-2 p-2 pb-4 pl-4 w-full ">
+                            <div className="flex items-center space-x-4 border-b-2 pb-2 pl-4 w-full ">
                               <Image
                                 width={35}
                                 height={35}
@@ -276,7 +278,7 @@ export default function Overview(props: Props) {
             </div>
           </div>
           <div className="flex flex-col w-[50%] space-y-8">
-            <div className="bg-[#fdf5e8] rounded-lg overflow-y-scroll max-h-[600px] min-h-[600px] scrollbar break-words">
+            <div className="bg-[#fdf5e8] rounded-lg overflow-y-scroll max-h-[500px] min-h-[500px] scrollbar break-words">
               {props.chapters.map((chapter, index) => {
                 return (
                   <div

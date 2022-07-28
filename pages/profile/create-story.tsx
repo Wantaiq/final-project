@@ -112,8 +112,8 @@ export default function CreateStory(props: Props) {
   }
 
   return !isStory ? (
-    <div className="mx-auto bg-ink-light bg-[bottom_left_1000px] bg-[length:1700px] w-full h-full bg-no-repeat">
-      <div className="w-full min-h-full pt-36 px-96 bg-ink-blot bg-[top_right_1200px] bg-no-repeat bg-[length:1800px]">
+    <main>
+      <div className="w-[40%] mx-auto">
         <form
           className="flex flex-col space-y-4"
           onSubmit={handleSubmit(createNewStoryHandler)}
@@ -246,78 +246,76 @@ export default function CreateStory(props: Props) {
           ) : null}
         </form>
       </div>
-    </div>
+    </main>
   ) : (
-    <div className="mx-auto bg-ink-light bg-[bottom_left_1000px] bg-[length:1700px] w-full h-full bg-no-repeat">
-      <div className="w-[100%] min-h-full px-96 bg-ink-blot bg-[top_right_1200px] bg-no-repeat bg-[length:1800px]">
-        <h1 className="font-bold text-2xl tracking-wide text-cyan-400 mt-12">
-          Chapter # {chapterNumber}
-        </h1>
-        <form
-          onSubmit={handleSubmit(createNewChapterHandler)}
-          className="space-y-4"
-        >
-          <div className="flex flex-col justify-center w-full mt-10 items-center space-y-3">
-            <label htmlFor="chapterHeading">
+    <main className="mx-auto w-[50%]">
+      <h1 className="font-bold text-2xl tracking-wide text-slate-200">
+        Chapter #{chapterNumber}
+      </h1>
+      <form
+        onSubmit={handleSubmit(createNewChapterHandler)}
+        className="space-y-4"
+      >
+        <div className="flex flex-col justify-center w-full mt-10 items-center space-y-3">
+          <label htmlFor="chapterHeading">
+            <textarea
+              id="chapterHeading"
+              placeholder="Title"
+              className="text-black text-lg font-medium resize-none rounded-lg text-center"
+              {...register('chapterHeading', {
+                required: { value: true, message: 'Write short title' },
+                minLength: {
+                  value: 3,
+                  message: 'Minimum length is 3 characters',
+                },
+              })}
+            />
+          </label>
+          {errors.chapterHeading ? (
+            <p className="font-bold tracking-wide text-base text-red-300">
+              {errors.chapterHeading.message}
+            </p>
+          ) : null}
+          <div className="flex flex-col space-y-6 w-full">
+            <label htmlFor="chapterContent">
               <textarea
-                id="chapterHeading"
-                placeholder="Title"
-                className="text-black text-lg font-medium resize-none rounded-lg text-center"
-                {...register('chapterHeading', {
-                  required: { value: true, message: 'Write short title' },
+                id="chapterContent"
+                className="text-black indent-2 h-[300px] w-full resize-none px-24 leading-7 font-light tracking-wider scrollbar"
+                {...register('chapterContent', {
+                  required: {
+                    value: true,
+                    message: 'Write some content',
+                  },
                   minLength: {
-                    value: 3,
-                    message: 'Minimum length is 3 characters',
+                    value: 20,
+                    message: 'Minimum length is 20 characters',
                   },
                 })}
               />
             </label>
-            {errors.chapterHeading ? (
-              <p className="font-bold tracking-wide text-base text-red-300">
-                {errors.chapterHeading.message}
+            {errors.chapterContent ? (
+              <p className="font-bold text-base tracking-wide text-red-300 text-center">
+                {errors.chapterContent.message}
               </p>
             ) : null}
-            <div className="flex flex-col space-y-6 w-full">
-              <label htmlFor="chapterContent">
-                <textarea
-                  id="chapterContent"
-                  className="text-black indent-2 h-[500px] w-full resize-none px-24 leading-7 font-light tracking-wider"
-                  {...register('chapterContent', {
-                    required: {
-                      value: true,
-                      message: 'Write some content',
-                    },
-                    minLength: {
-                      value: 20,
-                      message: 'Minimum length is 20 characters',
-                    },
-                  })}
-                />
-              </label>
-              {errors.chapterContent ? (
-                <p className="font-bold text-base tracking-wide text-red-300 text-center">
-                  {errors.chapterContent.message}
-                </p>
-              ) : null}
-            </div>
           </div>
-          <div className="px-12 space-x-12">
-            <button className="bg-cyan-700 py-[0.4em] text-slate-200 font-bold rounded-full tracking-wider self-center scale-100 duration-200 ease-in hover:scale-110 hover:text-inherit hover:bg-cyan-300 focus:scale-105 focus:bg-cyan-300 cursor-pointer px-[1.2em]">
-              Next chapter
+        </div>
+        <div className="px-12 space-x-12">
+          <button className="bg-cyan-700 py-[0.4em] text-slate-200 font-bold rounded-full tracking-wider self-center scale-100 duration-200 ease-in hover:scale-110 hover:text-inherit hover:bg-cyan-300 focus:scale-105 focus:bg-cyan-300 cursor-pointer px-[1.2em]">
+            Next chapter
+          </button>
+          <Link href={`/stories/${newStory?.id}`}>
+            <button
+              className={`bg-cyan-400 py-[0.5em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:bg-hover:scale-110 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer ${
+                chapterNumber > 1 ? 'inline' : 'hidden'
+              }`}
+            >
+              Publish
             </button>
-            <Link href={`/stories/${newStory?.id}`}>
-              <button
-                className={`bg-cyan-400 py-[0.5em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:bg-hover:scale-110 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer ${
-                  chapterNumber > 1 ? 'inline' : 'hidden'
-                }`}
-              >
-                Publish
-              </button>
-            </Link>
-          </div>
-        </form>
-      </div>
-    </div>
+          </Link>
+        </div>
+      </form>
+    </main>
   );
 }
 
