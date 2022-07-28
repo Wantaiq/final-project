@@ -477,6 +477,18 @@ export default function Profile(props: Props) {
                                     </p>
                                   </a>
                                 </Link>
+                                <button
+                                  aria-label="Delete story"
+                                  onClick={() =>
+                                    removeFromFavorites(
+                                      favorite.storyId,
+                                      props.userProfile.userId,
+                                    )
+                                  }
+                                  className="bg-red-400 px-2 py-1 rounded-full hover:bg-red-600 focus:bg-red-600 scale-100 duration-200 ease-in  hover:scale-105 focus:scale-105 "
+                                >
+                                  <TrashIcon width="20" height="20" />
+                                </button>
                               </div>
                             </div>
                           </div>
