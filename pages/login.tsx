@@ -51,15 +51,12 @@ export default function Login() {
         <title>Login</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex justify-center py-20">
-        <h1 className="text-cyan-300 text-3xl font-bold tracking-wider">
-          Login
-        </h1>
-        <form
-          onSubmit={handleSubmit(handleUserLogin)}
-          className="flex justify-center h-[40%] items-center"
-        >
-          <div className="flex flex-col justify-center items-center mx-auto my-20 px-20 space-y-6">
+      <main className="flex justify-center">
+        <form onSubmit={handleSubmit(handleUserLogin)}>
+          <h1 className="text-cyan-300 text-3xl font-bold tracking-wider">
+            Login
+          </h1>
+          <div className="flex flex-col justify-center items-center mt-12 space-y-6">
             <div className="space-y-3">
               <div className="flex flex-col justify-center items-center space-y-2">
                 <label

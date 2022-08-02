@@ -13,7 +13,7 @@ export default function Pagination(props: Props) {
     pageNumbers.push(i);
   }
   return (
-    <ul className="flex">
+    <ul className="flex my-4 mx-auto w-[50%]">
       {pageNumbers.map((pageNumber) => {
         return (
           <li key={`pageNumber-${pageNumber}`}>

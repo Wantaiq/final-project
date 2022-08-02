@@ -1,6 +1,7 @@
+import { MenuIcon, XIcon } from '@heroicons/react/outline';
 import Image from 'next/image';
 import Link from 'next/link';
-import { AnchorHTMLAttributes, useContext, useEffect } from 'react';
+import { AnchorHTMLAttributes, useContext, useEffect, useState } from 'react';
 import { profileContext } from '../context/ProfileProvider';
 
 type Props = {
@@ -17,15 +18,25 @@ export default function Header(props: Props) {
   useEffect(() => {
     handleUserProfile();
   }, [handleUserProfile]);
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
     <>
-      <header className="bg-transparent font-bold tracking-wider text-lg mx-auto w-full px-80 pt-8 pb-4 border-b-2 mb-8">
-        <nav className="flex justify-between">
+      <header className="bg-transparent text-slate-300 font-md tracking-wider md:text-lg md:border-b-2 md:px-32 py-8 px-6 md:mb-8 w-full">
+        <nav className="flex md:w-full justify-between md:items-center">
           <Link href="/">
-            <a className="text-cyan-500 text-[2rem]">Qualia</a>
+            <a className="text-[2rem] md:block hidden">Qualia</a>
           </Link>
-
-          <div className="space-x-8 flex items-center justify-center">
+          <div
+            className={`md:flex md:flex-row flex flex-col items-center md:justify-center pt-4 md:pt-0 md:space-x-8 font-medium md:space-y-0 md:w-[50%] md:ml-auto text-xl space-y-6 w-full ${
+              isMenuOpen ? 'border-b-2 pb-4 w-[60%] mx-auto' : 'hidden'
+            }`}
+          >
+            {isMenuOpen && (
+              <Link href="/">
+                <a className="text-[2rem] md:block">Qualia</a>
+              </Link>
+            )}
             <Link href="/stories">
               <a className="text-slate-200 hover:text-cyan-400">
                 Discover stories
@@ -43,7 +54,7 @@ export default function Header(props: Props) {
                 </Link>
                 <Link href="/registration">
                   <a
-                    className="text-slate-200 hover:text-cyan-400"
+                    className="bg-cyan-500 py-[0.2em] rounded-full font-bold tracking-wider text-gray-800 self-center px-[.6em] scale-100 duration-200 ease-in hover:scale-110 hover:bg-cyan-400 focus:scale-105 focus:bg-cyan-400 cursor-pointer"
                     data-test-id="register"
                   >
                     Register
@@ -74,6 +85,21 @@ export default function Header(props: Props) {
               </>
             )}
           </div>
+          {isMenuOpen ? (
+            <button
+              onClick={() => setIsMenuOpen((prevState) => !prevState)}
+              className="absolute pr-4 right-0  "
+            >
+              <XIcon width={25} height={25} />
+            </button>
+          ) : (
+            <button
+              onClick={() => setIsMenuOpen((prevState) => !prevState)}
+              className="md:hidden block absolute right-0 mr-4 "
+            >
+              <MenuIcon width={25} height={25} />
+            </button>
+          )}
         </nav>
       </header>
       {props.children}

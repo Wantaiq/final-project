@@ -1,4 +1,5 @@
 import { GetServerSidePropsContext } from 'next';
+import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -111,211 +112,219 @@ export default function CreateStory(props: Props) {
     return;
   }
 
-  return !isStory ? (
-    <main>
-      <div className="w-[40%] mx-auto">
-        <form
-          className="flex flex-col space-y-4"
-          onSubmit={handleSubmit(createNewStoryHandler)}
-        >
-          <div className="flex flex-col space-y-2">
-            <label
-              htmlFor="title"
-              className="text-cyan-400 font-semibold tracking-wider indent-5 text-lg"
+  return (
+    <>
+      <Head>
+        <title>New story</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      {!isStory ? (
+        <main>
+          <div className="w-[40%] mx-auto">
+            <form
+              className="flex flex-col space-y-4"
+              onSubmit={handleSubmit(createNewStoryHandler)}
             >
-              Title
-            </label>
-            <input
-              id="title"
-              {...register('title', {
-                required: {
-                  value: true,
-                  message: 'Hmm, story without title?',
-                },
-                minLength: {
-                  value: 3,
-                  message: 'Minimum length is 3 characters',
-                },
-              })}
-              data-test-id="story-title"
-            />
-            {errors.title ? (
-              <p
-                className="font-bold tracking-wide text-sm text-red-500 text-center"
-                data-test-id="story-title-error"
-              >
-                {errors.title.message}
-              </p>
-            ) : null}
-            <label
-              htmlFor="description"
-              className="indent-5 text-cyan-400 font-semibold tracking-wide text-lg"
-            >
-              Description
-            </label>
-            <textarea
-              id="description"
-              className="text-black indent-4 resize-none rounded-md h-[80px] px-4"
-              {...register('description', {
-                required: {
-                  value: true,
-                  message: 'Let others know what your story is about.',
-                },
-                minLength: {
-                  value: 20,
-                  message: 'Minimum length is 20 characters',
-                },
-              })}
-              data-test-id="story-description"
-            />
-            {errors.description ? (
-              <p
-                className="font-bold tracking-wide text-sm text-red-500 text-center"
-                data-test-id="story-description-error"
-              >
-                {errors.description.message}
-              </p>
-            ) : null}
-          </div>
-          <div className="px-10 py-8 flex justify-around items-start">
-            <div className="flex flex-col space-y-2">
-              <label
-                htmlFor="category"
-                className="text-cyan-400 font-semibold tracking-wide text-lg"
-              >
-                Category
-              </label>
-              <select
-                id="category"
-                {...register('category')}
-                className="rounded-md"
-              >
-                <option value="other">Other</option>
-                <option value="adventure">Adventure</option>
-                <option value="short">Short</option>
-                <option value="humor">Humor</option>
-                <option value="mystery">Mystery</option>
-                <option value="fantasy">Fantasy</option>
-              </select>
-            </div>
-            {!coverStoryImg && (
-              <>
+              <div className="flex flex-col space-y-2">
                 <label
-                  htmlFor="storyCover"
-                  className="font-lg font-bold px-[1em] py-[.7em] mt-7 rounded-full text-slate-200 bg-cyan-800 scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-300 hover:text-inherit focus:scale-105 focus:cyan-300 focus:text-inherit cursor-pointer"
+                  htmlFor="title"
+                  className="text-cyan-400 font-semibold tracking-wider indent-5 text-lg"
                 >
-                  Choose cover
+                  Title
                 </label>
                 <input
-                  type="file"
-                  id="storyCover"
-                  hidden
-                  accept=".jpg , .png, .jpeg"
-                  disabled={coverStoryImg ? true : false}
-                  onChange={handleCoverStoryInput}
+                  id="title"
+                  {...register('title', {
+                    required: {
+                      value: true,
+                      message: 'Hmm, story without title?',
+                    },
+                    minLength: {
+                      value: 3,
+                      message: 'Minimum length is 3 characters',
+                    },
+                  })}
+                  data-test-id="story-title"
                 />
-              </>
-            )}
-            {coverStoryImg && (
-              <div className="rounded-md ">
-                {typeof coverStoryImg === 'string' && (
-                  <Image
-                    src={coverStoryImg}
-                    width={150}
-                    height={200}
+                {errors.title ? (
+                  <p
+                    className="font-bold tracking-wide text-sm text-red-500 text-center"
+                    data-test-id="story-title-error"
+                  >
+                    {errors.title.message}
+                  </p>
+                ) : null}
+                <label
+                  htmlFor="description"
+                  className="indent-5 text-cyan-400 font-semibold tracking-wide text-lg"
+                >
+                  Description
+                </label>
+                <textarea
+                  id="description"
+                  className="text-black indent-4 resize-none rounded-md h-[80px] px-4"
+                  {...register('description', {
+                    required: {
+                      value: true,
+                      message: 'Let others know what your story is about.',
+                    },
+                    minLength: {
+                      value: 20,
+                      message: 'Minimum length is 20 characters',
+                    },
+                  })}
+                  data-test-id="story-description"
+                />
+                {errors.description ? (
+                  <p
+                    className="font-bold tracking-wide text-sm text-red-500 text-center"
+                    data-test-id="story-description-error"
+                  >
+                    {errors.description.message}
+                  </p>
+                ) : null}
+              </div>
+              <div className="px-10 py-8 flex justify-around items-start">
+                <div className="flex flex-col space-y-2">
+                  <label
+                    htmlFor="category"
+                    className="text-cyan-400 font-semibold tracking-wide text-lg"
+                  >
+                    Category
+                  </label>
+                  <select
+                    id="category"
+                    {...register('category')}
                     className="rounded-md"
-                  />
+                  >
+                    <option value="other">Other</option>
+                    <option value="adventure">Adventure</option>
+                    <option value="short">Short</option>
+                    <option value="humor">Humor</option>
+                    <option value="mystery">Mystery</option>
+                    <option value="fantasy">Fantasy</option>
+                  </select>
+                </div>
+                {!coverStoryImg && (
+                  <>
+                    <label
+                      htmlFor="storyCover"
+                      className="font-lg font-bold px-[1em] py-[.7em] mt-7 rounded-full text-slate-200 bg-cyan-800 scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-300 hover:text-inherit focus:scale-105 focus:cyan-300 focus:text-inherit cursor-pointer"
+                    >
+                      Choose cover
+                    </label>
+                    <input
+                      type="file"
+                      id="storyCover"
+                      hidden
+                      accept=".jpg , .png, .jpeg"
+                      disabled={coverStoryImg ? true : false}
+                      onChange={handleCoverStoryInput}
+                    />
+                  </>
+                )}
+                {coverStoryImg && (
+                  <div className="rounded-md ">
+                    {typeof coverStoryImg === 'string' && (
+                      <Image
+                        src={coverStoryImg}
+                        width={150}
+                        height={200}
+                        className="rounded-md"
+                      />
+                    )}
+                  </div>
                 )}
               </div>
-            )}
+              <button
+                className="py-[1em] px-[1em] w-fit mx-auto text-lg font-bold rounded-full bg-cyan-400 scale-100 duration-200 ease-in  hover:scale-110 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer"
+                disabled={coverStoryImgError ? true : false}
+                data-test-id="start-story-button"
+              >
+                Start new story
+              </button>
+              {coverStoryImgError ? (
+                <p
+                  className="font-bold tracking-wide text-base text-red-300 text-center"
+                  data-test-id="coverImgError"
+                >
+                  {coverStoryImgError}
+                </p>
+              ) : null}
+            </form>
           </div>
-          <button
-            className="py-[1em] px-[1em] w-fit mx-auto text-lg font-bold rounded-full bg-cyan-400 scale-100 duration-200 ease-in  hover:scale-110 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer"
-            disabled={coverStoryImgError ? true : false}
-            data-test-id="start-story-button"
+        </main>
+      ) : (
+        <main className="mx-auto w-[50%]">
+          <h1 className="font-bold text-2xl tracking-wide text-slate-200">
+            Chapter #{chapterNumber}
+          </h1>
+          <form
+            onSubmit={handleSubmit(createNewChapterHandler)}
+            className="space-y-4"
           >
-            Start new story
-          </button>
-          {coverStoryImgError ? (
-            <p
-              className="font-bold tracking-wide text-base text-red-300 text-center"
-              data-test-id="coverImgError"
-            >
-              {coverStoryImgError}
-            </p>
-          ) : null}
-        </form>
-      </div>
-    </main>
-  ) : (
-    <main className="mx-auto w-[50%]">
-      <h1 className="font-bold text-2xl tracking-wide text-slate-200">
-        Chapter #{chapterNumber}
-      </h1>
-      <form
-        onSubmit={handleSubmit(createNewChapterHandler)}
-        className="space-y-4"
-      >
-        <div className="flex flex-col justify-center w-full mt-10 items-center space-y-3">
-          <label htmlFor="chapterHeading">
-            <textarea
-              id="chapterHeading"
-              placeholder="Title"
-              className="text-black text-lg font-medium resize-none rounded-lg text-center"
-              {...register('chapterHeading', {
-                required: { value: true, message: 'Write short title' },
-                minLength: {
-                  value: 3,
-                  message: 'Minimum length is 3 characters',
-                },
-              })}
-            />
-          </label>
-          {errors.chapterHeading ? (
-            <p className="font-bold tracking-wide text-base text-red-300">
-              {errors.chapterHeading.message}
-            </p>
-          ) : null}
-          <div className="flex flex-col space-y-6 w-full">
-            <label htmlFor="chapterContent">
-              <textarea
-                id="chapterContent"
-                className="text-black indent-2 h-[300px] w-full resize-none px-24 leading-7 font-light tracking-wider scrollbar"
-                {...register('chapterContent', {
-                  required: {
-                    value: true,
-                    message: 'Write some content',
-                  },
-                  minLength: {
-                    value: 20,
-                    message: 'Minimum length is 20 characters',
-                  },
-                })}
-              />
-            </label>
-            {errors.chapterContent ? (
-              <p className="font-bold text-base tracking-wide text-red-300 text-center">
-                {errors.chapterContent.message}
-              </p>
-            ) : null}
-          </div>
-        </div>
-        <div className="px-12 space-x-12">
-          <button className="bg-cyan-700 py-[0.4em] text-slate-200 font-bold rounded-full tracking-wider self-center scale-100 duration-200 ease-in hover:scale-110 hover:text-inherit hover:bg-cyan-300 focus:scale-105 focus:bg-cyan-300 cursor-pointer px-[1.2em]">
-            Next chapter
-          </button>
-          <Link href={`/stories/${newStory?.id}`}>
-            <button
-              className={`bg-cyan-400 py-[0.5em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:bg-hover:scale-110 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer ${
-                chapterNumber > 1 ? 'inline' : 'hidden'
-              }`}
-            >
-              Publish
-            </button>
-          </Link>
-        </div>
-      </form>
-    </main>
+            <div className="flex flex-col justify-center w-full mt-10 items-center space-y-3">
+              <label htmlFor="chapterHeading">
+                <textarea
+                  id="chapterHeading"
+                  placeholder="Title"
+                  className="text-black text-lg font-medium resize-none rounded-lg text-center"
+                  {...register('chapterHeading', {
+                    required: { value: true, message: 'Write short title' },
+                    minLength: {
+                      value: 3,
+                      message: 'Minimum length is 3 characters',
+                    },
+                  })}
+                />
+              </label>
+              {errors.chapterHeading ? (
+                <p className="font-bold tracking-wide text-base text-red-300">
+                  {errors.chapterHeading.message}
+                </p>
+              ) : null}
+              <div className="flex flex-col space-y-6 w-full">
+                <label htmlFor="chapterContent">
+                  <textarea
+                    id="chapterContent"
+                    className="text-black indent-2 h-[300px] w-full resize-none px-24 leading-7 font-light tracking-wider scrollbar"
+                    {...register('chapterContent', {
+                      required: {
+                        value: true,
+                        message: 'Write some content',
+                      },
+                      minLength: {
+                        value: 20,
+                        message: 'Minimum length is 20 characters',
+                      },
+                    })}
+                  />
+                </label>
+                {errors.chapterContent ? (
+                  <p className="font-bold text-base tracking-wide text-red-300 text-center">
+                    {errors.chapterContent.message}
+                  </p>
+                ) : null}
+              </div>
+            </div>
+            <div className="px-12 space-x-12">
+              <button className="bg-cyan-700 py-[0.4em] text-slate-200 font-bold rounded-full tracking-wider self-center scale-100 duration-200 ease-in hover:scale-110 hover:text-inherit hover:bg-cyan-300 focus:scale-105 focus:bg-cyan-300 cursor-pointer px-[1.2em]">
+                Next chapter
+              </button>
+              <Link href={`/stories/${newStory?.id}`}>
+                <button
+                  className={`bg-cyan-400 py-[0.5em] rounded-full font-bold tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:bg-hover:scale-110 hover:bg-cyan-800 hover:text-slate-100 focus:scale-105 focus:bg-cyan-800 cursor-pointer ${
+                    chapterNumber > 1 ? 'inline' : 'hidden'
+                  }`}
+                >
+                  Publish
+                </button>
+              </Link>
+            </div>
+          </form>
+        </main>
+      )}
+    </>
   );
 }
 

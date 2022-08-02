@@ -23,6 +23,26 @@ export default function Stories(props: Props) {
     speed: 1000,
     slidesToShow: 3,
     slidesToScroll: 2,
+    responsive: [
+      {
+        breakpoint: 1050,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 800,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+        },
+      },
+    ],
   };
 
   const { handleUserProfile } = useContext(profileContext);
@@ -36,20 +56,20 @@ export default function Stories(props: Props) {
         <title>Discover stories</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="w-[40%] mx-auto mt-12 px-12">
-        <p className="text-xl text-cyan-600 font-md italic">
+      <div className="md:w-[40%] mx-auto md:px-12 w-[60%]">
+        <p className="text-xl text-slate-200 font-md italic">
           "If there is a book that you want to read, but it hasn't been written
           yet, then you must write it."
         </p>
-        <p className="text-lg text-cyan-600 font-bold italic indent-4">
+        <p className="text-md text-slate-200/70 font-bold italic indent-4">
           -Toni Morrison
         </p>
       </div>
-      <div className="mt-10">
-        <nav className="flex justify-center items-center border-b-2 w-[50%] mx-auto space-x-12 text-sm pb-4">
+      <div className="mt-10 px-12 overflow-x-scroll small-scrollbar">
+        <nav className="flex justify-center items-center md:border-b-2 w-fit mx-auto md:space-x-12 space-x-6 text-sm pb-4">
           <Link href="/stories">
             <a
-              className={`font-semibold text-slate-300 py-2 mx-10 px-2 ${
+              className={`font-semibold text-slate-300 py-2 ${
                 props.query === null && 'border-b-2 border-cyan-500'
               }`}
             >
@@ -58,7 +78,7 @@ export default function Stories(props: Props) {
           </Link>
           <Link href="/stories?q=mystery">
             <a
-              className={`font-semibold text-slate-300 py-2 mx-10 px-2 ${
+              className={`font-semibold text-slate-300 py-2 mx-10 ${
                 props.query === 'mystery' && 'border-b-2 border-cyan-500'
               }`}
             >
@@ -67,7 +87,7 @@ export default function Stories(props: Props) {
           </Link>
           <Link href="/stories?q=adventure">
             <a
-              className={`font-semibold text-slate-300 py-2 mx-10 px-2 ${
+              className={`font-semibold text-slate-300 py-2 mx-10 ${
                 props.query === 'adventure' && 'border-b-2 border-cyan-500'
               }`}
             >
@@ -76,7 +96,7 @@ export default function Stories(props: Props) {
           </Link>
           <Link href="/stories?q=short">
             <a
-              className={`font-semibold text-slate-300 py-2 mx-10 px-2 ${
+              className={`font-semibold text-slate-300 py-2 mx-10 ${
                 props.query === 'short' && 'border-b-2 border-cyan-500'
               }`}
             >
@@ -85,7 +105,7 @@ export default function Stories(props: Props) {
           </Link>
           <Link href="/stories?q=humor">
             <a
-              className={`font-semibold text-slate-300 py-2 mx-10 px-2 ${
+              className={`font-semibold text-slate-300 py-2 mx-10 ${
                 props.query === 'humor' && 'border-b-2 border-cyan-500'
               }`}
             >
@@ -94,7 +114,7 @@ export default function Stories(props: Props) {
           </Link>
           <Link href="/stories?q=fantasy">
             <a
-              className={`font-semibold text-slate-300 py-2 mx-10 px-2 ${
+              className={`font-semibold text-slate-300 py-2 mx-10 ${
                 props.query === 'fantasy' && 'border-b-2 border-cyan-500'
               }`}
             >
@@ -103,7 +123,7 @@ export default function Stories(props: Props) {
           </Link>
           <Link href="/stories?q=other">
             <a
-              className={`font-semibold text-slate-300 py-2 mx-10 px-2 ${
+              className={`font-semibold text-slate-300 py-2 mx-10 ${
                 props.query === 'other' && 'text-cyan-300'
               }`}
             >
@@ -113,12 +133,12 @@ export default function Stories(props: Props) {
         </nav>
       </div>
       <main>
-        <div className="mx-auto mt-12 shadow-md shadow-black w-[80%]">
+        <div className="mx-auto mt-10 shadow-md shadow-black w-[80%]">
           <Slider {...settings}>
             {stories.map((story) => {
               return (
-                <div key={`storyId-${story.id}`} className="group px-10 h-full">
-                  <div className="flex align-center justify-center transition-all duration-500 ease-in-out group-hover:scale-105 py-2">
+                <div key={`storyId-${story.id}`} className="px-2 py-4">
+                  <div className="flex">
                     <div className="shrink-0">
                       <Image
                         src={story.coverImgUrl}
@@ -128,8 +148,8 @@ export default function Stories(props: Props) {
                         className="rounded-lg"
                       />
                     </div>
-                    <div className="flex px-4 flex-col justify-between break-all min-h-full">
-                      <div className="space-y-2">
+                    <div className="flex flex-col">
+                      <div className="px-4 break-all line-clamp-3">
                         <p className="text-slate-200 font-bold tracking-wide">
                           {story.title}
                         </p>
@@ -141,32 +161,29 @@ export default function Stories(props: Props) {
                             </Link>
                           </span>
                         </p>
-                      </div>
-                      <div className="h-[80px] pt-2">
-                        <p className="font-semibold text-sm line-clamp-3 text-slate-200">
+                        <p className="font-semibold text-sm md:line-clamp-4 line-clamp-3 text-slate-200">
                           {story.description}
                         </p>
                       </div>
-                      <div className="px-3 rounded-md text-sm">
+                      <div className="px-3 rounded-md text-sm absolute bottom-0 pb-4 flex flex-col">
                         <Link
                           href={`/stories?q=${story.category.toLowerCase()}`}
                         >
-                          <a className=" bg-cyan-200/70 px-[0.2em] py-[.06em] rounded font-bold opacity-75 hover:text-slate-200">
+                          <a className=" bg-cyan-200 text-gray-800 px-[0.1em] py-[.03em] rounded font-bold opacity-75 hover:text-slate-200 w-fit text-xs">
                             {story.category.toLowerCase()}
                           </a>
                         </Link>
-                      </div>
-                      <div className="flex space-x-4 min-w-[90%] mx-auto shrink-0 mt-1 mb-1">
                         <Link href={`/stories/${story.id}`}>
-                          <a className="bg-cyan-800 rounded-full min-w-[150px] flex justify-center items-center scale-100 duration-200 ease-in  hover:scale-105 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer">
+                          <a className="bg-cyan-500 mt-2 py-[.1em] px-[.4em] rounded-full">
                             <BookOpenIcon
                               width="30"
                               height="20"
                               stroke="#ffffff"
+                              className="inline"
                             />
-                            <p className="font-bold text-slate-200">
+                            <span className="font-bold text-slate-200">
                               Read story
-                            </p>
+                            </span>
                           </a>
                         </Link>
                       </div>
