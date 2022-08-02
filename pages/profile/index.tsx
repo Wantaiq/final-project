@@ -169,10 +169,10 @@ export default function Profile(props: Props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div className="flex md:flex-row flex-col h-full md:items-start md:justify-center md:mt-0 mt-6">
-          <div className="flex flex-col items-center justify-start h-full md:mb-20 mb-10 ">
+        <div className="flex md:flex-row flex-col h-full md:items-start md:space-x-20  md:mt-0 mt-6 md:px-24">
+          <div className="flex flex-col items-center justify-start h-full md:mb-20 mb-10">
             <div className="flex items-start justify-center space-x-2">
-              <div className="flex flex-col items-center space-y-4">
+              <div className="flex flex-col items-center space-y-4 md:w-[125px]">
                 {typeof selectedAvatarImage === 'string' && (
                   <Image
                     src={
@@ -226,7 +226,7 @@ export default function Profile(props: Props) {
                   </form>
                 ) : (
                   <button
-                    className="bg-cyan-600 py-[0.2em] text-sm rounded-full font-bold tracking-wider self-center px-[.3em] scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 cursor-pointer"
+                    className="bg-cyan-600 py-[0.2em] text-sm rounded-full font-bold tracking-wider px-[.2em] scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 cursor-pointer w-full"
                     onClick={() => setIsAvatarUpdate(true)}
                   >
                     Upload image
@@ -344,7 +344,7 @@ export default function Profile(props: Props) {
                 </div>
               ) : (
                 <>
-                  <div className="md:grid md:grid-cols-2 md:gap-x-2 md:gap-y-2">
+                  <div className="md:grid md:grid-cols-2 md:gap-x-2 md:gap-y-2 ">
                     {currentStories.map((story) => {
                       return (
                         <div
@@ -409,11 +409,13 @@ export default function Profile(props: Props) {
                       );
                     })}
                   </div>
-                  <Pagination
-                    storiesPerPage={storiesPerPage}
-                    totalStories={numberOfStories}
-                    paginate={paginate}
-                  />
+                  {numberOfStories > 4 && (
+                    <Pagination
+                      storiesPerPage={storiesPerPage}
+                      totalStories={numberOfStories}
+                      paginate={paginate}
+                    />
+                  )}
                 </>
               ))}
             {props.tab === 'favorites' &&
