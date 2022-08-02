@@ -1,5 +1,4 @@
 import {
-  BookOpenIcon,
   CheckCircleIcon,
   PencilAltIcon,
   TrashIcon,
@@ -389,9 +388,9 @@ export default function Profile(props: Props) {
                                     {story.category.toLowerCase()}
                                   </a>
                                 </Link>
-                                <div className="flex items-center justify-between space-x-4 mt-2">
+                                <div className="flex items-center justify-between space-x-2 md:space-x-2 mt-2">
                                   <Link href={`/stories/${story.id}`}>
-                                    <a className="bg-cyan-500 py-[.2em] px-[.5em] rounded-full text-gray-800 font-bold">
+                                    <a className="bg-cyan-500 py-[.2em] px-[.5em]  rounded-full text-gray-800 font-bold">
                                       Read story
                                     </a>
                                   </Link>
@@ -420,7 +419,7 @@ export default function Profile(props: Props) {
             {props.tab === 'favorites' &&
               (favorites.length !== 0 ? (
                 <section>
-                  <div className="w-[95%] mx-auto grid grid-cols-2 gap-x-10 gap-y-20">
+                  <div className="md:grid md:grid-cols-2 md:gap-x-2 md:gap-y-2">
                     {favorites.map((favorite) => {
                       return (
                         <div
@@ -439,7 +438,7 @@ export default function Profile(props: Props) {
                             </div>
                             <div className="flex flex-col h-[180px]">
                               <div className="text-slate-200 font-bold tracking-wide px-2">
-                                <div className="border-b-cyan-500 border-b-2">
+                                <div className="border-b-cyan-500 border-b-2 pb-2">
                                   <p className="text-slate-200  font-bold tracking-wide pb-2 break-words line-clamp-2">
                                     {favorite.title}
                                   </p>
@@ -469,7 +468,7 @@ export default function Profile(props: Props) {
                                     {favorite.category.toLowerCase()}
                                   </a>
                                 </Link>
-                                <div className="flex items-center justify-between space-x-4 mt-2">
+                                <div className="flex items-center justify-between space-x-2 mt-2">
                                   <Link href={`/stories/${favorite.storyId}`}>
                                     <a className="bg-cyan-500 py-[.2em] px-[.5em] rounded-full text-gray-800 font-bold">
                                       Read story
