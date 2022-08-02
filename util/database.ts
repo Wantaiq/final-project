@@ -93,6 +93,7 @@ export type Comments = {
 
 export type StoryOverview = {
   id: number;
+  avatar: string;
   storyId: number;
   author: string;
   title: string;
@@ -285,12 +286,13 @@ export async function getStoryOverviewByStoryId(storyId: number) {
   if (!storyId) return;
   const [overview] = await sql<
     [StoryOverview | undefined]
-  >`SELECT stories.id as story_id, users.username as author, stories.title, stories.description, stories.cover_img_url, MAX(chapters.sort_position) as number_of_chapters
-    FROM users, stories, chapters
+  >`SELECT stories.id as story_id, users.username as author, stories.title, stories.description, stories.cover_img_url, user_profiles.profile_avatar_url AS avatar, MAX(chapters.sort_position) as number_of_chapters
+    FROM users, stories, chapters, user_profiles
     WHERE stories.id = ${storyId}
     AND stories.user_id = users.id
     AND stories.id = chapters.story_id
-    GROUP BY stories.id, users.username, stories.title, stories.description
+    AND user_profiles.id = users.id
+    GROUP BY stories.id, users.username, stories.title, stories.description, user_profiles.profile_avatar_url
     `;
   return !overview ? undefined : camelcaseKeys(overview);
 }

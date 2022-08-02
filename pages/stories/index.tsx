@@ -149,7 +149,7 @@ export default function Stories(props: Props) {
                       />
                     </div>
                     <div className="flex flex-col">
-                      <div className="px-4 break-all line-clamp-3">
+                      <div className="px-4 break-words line-clamp-3">
                         <p className="text-slate-200 font-bold tracking-wide">
                           {story.title}
                         </p>
