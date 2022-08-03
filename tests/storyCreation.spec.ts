@@ -22,7 +22,7 @@ test('storyCreation', async ({ page }) => {
   await expect(page.locator(testIds.registrationPassword)).toBeEditable();
   await expect(page.locator(testIds.registrationUsername)).toBeVisible();
   await expect(page.locator(testIds.registrationPassword)).toBeEditable();
-  await page.locator(testIds.registrationUsername).fill('hejhej');
+  await page.locator(testIds.registrationUsername).fill('hejj');
   await page.locator(testIds.registrationPassword).fill('hejhej!!');
   await expect(page.locator(testIds.registrationButton)).toBeVisible();
   await page.locator(testIds.registrationButton).click();

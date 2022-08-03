@@ -1,4 +1,3 @@
-import { BookOpenIcon } from '@heroicons/react/outline';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';

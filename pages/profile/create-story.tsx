@@ -144,8 +144,8 @@ export default function CreateStory(props: Props) {
                       message: 'Minimum length is 3 characters',
                     },
                     pattern: {
-                      value: /^[a-zA-Z-0-9-!?:;'"()_ ]*$/gm,
-                      message: `Letters, numbers and !?:;'"()_- special characters are allowed`,
+                      value: /^[a-zA-Z-0-9-!?:;'"()_,. ]*$/gm,
+                      message: `Letters, numbers and !?:;'"()_- characters are allowed`,
                     },
                   })}
                   data-test-id="story-title"
@@ -173,8 +173,8 @@ export default function CreateStory(props: Props) {
                       message: 'Let others know what your story is about.',
                     },
                     pattern: {
-                      value: /^[a-zA-Z-0-9-!?:;'"()_ ]*$/gm,
-                      message: `Letters, numbers and !?:;'"()_- special characters are allowed`,
+                      value: /^[a-zA-Z-0-9-!?:;'"()_,. ]*$/gm,
+                      message: `Letters, numbers and !?:;'"()_- characters are allowed`,
                     },
                     minLength: {
                       value: 20,
@@ -288,8 +288,8 @@ export default function CreateStory(props: Props) {
                       message: 'Minimum length is 3 characters',
                     },
                     pattern: {
-                      value: /^[a-zA-Z-0-9-!?:;'"()_ ]*$/gm,
-                      message: `Letters, numbers and !?:;'"()_- special characters are allowed`,
+                      value: /^[a-zA-Z-0-9-!?:;'"()_,. ]*$/gm,
+                      message: `Letters, numbers and !?:;'"()_- characters are allowed`,
                     },
                   })}
                 />
@@ -310,8 +310,8 @@ export default function CreateStory(props: Props) {
                         message: 'Write some content',
                       },
                       pattern: {
-                        value: /^[a-zA-Z-0-9-!?:;'"() ]*$/gm,
-                        message: `Letters, numbers and (!?:;'") are allowed`,
+                        value: /^[a-zA-Z-0-9-!?:;'"()_,. ]*$/gm,
+                        message: `Letters, numbers and !?:;'"()_- characters are allowed`,
                       },
                       minLength: {
                         value: 20,

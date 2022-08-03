@@ -68,8 +68,8 @@ export default function Register() {
                     message: 'Please choose username longer than 2 characters',
                   },
                   pattern: {
-                    value: /^[a-zA-Z-0-9-!?:'"@ ]*$/gm,
-                    message: `Letters, numbers and !?:-@ are allowed`,
+                    value: /^[a-zA-Z-0-9-!?:;'"()_,. ]*$/gm,
+                    message: `Letters, numbers and !?:;'"()_- characters are allowed`,
                   },
                 })}
                 id="username"
