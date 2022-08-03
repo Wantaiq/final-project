@@ -210,10 +210,10 @@ export default function CreateStory(props: Props) {
                     <label
                       htmlFor="storyCover"
                       className="font-lg font-bold px-[.5em] py-[.5em] mt-7
-                      rounded-full text-slate-200 bg-cyan-800 scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-300
-                      hover:text-slate-800 hover:text-inherit
+                      rounded-full bg-cyan-800 scale-100 duration-200 ease-in hover:scale-105 hover:bg-cyan-300
+                      hover:text-slate-800
                       focus:text-slate-800 focus:scale-105 focus:cyan-300 focus:text-inherit cursor-pointer
-                      active:text-slate-800 "
+                      active:text-slate-800"
                     >
                       Choose cover
                     </label>
@@ -241,7 +241,7 @@ export default function CreateStory(props: Props) {
                 )}
               </div>
               <button
-                className="py-[.5em] px-[1em] w-fit mx-auto text-lg font-bold text-gray-900 rounded-full bg-cyan-400 scale-100 duration-200 ease-in  hover:scale-110 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer"
+                className="py-[.4em] px-[.8em] w-fit mx-auto text-lg font-bold text-gray-900 rounded-full bg-cyan-400 scale-100 duration-200 ease-in  hover:scale-110 hover:bg-cyan-800 hover:text-slate-200 focus:scale-105 focus:bg-cyan-800 focus:text-slate-200 cursor-pointer"
                 disabled={coverStoryImgError ? true : false}
                 data-test-id="start-story-button"
               >
@@ -313,15 +313,15 @@ export default function CreateStory(props: Props) {
             </div>
             <div className="flex md:flex-row md:justify-around flex-col items-center space-y-4 ">
               <button
-                className="bg-cyan-700 py-[0.4em] text-slate-200 font-bold rounded-full tracking-wider self-center scale-100 duration-200 ease-in hover:scale-110 hover:text-inherit hover:bg-cyan-300 focus:scale-105 focus:bg-cyan-300
-              hover:text-slate-800 focus:text-slate-800 cursor-pointer px-[1.2em]"
+                className="bg-cyan-700 py-[0.4em] text-slate-200 font-bold rounded-full tracking-wider self-center scale-100 duration-200 ease-in hover:scale-110  hover:bg-cyan-300 focus:scale-105 focus:bg-cyan-300
+              hover:text-slate-800 focus:text-slate-800 cursor-pointer px-[1.2em] active:text-slate-800"
               >
                 Next chapter
               </button>
               <Link href={`/stories/${newStory?.id}`}>
                 <button
                   className={`bg-cyan-400 py-[0.5em] rounded-full font-bold
-                  text-slate-800 tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:bg- hover:scale-110 hover:bg-cyan-800 hover:text-slate-200
+                  text-slate-800 tracking-wider self-center px-[1.4em] scale-100 duration-200 ease-in hover:bg- hover:scale-110 hover:bg-cyan-800 hover:text-slate-200 focus:text-slate-200
                    focus:scale-105 focus:bg-cyan-800 cursor-pointer ${
                      chapterNumber > 1 ? 'inline' : 'hidden'
                    }`}

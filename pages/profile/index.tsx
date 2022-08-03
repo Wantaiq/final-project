@@ -349,9 +349,9 @@ export default function Profile(props: Props) {
                       return (
                         <div
                           key={`storyId-${story.id}`}
-                          className="shadow-lg shadow-black px-2"
+                          className="shadow-lg shadow-black px-2 w-fit"
                         >
-                          <div className="flex items-center justify-center py-2 mt-4 md:mt-0">
+                          <div className="flex items-center py-2 mt-4 md:mt-0">
                             <div className="shrink-0">
                               <Image
                                 src={story.coverImgUrl}
