@@ -143,6 +143,10 @@ export default function CreateStory(props: Props) {
                       value: 3,
                       message: 'Minimum length is 3 characters',
                     },
+                    pattern: {
+                      value: /^[a-zA-Z-0-9-!?:;'"()_ ]*$/gm,
+                      message: `Letters, numbers and !?:;'"()_- special characters are allowed`,
+                    },
                   })}
                   data-test-id="story-title"
                 />
@@ -167,6 +171,10 @@ export default function CreateStory(props: Props) {
                     required: {
                       value: true,
                       message: 'Let others know what your story is about.',
+                    },
+                    pattern: {
+                      value: /^[a-zA-Z-0-9-!?:;'"()_ ]*$/gm,
+                      message: `Letters, numbers and !?:;'"()_- special characters are allowed`,
                     },
                     minLength: {
                       value: 20,
@@ -279,6 +287,10 @@ export default function CreateStory(props: Props) {
                       value: 3,
                       message: 'Minimum length is 3 characters',
                     },
+                    pattern: {
+                      value: /^[a-zA-Z-0-9-!?:;'"()_ ]*$/gm,
+                      message: `Letters, numbers and !?:;'"()_- special characters are allowed`,
+                    },
                   })}
                 />
               </label>
@@ -296,6 +308,10 @@ export default function CreateStory(props: Props) {
                       required: {
                         value: true,
                         message: 'Write some content',
+                      },
+                      pattern: {
+                        value: /^[a-zA-Z-0-9-!?:;'"() ]*$/gm,
+                        message: `Letters, numbers and (!?:;'") are allowed`,
                       },
                       minLength: {
                         value: 20,

@@ -40,7 +40,6 @@ type Comment = {
 };
 export default function Overview(props: Props) {
   const { userProfile } = useContext(profileContext);
-  console.log(props);
   const {
     register,
     handleSubmit,
@@ -285,6 +284,10 @@ export default function Overview(props: Props) {
                     required: {
                       value: true,
                       message: 'Write short comment.',
+                    },
+                    pattern: {
+                      value: /^[a-zA-Z-0-9-!?'" ]*$/gm,
+                      message: `Special characters are not allowed`,
                     },
                   })}
                 />

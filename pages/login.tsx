@@ -77,7 +77,7 @@ export default function Login() {
                 />
                 {errors.username ? (
                   <p
-                    className="font-bold tracking-wide text-sm text-red-500"
+                    className="font-bold tracking-wide text-sm text-red-200"
                     date-test-id="loginUsernameError"
                   >
                     {errors.username.message}

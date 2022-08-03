@@ -67,6 +67,10 @@ export default function Register() {
                     value: 2,
                     message: 'Please choose username longer than 2 characters',
                   },
+                  pattern: {
+                    value: /^[a-zA-Z-0-9-!?:'"@ ]*$/gm,
+                    message: `Letters, numbers and !?:-@ are allowed`,
+                  },
                 })}
                 id="username"
                 data-test-id="registrationUsername"
