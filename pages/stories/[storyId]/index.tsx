@@ -129,7 +129,7 @@ export default function Overview(props: Props) {
       <main className="w-[90%] mx-auto mt-4 md:mt-14">
         <div className="md:flex md:space-x-20 md:mx-auto">
           <div>
-            <div className="flex flex-col items-center space-y-4 border-b-2 border-cyan-400 pb-4 mx-auto">
+            <div className="flex flex-col items-center space-y-4 border-b-2 border-cyan-400 pb-4 md:max-w-[650px]">
               <div className="space-y-2 flex flex-col items-center">
                 <p className="text-cyan-400 font-bold">
                   {props.overview.title}
