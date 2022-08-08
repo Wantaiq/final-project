@@ -181,9 +181,7 @@ export default function Stories(props: Props) {
                               stroke="#ffffff"
                               className="inline"
                             />
-                            <span className="font-bold text-gray-800">
-                              Read story
-                            </span>
+                            <span className="font-bold">Read story</span>
                           </a>
                         </Link>
                       </div>
