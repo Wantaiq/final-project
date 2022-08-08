@@ -161,7 +161,7 @@ export default function Stories(props: Props) {
                             </Link>
                           </span>
                         </p>
-                        <p className="font-semibold text-sm md:line-clamp-4 line-clamp-3 text-slate-200">
+                        <p className="font-semibold text-sm md:line-clamp-3 line-clamp-2 text-slate-200">
                           {story.description}
                         </p>
                       </div>
@@ -181,7 +181,7 @@ export default function Stories(props: Props) {
                               stroke="#ffffff"
                               className="inline"
                             />
-                            <span className="font-bold text-slate-200">
+                            <span className="font-bold text-gray-800">
                               Read story
                             </span>
                           </a>
